@@ -2,10 +2,7 @@
 # the keywords [bit ly], then filters the 'urls' field for bit.ly links
 # before printing matching results
 
-#from tweepy.streaming import StreamListener
-#from tweepy import OAuthHandler
-#from tweepy import Stream
-import streaming
+import tweepy
 import json
 import time
 
@@ -27,7 +24,7 @@ def buildURLList():
 	
 	
 # Listens to responses from tweepy stream
-class StdOutListener(streaming.StreamListener):
+class StdOutListener(tweepy.StreamListener):
 
     #Init function
 	def __init__(self, time_limit, path_and_filename):
@@ -40,10 +37,12 @@ class StdOutListener(streaming.StreamListener):
 		obj = json.loads(data)
 		if 'entities' in obj and 'urls' in obj['entities'] and len(obj['entities']['urls']) > 0:
 			expUrl = obj['entities']['urls'][0]['expanded_url']
+                        # if expUrl is None:
+                        #        print('We have a None')
 			urlList = buildURLList() # List of URLs that are OK, e.g. cnn.it, bit.ly etc.
 			goodURL = False
 			for url in urlList:
-				if (url in expUrl): goodURL = True
+				if (expUrl is not None) and (url in expUrl): goodURL = True
 			if goodURL:
 				tweetsFile = open(self.filename, 'a+')
 				if (time.time() - self.start_time) < self.limit:
