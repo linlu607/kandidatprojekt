@@ -28,7 +28,7 @@ print "Article parsed, reading."
 print "Commiting to memory"
 
 path = './data/news/'
-o = open(path+'news1.txt', 'a')
+o = open(path+'news1.txt', 'w')
 print text
 o.write(text.encode('utf8'))
 o.close()
