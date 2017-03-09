@@ -1,8 +1,10 @@
 import urllib
 from bs4 import BeautifulSoup
 
-url = "http://www.svt.se/nyheter/lokalt/stockholm/kallor-till-svt-dubbelmordet-gangrelaterat"
+print "Getting the news"
+url = "https://en.wikipedia.org/wiki/Terminal_High_Altitude_Area_Defense"
 html = urllib.urlopen(url).read()
+print "The news are here! Starting parsing"
 soup = BeautifulSoup(html, 'html.parser')
 
 # kill all script and style elements
@@ -19,31 +21,16 @@ chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 # drop blank lines
 text = '\n'.join(chunk for chunk in chunks if chunk)
 
-counter=0
-textFile=""
-realText=""
-for i, c in enumerate(text):
-    textFile=textFile+c
-    if c==" ":
-        counter=counter+1
-    if c=="\n":
-        counter=0
+print "Article parsed, reading."
 
-    if counter==20: 
-        realText=realText+textFile
-        textFile=""
-        
-    if counter>20:
-        textFile=""
-        realText=realText+c    
-        
-        #print i, c
-#extracting the hole text
-        
-#print(text)    
+# Stuff should happen here
 
-path = './data/news'
-o = open(path+'news1.txt', 'a+')
-o.write(str(text))
+print "Commiting to memory"
+
+path = './data/news/'
+o = open(path+'news1.txt', 'a')
+print text
+o.write(text.encode('utf8'))
 o.close()
+print "Done"
 
