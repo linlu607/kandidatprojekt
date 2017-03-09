@@ -44,5 +44,6 @@ if __name__ == '__main__':
 				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = news_file_path, newsOnly=1)
 				haveread.append(line)
 				runs += 1
+	print("DONE")
 	
 	
