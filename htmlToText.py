@@ -57,13 +57,12 @@ else:
     for part in soup.title.string.split(" "):
         temp = ""
         for character in list(part):
-            if character != ':' and character != u'’':
+            if character.isalpha():
                 temp = temp + character
         title = title + " " + temp
         i = i + 1
         if i > 4:
             break
-    
 
 file_path_and_name = path+'news ' + title.encode("utf8") + ' ' + time_for_filename + '.txt'
 #  ' + soup.title.string + ' ' + time_for_filename + '
