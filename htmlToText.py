@@ -1,11 +1,21 @@
 import os
+
+
 import urllib
 from bs4 import BeautifulSoup
 import time
 from time import strftime
 
+
+
+
+url = "http://www.aftonbladet.se/nyheter/a/4ax5e/teorin-de-skots-bakifran--inne-i-bilen"
+
+
+
 print "Getting the news"
 url = "https://en.wikipedia.org/wiki/Terminal_High_Altitude_Area_Defense"
+
 html = urllib.urlopen(url).read()
 print "The news are here! Starting parsing"
 soup = BeautifulSoup(html, 'html.parser')
@@ -39,9 +49,17 @@ if not os.path.exists(os.path.dirname(file_path_and_name)):
     except OSError as exc: # Guard against race condition
         if exc.errno != errno.EEXIST:
             raise
-o = open(file_path_and_name, 'w')
-o.write(text.encode('utf8'))
-o.close()
-print text
+
+
+o = open(file_path_and_name,"a")
+realText=""
+for line in text.split("\n"):
+    tmp=len(line.split(" "))
+    if(tmp>10):
+        line=line+"\n"
+        o.write(line.encode("utf8"))
+        print(line)
+o.close
+
 print "Done"
 
