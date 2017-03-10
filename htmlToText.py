@@ -1,5 +1,5 @@
 import os
-import urllib
+import urllib2
 from bs4 import BeautifulSoup
 import time
 from time import strftime
@@ -8,7 +8,11 @@ print "Getting the news"
 
 url = "https://en.wikipedia.org/wiki/Mangrove_swallow"
 
-html = urllib.urlopen(url).read()
+opener = urllib2.build_opener()
+opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
+html = opener.open(url)
+
+#html = urllib.urlopen(url).read()
 print "The news are here! Starting parsing"
 soup = BeautifulSoup(html, 'html.parser')
 
