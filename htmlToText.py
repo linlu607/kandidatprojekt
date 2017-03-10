@@ -1,7 +1,9 @@
+# -*- coding: cp1252 -*-
 import urllib
 from bs4 import BeautifulSoup
 
-url = "http://www.svt.se/nyheter/lokalt/stockholm/kallor-till-svt-dubbelmordet-gangrelaterat"
+
+url = "http://www.aftonbladet.se/nyheter/a/4ax5e/teorin-de-skots-bakifran--inne-i-bilen"
 html = urllib.urlopen(url).read()
 soup = BeautifulSoup(html, 'html.parser')
 
@@ -19,31 +21,33 @@ chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 # drop blank lines
 text = '\n'.join(chunk for chunk in chunks if chunk)
 
-counter=0
-textFile=""
-realText=""
-for i, c in enumerate(text):
-    textFile=textFile+c
-    if c==" ":
-        counter=counter+1
-    if c=="\n":
-        counter=0
 
-    if counter==20: 
-        realText=realText+textFile
-        textFile=""
-        
-    if counter>20:
-        textFile=""
-        realText=realText+c    
-        
+
+#for word in text.split():   
+#    if i==1:
+#        print("första ordet som finns är: " + word)
         #print i, c
 #extracting the hole text
-        
+
+#print(text)
+
+path = './data/news/'
+o = open(path+"news1.txt","a")
+realText=""
+for line in text.split("\n"):
+    #if "BBC" in line:
+    tmp=len(line.split(" "))
+    if(tmp>10):
+        line=line+"\n"
+        o.write(line.encode("utf8"))
+        print(line)
+o.close
+
+
+print("done")
+#text = text.encode('ascii', 'ignore').decode('ascii')
+#print 'test'
+#sys.stdout.close()	
 #print(text)    
-
-path = './data/news'
-o = open(path+'news1.txt', 'a+')
-o.write(str(text))
-o.close()
-
+#trying to extract just the news article
+#print(realText)
