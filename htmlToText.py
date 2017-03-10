@@ -1,11 +1,8 @@
 import os
 import urllib
-
 from bs4 import BeautifulSoup
 import time
 from time import strftime
-
-
 
 url = "http://www.aftonbladet.se/nyheter/a/4ax5e/teorin-de-skots-bakifran--inne-i-bilen"
 
@@ -26,7 +23,6 @@ lines = (line.strip() for line in text.splitlines())
 chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 # drop blank lines
 text = '\n'.join(chunk for chunk in chunks if chunk)
-
 
 print "Article parsed, reading."
 
@@ -54,4 +50,3 @@ for line in text.split("\n"):
         print(line)
 o.close
 print "Done"
-
