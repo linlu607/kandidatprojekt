@@ -1,13 +1,19 @@
+# -*- coding: cp1252 -*-
 import os
 import urllib2
 from bs4 import BeautifulSoup
 from bs4 import Comment
 import time
+import re
 from time import strftime
 
 print "Getting the news"
 
-url = "http://thepoliticalinsider.com/wikileaks-confirms-hillary-sold-weapons-isis-drops-another-bombshell-breaking-news/"
+# http://worldnewsdailyreport.com/rupaul-claims-trump-touched-him-inappropriately-in-the-1990s/
+# https://worldnewsdailyreport.com/isis-leader-calls-for-american-muslim-voters-to-support-hillary-clinton/
+# http://www.breitbart.com/2016-presidential-race/2016/08/01/clinton-cash-khizr-khans-deep-legal-financial-connections-saudi-arabia-hillarys-clinton-foundation-connect-terror-immigration-email-scandals/
+
+url = "http://www.breitbart.com/2016-presidential-race/2016/08/01/clinton-cash-khizr-khans-deep-legal-financial-connections-saudi-arabia-hillarys-clinton-foundation-connect-terror-immigration-email-scandals/"
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
@@ -21,7 +27,7 @@ soup = BeautifulSoup(html, 'html.parser')
 for script in soup(["script", "style"]):
     script.extract()    # rip it out
 
-for comment in soup.findAll("div", { "class" : "comment-body" }):
+for comment in soup.findAll("div", class_=re.compile('(C|c)omment.*')):
     comment.extract()
 
 # get text
@@ -43,12 +49,23 @@ print "Commiting to memory"
 time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
 path = './data/news/'
 
+title = ""
+i = 0
 if soup.title is None :
     title = 'noTitle'
 else:
-    title = soup.title.string
+    for part in soup.title.string.split(" "):
+        temp = ""
+        for character in list(part):
+            if character != ':' and character != u'’':
+                temp = temp + character
+        title = title + " " + temp
+        i = i + 1
+        if i > 4:
+            break
+    
 
-file_path_and_name = path+'news ' + title + ' ' + time_for_filename + '.txt'
+file_path_and_name = path+'news ' + title.encode("utf8") + ' ' + time_for_filename + '.txt'
 #  ' + soup.title.string + ' ' + time_for_filename + '
 if not os.path.exists(os.path.dirname(file_path_and_name)):
     try:
