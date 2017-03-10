@@ -1,6 +1,6 @@
 import os
-
 import urllib
+
 from bs4 import BeautifulSoup
 import time
 from time import strftime
@@ -34,18 +34,18 @@ print "Article parsed, reading."
 
 print "Commiting to memory"
 
-path = './data/news/'
-time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
-file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename + '.txt'
-if not os.path.exists(os.path.dirname(file_path_and_name)):
-    try:
-        os.makedirs(os.path.dirname(file_path_and_name))
-    except OSError as exc: # Guard against race condition
-        if exc.errno != errno.EEXIST:
-            raise
+#time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
+#file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename 
+#file_path_and_name=file_path_and_name+ '.txt'
+#if not os.path.exists(os.path.dirname(file_path_and_name)):
+#    try:
+#        os.makedirs(os.path.dirname(file_path_and_name))
+#    except OSError as exc: # Guard against race condition
+#        if exc.errno != errno.EEXIST:
+#            raise
 
-o = open(file_path_and_name,"a")
-realText=""
+path = './data/news/'
+o = open(path+"news1.txt","a")
 for line in text.split("\n"):
     tmp=len(line.split(" "))
     if(tmp>10):
