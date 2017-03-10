@@ -1,6 +1,7 @@
 import os
 import urllib2
 from bs4 import BeautifulSoup
+from bs4 import Comment
 import time
 from time import strftime
 
@@ -19,6 +20,9 @@ soup = BeautifulSoup(html, 'html.parser')
 # kill all script and style elements
 for script in soup(["script", "style"]):
     script.extract()    # rip it out
+
+for comment in soup.findAll("div", { "class" : "comment-body" }):
+    comment.extract()
 
 # get text
 text = soup.get_text()
