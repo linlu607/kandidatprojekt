@@ -6,7 +6,7 @@ from time import strftime
 
 print "Getting the news"
 
-url = "https://en.wikipedia.org/wiki/Mangrove_swallow"
+url = "http://thepoliticalinsider.com/wikileaks-confirms-hillary-sold-weapons-isis-drops-another-bombshell-breaking-news/"
 
 opener = urllib2.build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
@@ -38,7 +38,13 @@ print "Commiting to memory"
 
 time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
 path = './data/news/'
-file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename + '.txt'
+
+if soup.title is None :
+    title = 'noTitle'
+else:
+    title = soup.title.string
+
+file_path_and_name = path+'news ' + title + ' ' + time_for_filename + '.txt'
 #  ' + soup.title.string + ' ' + time_for_filename + '
 if not os.path.exists(os.path.dirname(file_path_and_name)):
     try:
