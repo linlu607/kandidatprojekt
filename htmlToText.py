@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 import time
 from time import strftime
 
-url = "http://www.aftonbladet.se/nyheter/a/4ax5e/teorin-de-skots-bakifran--inne-i-bilen"
+print "Getting the news"
+
+url = "https://en.wikipedia.org/wiki/Mangrove_swallow"
 
 html = urllib.urlopen(url).read()
 print "The news are here! Starting parsing"
@@ -30,23 +32,24 @@ print "Article parsed, reading."
 
 print "Commiting to memory"
 
-#time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
-#file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename 
-#file_path_and_name=file_path_and_name+ '.txt'
-#if not os.path.exists(os.path.dirname(file_path_and_name)):
-#    try:
-#        os.makedirs(os.path.dirname(file_path_and_name))
-#    except OSError as exc: # Guard against race condition
-#        if exc.errno != errno.EEXIST:
-#            raise
-
+time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
 path = './data/news/'
-o = open(path+"news1.txt","a")
+file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename + '.txt'
+#  ' + soup.title.string + ' ' + time_for_filename + '
+if not os.path.exists(os.path.dirname(file_path_and_name)):
+    try:
+        os.makedirs(os.path.dirname(file_path_and_name))
+    except OSError as exc: # Guard against race condition
+        if exc.errno != errno.EEXIST:
+            raise
+
+savedArticle = open(file_path_and_name,"w")
 for line in text.split("\n"):
     tmp=len(line.split(" "))
     if(tmp>10):
         line=line+"\n"
-        o.write(line.encode("utf8"))
-        print(line)
-o.close
+        savedArticle.write(line.encode("utf8"))
+        savedArticle.flush()
+#        print(line)
+savedArticle.close
 print "Done"
