@@ -1,10 +1,16 @@
-# -*- coding: cp1252 -*-
+import os
+
 import urllib
 from bs4 import BeautifulSoup
+import time
+from time import strftime
+
 
 
 url = "http://www.aftonbladet.se/nyheter/a/4ax5e/teorin-de-skots-bakifran--inne-i-bilen"
+
 html = urllib.urlopen(url).read()
+print "The news are here! Starting parsing"
 soup = BeautifulSoup(html, 'html.parser')
 
 # kill all script and style elements
@@ -22,32 +28,30 @@ chunks = (phrase.strip() for line in lines for phrase in line.split("  "))
 text = '\n'.join(chunk for chunk in chunks if chunk)
 
 
+print "Article parsed, reading."
 
-#for word in text.split():   
-#    if i==1:
-#        print("första ordet som finns är: " + word)
-        #print i, c
-#extracting the hole text
+# Stuff should happen here
 
-#print(text)
+print "Commiting to memory"
 
 path = './data/news/'
-o = open(path+"news1.txt","a")
+time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
+file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename + '.txt'
+if not os.path.exists(os.path.dirname(file_path_and_name)):
+    try:
+        os.makedirs(os.path.dirname(file_path_and_name))
+    except OSError as exc: # Guard against race condition
+        if exc.errno != errno.EEXIST:
+            raise
+
+o = open(file_path_and_name,"a")
 realText=""
 for line in text.split("\n"):
-    #if "BBC" in line:
     tmp=len(line.split(" "))
     if(tmp>10):
         line=line+"\n"
         o.write(line.encode("utf8"))
         print(line)
 o.close
+print "Done"
 
-
-print("done")
-#text = text.encode('ascii', 'ignore').decode('ascii')
-#print 'test'
-#sys.stdout.close()	
-#print(text)    
-#trying to extract just the news article
-#print(realText)
