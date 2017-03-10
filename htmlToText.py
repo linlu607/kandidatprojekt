@@ -1,5 +1,7 @@
 import urllib
 from bs4 import BeautifulSoup
+import time
+from time import strftime
 
 print "Getting the news"
 url = "https://en.wikipedia.org/wiki/Terminal_High_Altitude_Area_Defense"
@@ -28,9 +30,11 @@ print "Article parsed, reading."
 print "Commiting to memory"
 
 path = './data/news/'
-o = open(path+'news1.txt', 'w')
-print text
+time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
+file_path_and_name = path+'news ' + soup.title.string + ' ' + time_for_filename + '.txt'
+o = open(file_path_and_name, 'w')
 o.write(text.encode('utf8'))
 o.close()
+print text
 print "Done"
 
