@@ -9,9 +9,9 @@ from time import strftime
 def buildURLList():
     # In the future this should read links as lines from a .txt
 	urlList = []
-	urlList.append('http://worldnewsdailyreport.com/rupaul-claims-trump-touched-him-inappropriately-in-the-1990s/')
-	urlList.append('https://worldnewsdailyreport.com/isis-leader-calls-for-american-muslim-voters-to-support-hillary-clinton/')
-	urlList.append('http://www.breitbart.com/2016-presidential-race/2016/08/01/clinton-cash-khizr-khans-deep-legal-financial-connections-saudi-arabia-hillarys-clinton-foundation-connect-terror-immigration-email-scandals/')
+	fakes = open(LinksFakeNews,"r")
+        for line in fakes.split("\n"):
+            urlList.append(line)
 	return urlList
 
 print "Getting the news"
