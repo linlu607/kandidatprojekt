@@ -8,11 +8,13 @@ from time import strftime
 
 def buildURLList():
     # In the future this should read links as lines from a .txt
-	urlList = []
-	fakes = open(LinksFakeNews,"r")
-        for line in fakes.split("\n"):
-            urlList.append(line)
-	return urlList
+    urlList = []
+    fakes = open('LinksFakeNews.txt',"r")
+    lines = fakes.read()
+    fakes.close()
+    for line in lines.split("\n"):
+        urlList.append(line)
+    return urlList
 
 print "Getting the news"
 
