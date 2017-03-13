@@ -13,6 +13,8 @@ def buildURLList(fake_or_not):
         links = open('LinksFakeNews.txt',"r")
     elif fake_or_not == 1:
         links = open('LinkRealNews.txt',"r")
+    elif fake_or_not == 2:
+        links = open('LinkUnknownClass.txt',"r")
     else:
         return urlList
 
@@ -30,6 +32,7 @@ opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 runList = []
 runList.append('training_fake/')
 runList.append('training_real/')
+runList.append('LinksUnknownClass/')
 r = 0
 for run in runList:
     urlList = buildURLList(r)
@@ -73,7 +76,6 @@ for run in runList:
 
                 print "Commiting to memory"
 
-                time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
                 path = './data/news/'+ run
 
                 title = ""
@@ -91,7 +93,7 @@ for run in runList:
                         if i > 4:
                             break
 
-                file_path_and_name = path+'news ' + title.encode("utf8") + ' ' + time_for_filename + '.txt'
+                file_path_and_name = path+'news ' + title.encode("utf8") + '.txt'
                 if not os.path.exists(os.path.dirname(file_path_and_name)):
                     try:
                         os.makedirs(os.path.dirname(file_path_and_name))
