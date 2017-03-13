@@ -14,7 +14,7 @@ def buildURLList(fake_or_not):
     elif fake_or_not == 1:
         links = open('LinkRealNews.txt',"r")
     elif fake_or_not == 2:
-        links = open('LinkUnknownClass.txt',"r")
+        links = open('LinksUnknownClass.txt',"r")
     else:
         return urlList
 
