@@ -31,8 +31,7 @@ for filename in os.listdir(path):
     file_path_and_name=path+filename
     news=open(file_path_and_name,"r")
     read = news.read()
-    trainingSet.append({"text":read,'category': 'fakeNews'})  
-    print("de filnamn som hör till fakenews är: " +filename)
+    trainingSet.append({"text":read,'category': 'fakeNews'})
 
 #training with real news
 path = './data/news/training_real/'    
@@ -40,8 +39,7 @@ for filename in os.listdir(path):
     file_path_and_name=path+filename
     news=open(file_path_and_name,"r")
     read=news.read()
-    trainingSet.append({"text":read ,'category': 'realNews'})  
-    print("de filnamn som är de riktiga nyheterna är: " +filename) 
+    trainingSet.append({"text":read ,'category': 'realNews'})
     
 
 
