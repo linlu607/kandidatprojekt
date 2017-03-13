@@ -25,7 +25,8 @@ def buildURLList(fake_or_not):
 
 print "Getting the news"
 
-opener = urllib2.build_opener(HTTPRedirectHandler)
+opener = urllib2.build_opener()
+#opener.add_handler(BaseHandler.HTTPRedirectHandler)
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
 runList = []
@@ -37,7 +38,7 @@ for run in runList:
     r = r + 1
     for url in urlList:
             try:
-                html = opener.open(url)
+                req = opener.open(url)
             except HTTPError as e:
                 print 'The server couldn\'t fulfill the request.'
                 print 'Error code: ', e.code
@@ -48,6 +49,7 @@ for run in runList:
                 print url
             else:
 
+                html = req.open()
                 print "The news are here! Starting parsing"
                 soup = BeautifulSoup(html, 'html.parser')
 
