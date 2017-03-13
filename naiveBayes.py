@@ -23,14 +23,15 @@ newsTrainer = Trainer(tokenizer)
 
 
 #news=open(file_path_and_name,"r")
-testSet=[]
 
+trainingSet=[]
 #training with fake news
 path = './data/news/training_fake/'
 for filename in os.listdir(path):
     file_path_and_name=path+filename
     news=open(file_path_and_name,"r")
-    testSet.append({"text":news,'category': 'fakeNews'})  
+    read = news.read()
+    trainingSet.append({"text":read,'category': 'fakeNews'})  
     print("de filnamn som hör till fakenews är: " +filename)
 
 #training with real news
@@ -39,24 +40,13 @@ for filename in os.listdir(path):
     file_path_and_name=path+filename
     news=open(file_path_and_name,"r")
     read=news.read()
-    testSet.append({"text":read ,'category': 'realNews'})  
-    print("de filnamn som är de riktiga nyheterna är: " +filename)
-
-
-
-
-    #fakeNews
-path = './data/news/training_fake/' 
-for filename in os.listdir(path):
-    file_path_and_name=path+filename
-    news=open(file_path_and_name,"r")
-    read=news.read()
-    testSet.append({"text":read ,'category': 'fakeNews'})  
+    trainingSet.append({"text":read ,'category': 'realNews'})  
+    print("de filnamn som är de riktiga nyheterna är: " +filename) 
     
 
 
 
-for news in testSet:
+for news in trainingSet:
     newsTrainer.train(news['text'], news['category'])
 
 
@@ -66,9 +56,14 @@ newsClassifier = Classifier(newsTrainer.data, tokenizer)
 
 # Now you have a classifier which can give a try to classifiy text of news whose
 # category is unknown, yet.
-classification = newsClassifier.classify("the")
+testSet=[]
+path = './data/news/LinksUnknownClass/' 
+for filename in os.listdir(path):
+    file_path_and_name=path+filename
+    news=open(file_path_and_name,"r")
+    read=news.read()
+    classification = newsClassifier.classify(read)
+    print str(classification) + ' ' + filename
 
 # the classification variable holds the detected categories sorted
 
-
-print(classification)
