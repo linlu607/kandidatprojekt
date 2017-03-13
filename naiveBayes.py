@@ -41,23 +41,22 @@ for filename in os.listdir(path):
     read=news.read()
     testSet.append({"text":read ,'category': 'realNews'})  
     print("de filnamn som är de riktiga nyheterna är: " +filename)
-#for filename in glob.glob(os.path.join(path, '*.txt')):
-    # do your stuff
 
-#TESTING
-    tmp=[]
+
+
+
+    #fakeNews
+path = './data/news/training_fake/' 
 for filename in os.listdir(path):
     file_path_and_name=path+filename
     news=open(file_path_and_name,"r")
-    tmp.append({"text":"here it will be some sort of test" ,'category': 'realNews'})  
-    print("de filnamn som är de riktiga nyheterna är: " +filename)
+    read=news.read()
+    testSet.append({"text":read ,'category': 'fakeNews'})  
+    
 
-print(tmp)
-#TESTING
-#print(testSet)
-#print(" den träningsmängd som vi har är: " + str(testSet))
 
-for news in tmp:
+
+for news in testSet:
     newsTrainer.train(news['text'], news['category'])
 
 
@@ -67,7 +66,7 @@ newsClassifier = Classifier(newsTrainer.data, tokenizer)
 
 # Now you have a classifier which can give a try to classifiy text of news whose
 # category is unknown, yet.
-classification = newsClassifier.classify("kommer")
+classification = newsClassifier.classify("the")
 
 # the classification variable holds the detected categories sorted
 
