@@ -1,5 +1,6 @@
 import os
 import urllib2
+from urllib2 import Request, urlopen, URLError, HTTPError
 from bs4 import BeautifulSoup
 from bs4 import Comment
 import time
