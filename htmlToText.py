@@ -44,10 +44,12 @@ for run in runList:
                 print 'The server couldn\'t fulfill the request.'
                 print 'Error code: ', e.code
                 print url
+                print "No articles available here"
             except URLError as e:
                 print 'We failed to reach a server.'
                 print 'Reason: ', e.reason
                 print url
+                print "No articles available here"
             else:
 
                 print "The news are here! Starting parsing"
@@ -88,7 +90,10 @@ for run in runList:
                         for character in list(part):
                             if character.isalpha():
                                 temp = temp + character
-                        title = title + " " + temp
+                        if len(temp) > 0 and len(title) > 0:
+                            title = title + " " + temp
+                        elif len(temp) > 0:
+                            title = temp
                         i = i + 1
                         if i > 4:
                             break
@@ -108,7 +113,6 @@ for run in runList:
                         line=line+"\n"
                         savedArticle.write(line.encode("utf8"))
                         savedArticle.flush()
-                #        print(line)
                 savedArticle.close
                 print "Article saved"
 print "Done"
