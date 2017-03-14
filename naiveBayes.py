@@ -24,8 +24,8 @@ def read_files(path):
             read_files(os.path.join(root, path))
         for file_name in file_names:
             file_path = os.path.join(root, file_name)
-            if os.path.isfile(file_path):
-                past_header, lines = False, []
+            if os.path.isfile(file_path) and os.path.getsize(file_path) > 200L:
+                lines = []
                 f = open(file_path)
                 for line in f:
                     lines.append(line)
