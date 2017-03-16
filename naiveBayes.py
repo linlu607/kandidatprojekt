@@ -62,24 +62,26 @@ for path, classification in SOURCES:
 
 data = data.reindex(numpy.random.permutation(data.index))
 
-k_fold = KFold(n_splits=6)
+k_fold = KFold(n_splits=8)
 scores = []
-confusion = numpy.array([[0, 0], [0, 0]])
-for train_indices, test_indices in k_fold.split(data):
-    train_text = data.iloc[train_indices]['text'].values
-    train_y = data.iloc[train_indices]['class'].values
+total_confusion = numpy.array([[0, 0], [0, 0]])
+for training_indices, testing_indices in k_fold.split(data):
+    training_data_texts = data.iloc[training_indices]['text'].values
+    training_data_classes = data.iloc[training_indices]['class'].values
 
-    test_text = data.iloc[test_indices]['text'].values
-    test_y = data.iloc[test_indices]['class'].values
+    pipeline.fit(training_data_texts, training_data_classes)
 
-    pipeline.fit(train_text, train_y)
-    predictions = pipeline.predict(test_text)
+    testing_data_texts = data.iloc[testing_indices]['text'].values
+    testing_data_classes = data.iloc[testing_indices]['class'].values
 
-    confusion += confusion_matrix(test_y, predictions)
-    score = f1_score(test_y, predictions, pos_label=FAKE)
+    predicted_classes = pipeline.predict(testing_data_texts)
+
+    total_confusion += confusion_matrix(testing_data_classes, predicted_classes)
+    score = f1_score(testing_data_classes, predicted_classes, pos_label=FAKE)
     scores.append(score)
 
 print('Total articles classified:', len(data))
 print('Score:', sum(scores)/len(scores))
+# The average F1 score of the n_split tests
 print('Confusion matrix:')
-print(confusion)
+print(total_confusion)
