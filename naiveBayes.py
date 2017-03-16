@@ -1,14 +1,8 @@
 # -*- coding: cp1252 -*-
-##import os
-##from naiveBayesClassifier import tokenizer
-##from naiveBayesClassifier.trainer import Trainer
-##from naiveBayesClassifier.classifier import Classifier
-
-#newsTrainer = Trainer(tokenizer)
-
 import os
 import numpy
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import KFold
 from sklearn.metrics import confusion_matrix, f1_score
@@ -55,6 +49,7 @@ def build_data_frame(path, classification):
 
 pipeline = Pipeline([
     ('vectorizer',  CountVectorizer(ngram_range=(1, 3), stop_words='english', encoding="utf-8")),
+    #('tfidf_transformer',  TfidfTransformer()),
     ('classifier',  MultinomialNB()) ])
 
 REAL = 'real'
@@ -92,70 +87,3 @@ print('Total articles classified:', len(data))
 print('Score:', sum(scores)/len(scores))
 print('Confusion matrix:')
 print(confusion)
-
-##count_vectorizer = CountVectorizer(ngram_range=(1, 3), stop_words='english', encoding="utf-8")
-##counts = count_vectorizer.fit_transform(data['text'].values)
-##
-##classifier = MultinomialNB()
-##targets = data['class'].values
-##classifier.fit(counts, targets)
-
-##UNKNOWNS = [('./data/news/LinksUnknownClass/')]
-##
-##tests = DataFrame({'text': []})
-##for path in UNKNOWNS:
-##    tests = tests.append(build_test_frame(path))
-##example_counts = count_vectorizer.transform(tests['text'].values)
-##predictions = classifier.predict(example_counts)
-##
-##for prediction in predictions:
-##    print prediction
-
-
-
-#news=open(file_path_and_name,"r")
-
-#trainingSet=[]
-#training with fake news
-##path = './data/news/training_fake/'
-##for filename in os.listdir(path):
-##    file_path_and_name=path+filename
-##    news=open(file_path_and_name,"r")
-##    read = news.read()
-##    trainingSet.append({"text":read,'category': 'fakeNews'})
-
-#training with real news
-##path = './data/news/training_real/'    
-##for filename in os.listdir(path):
-##    file_path_and_name=path+filename
-##    news=open(file_path_and_name,"r")
-##    read=news.read()
-##    trainingSet.append({"text":read ,'category': 'realNews'})
-##    
-##
-##
-##
-##for news in trainingSet:
-##    newsTrainer.train(news['text'], news['category'])
-
-
-# When you have sufficient trained data, you are almost done and can start to use
-# a classifier.
-
-#newsClassifier = Classifier(newsTrainer.data, tokenizer)
-
-# Now you have a classifier which can give a try to classifiy text of news whose
-# category is unknown, yet.
-##testSet=[]
-##path = './data/news/LinksUnknownClass/' 
-### for filename in os.listdir(path):
-##filename = 'news An Open Letter to My.txt'
-##file_path_and_name=path+filename
-##news=open(file_path_and_name,"r")
-##read=news.read()
-##classification = newsClassifier.classify(read)
-##print 
-##print str(classification) + ' ' + filename
-
-# the classification variable holds the detected categories sorted
-
