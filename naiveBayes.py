@@ -1,21 +1,20 @@
 # -*- coding: cp1252 -*-
 import os
 import numpy
+from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import KFold
 from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.pipeline import Pipeline
-from pandas import DataFrame
 
+# Some constant strings
 NEWLINE = '\n'
+REAL = 'real'
+FAKE = 'fake'
 
 def read_files(path):
- #   for directory_path, dir_names, file_names in os.listdir(path):
- #       for path in dir_names:
- #           read_files(os.path.join(root, path))
- # Vi behöver inte vara rekursiva
     for file_name in os.listdir(path):
         file_path = os.path.join(path, file_name)
         if os.path.isfile(file_path) and os.path.getsize(file_path) > 200L: # Only files larger than 200 Bytes
@@ -27,15 +26,15 @@ def read_files(path):
             content = NEWLINE.join(lines)
             yield file_path, content
 
-def build_test_frame(path):
-    rows = []
-    index = []
-    for file_name, text in read_files(path):
-        rows.append({'text': text})
-        index.append(file_name)
-
-    test_frame = DataFrame(rows, index=index)
-    return test_frame
+##def build_test_frame(path):
+##    rows = []
+##    index = []
+##    for file_name, text in read_files(path):
+##        rows.append({'text': text})
+##        index.append(file_name)
+##
+##    test_frame = DataFrame(rows, index=index)
+##    return test_frame
 
 def build_data_frame(path, classification):
     rows = []
@@ -51,9 +50,6 @@ pipeline = Pipeline([
     ('vectorizer',  CountVectorizer(ngram_range=(1, 3), stop_words='english', encoding="utf-8")),
     #('tfidf_transformer',  TfidfTransformer()),
     ('classifier',  MultinomialNB()) ])
-
-REAL = 'real'
-FAKE = 'fake'
 
 SOURCES = [
     ('./data/news/training_fake/',      FAKE),
