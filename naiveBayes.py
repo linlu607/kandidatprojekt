@@ -7,25 +7,25 @@ from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import KFold
 from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.pipeline import Pipeline
-
 from pandas import DataFrame
 
 NEWLINE = '\n'
 
 def read_files(path):
-    for root, dir_names, file_names in os.walk(path):
-        for path in dir_names:
-            read_files(os.path.join(root, path))
-        for file_name in file_names:
-            file_path = os.path.join(root, file_name)
-            if os.path.isfile(file_path) and os.path.getsize(file_path) > 200L:
-                lines = []
-                f = open(file_path)
-                for line in f:
-                    lines.append(line)
-                f.close()
-                content = NEWLINE.join(lines)
-                yield file_path, content
+ #   for directory_path, dir_names, file_names in os.listdir(path):
+ #       for path in dir_names:
+ #           read_files(os.path.join(root, path))
+ # Vi behöver inte vara rekursiva
+    for file_name in os.listdir(path):
+        file_path = os.path.join(path, file_name)
+        if os.path.isfile(file_path) and os.path.getsize(file_path) > 200L: # Only files larger than 200 Bytes
+            lines = []
+            f = open(file_path)
+            for line in f:
+                lines.append(line)
+            f.close()
+            content = NEWLINE.join(lines)
+            yield file_path, content
 
 def build_test_frame(path):
     rows = []
