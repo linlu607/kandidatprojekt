@@ -24,6 +24,12 @@ SOURCES = [
     ('./data/news/LinkBBC/',    REAL)
 ]
 
+# Setup pipeline
+pipeline = Pipeline([
+    ('vectorizer',  CountVectorizer(ngram_range=(1, 3), stop_words='english', encoding="utf-8")),
+    #('tfidf_transformer',  TfidfTransformer()),
+    ('classifier',  MultinomialNB()) ])
+
 def read_files(path):
     for file_name in os.listdir(path):
         file_path = os.path.join(path, file_name)
@@ -45,10 +51,6 @@ def build_data_frame(path, classification):
     data_frame = DataFrame(rows, index=index)
     return data_frame
 
-pipeline = Pipeline([
-    ('vectorizer',  CountVectorizer(ngram_range=(1, 3), stop_words='english', encoding="utf-8")),
-    #('tfidf_transformer',  TfidfTransformer()),
-    ('classifier',  MultinomialNB()) ])
 
 training_data = DataFrame({'text': [], 'class': []})
 for path, classification in SOURCES:
@@ -92,7 +94,7 @@ predicted_classes = pipeline.predict(evaluation_data['text'].values)
 
 score = f1_score(evaluation_data['class'].values, predicted_classes, pos_label=FAKE)
 
-print 'Test-set results:'
+print 'Evaluation-set results:'
 print('Total articles classified:', len(evaluation_data))
 print('Score:', score)
 print('Confusion matrix:')
