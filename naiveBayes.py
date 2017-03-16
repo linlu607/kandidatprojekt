@@ -13,7 +13,7 @@ from sklearn.pipeline import Pipeline
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
-TESTS = [
+EVALUATION = [
     ('./data/news/LinksUnknownFake/',   FAKE),
     ('./data/news/LinksUnknownReal/',  REAL)
 ]
@@ -81,25 +81,25 @@ print('Score:', sum(scores)/len(scores))
 print('Confusion matrix:')
 print(total_confusion)
 
-testing_data = DataFrame({'text': [], 'class':[]})
-for path, classification in TESTS:
-    testing_data = testing_data.append(build_data_frame(path, classification))
+evaluation_data = DataFrame({'text': [], 'class':[]})
+for path, classification in EVALUATION:
+    evaluation_data = evaluation_data.append(build_data_frame(path, classification))
 
-testing_data = testing_data.reindex(numpy.random.permutation(testing_data.index))
+evaluation_data = evaluation_data.reindex(numpy.random.permutation(evaluation_data.index))
 
 pipeline.fit(training_data['text'].values, training_data['class'].values)
-predicted_classes = pipeline.predict(testing_data['text'].values)
+predicted_classes = pipeline.predict(evaluation_data['text'].values)
 
-score = f1_score(testing_data['class'].values, predicted_classes, pos_label=FAKE)
+score = f1_score(evaluation_data['class'].values, predicted_classes, pos_label=FAKE)
 
 print 'Test-set results:'
-print('Total articles classified:', len(testing_data))
+print('Total articles classified:', len(evaluation_data))
 print('Score:', score)
 print('Confusion matrix:')
-print confusion_matrix(testing_data['class'].values, predicted_classes)
+print confusion_matrix(evaluation_data['class'].values, predicted_classes)
 
 print 'Article:     Actual class:     Predicted class:'
-for article, actual, predicted in zip(testing_data.index.values ,testing_data['class'].values,predicted_classes):
+for article, actual, predicted in zip(evaluation_data.index.values, evaluation_data['class'].values, predicted_classes):
     newArticle = ""
     i = 0
     for word in article.split(" "):
