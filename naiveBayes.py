@@ -13,6 +13,16 @@ from sklearn.pipeline import Pipeline
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
+TESTS = [
+    ('./data/news/LinksUnknownFake/',   FAKE),
+    ('./data/news/LinksUnknownReal/',  REAL)
+]
+SOURCES = [
+    ('./data/news/training_fake/',      FAKE),
+    ('./data/news/LinksFakeExtra/',      FAKE),
+    ('./data/news/training_real/',    REAL),
+    ('./data/news/LinkBBC/',    REAL)
+]
 
 def read_files(path):
     for file_name in os.listdir(path):
@@ -26,23 +36,12 @@ def read_files(path):
             content = NEWLINE.join(lines)
             yield file_path, content
 
-##def build_test_frame(path):
-##    rows = []
-##    index = []
-##    for file_name, text in read_files(path):
-##        rows.append({'text': text})
-##        index.append(file_name)
-##
-##    test_frame = DataFrame(rows, index=index)
-##    return test_frame
-
 def build_data_frame(path, classification):
     rows = []
     index = []
     for file_name, text in read_files(path):
         rows.append({'text': text, 'class': classification})
         index.append(file_name)
-
     data_frame = DataFrame(rows, index=index)
     return data_frame
 
@@ -51,28 +50,23 @@ pipeline = Pipeline([
     #('tfidf_transformer',  TfidfTransformer()),
     ('classifier',  MultinomialNB()) ])
 
-SOURCES = [
-    ('./data/news/training_fake/',      FAKE),
-    ('./data/news/training_real/',    REAL)
-]
-
-data = DataFrame({'text': [], 'class': []})
+training_data = DataFrame({'text': [], 'class': []})
 for path, classification in SOURCES:
-    data = data.append(build_data_frame(path, classification))
+    training_data = training_data.append(build_data_frame(path, classification))
 
-data = data.reindex(numpy.random.permutation(data.index))
+training_data = training_data.reindex(numpy.random.permutation(training_data.index))
 
 k_fold = KFold(n_splits=8)
 scores = []
 total_confusion = numpy.array([[0, 0], [0, 0]])
-for training_indices, testing_indices in k_fold.split(data):
-    training_data_texts = data.iloc[training_indices]['text'].values
-    training_data_classes = data.iloc[training_indices]['class'].values
+for training_indices, testing_indices in k_fold.split(training_data):
+    training_data_texts = training_data.iloc[training_indices]['text'].values
+    training_data_classes = training_data.iloc[training_indices]['class'].values
 
     pipeline.fit(training_data_texts, training_data_classes)
 
-    testing_data_texts = data.iloc[testing_indices]['text'].values
-    testing_data_classes = data.iloc[testing_indices]['class'].values
+    testing_data_texts = training_data.iloc[testing_indices]['text'].values
+    testing_data_classes = training_data.iloc[testing_indices]['class'].values
 
     predicted_classes = pipeline.predict(testing_data_texts)
 
@@ -80,8 +74,36 @@ for training_indices, testing_indices in k_fold.split(data):
     score = f1_score(testing_data_classes, predicted_classes, pos_label=FAKE)
     scores.append(score)
 
-print('Total articles classified:', len(data))
+print 'Cross-validation results:'
+print('Total articles classified:', len(training_data))
 print('Score:', sum(scores)/len(scores))
 # The average F1 score of the n_split tests
 print('Confusion matrix:')
 print(total_confusion)
+
+testing_data = DataFrame({'text': [], 'class':[]})
+for path, classification in TESTS:
+    testing_data = testing_data.append(build_data_frame(path, classification))
+
+testing_data = testing_data.reindex(numpy.random.permutation(testing_data.index))
+
+pipeline.fit(training_data['text'].values, training_data['class'].values)
+predicted_classes = pipeline.predict(testing_data['text'].values)
+
+score = f1_score(testing_data['class'].values, predicted_classes, pos_label=FAKE)
+
+print 'Test-set results:'
+print('Total articles classified:', len(testing_data))
+print('Score:', score)
+print('Confusion matrix:')
+print confusion_matrix(testing_data['class'].values, predicted_classes)
+
+print 'Article:     Actual class:     Predicted class:'
+for article, actual, predicted in zip(testing_data.index.values ,testing_data['class'].values,predicted_classes):
+    newArticle = ""
+    i = 0
+    for word in article.split(" "):
+        if i != 0:
+            newArticle = newArticle + word + " "
+        i = i + 1
+    print newArticle, actual, predicted
