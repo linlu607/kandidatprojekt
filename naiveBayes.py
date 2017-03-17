@@ -4,8 +4,9 @@ import numpy
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
-#from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import GridSearchCV
+from sklearn.grid_search import GridSearchCV
+#from sklearn.model_selection import GridSearchCV
+from sklearn.externals import joblib
 from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.pipeline import Pipeline
 
@@ -23,6 +24,17 @@ SOURCES = [
     ('./data/news/training_real/',    REAL),
     ('./data/news/LinkBBC/',    REAL)
 ]
+param_grid  = {
+    'vectorizer__max_df': (0.5, 0.75, 1.0),
+    'vectorizer__max_features': (None, 200, 1600),
+    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3)),  # unigrams to 5-grams
+    'vectorizer__stop_words': ('english', None),
+    'vectorizer__lowercase': (True, False),
+    ##'tfidf__use_idf': (True, False),
+    ##'tfidf__norm': ('l1', 'l2'),
+    'classifier__alpha': (1.0, 0.75, 0.5, 0.3, 0.25, 0.2, 0.1),
+    'classifier__fit_prior': (True, False),
+}
 
 def read_files(path):
     for file_name in os.listdir(path):
@@ -51,19 +63,7 @@ pipeline = Pipeline([
     #('tfidf_transformer',  TfidfTransformer()),
     ('classifier',  MultinomialNB()) ])
 
-'vectorizer'
-'classifier'
-param_grid  = {
-    'vectorizer__max_df': (0.5, 0.75, 1.0),
-    ##'vect__max_features': (None, 5000, 10000),
-    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3), (1, 4), (1, 5)),  # unigrams to 5-grams
-    'vectorizer__stop_words': ('english', None),
-    'vectorizer__lowercase': (True, False),
-    #'tfidf__use_idf': (True, False),
-    #'tfidf__norm': ('l1', 'l2'),
-    'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.1, 0.01),
-    'classifier__fit_prior': (True, False),
-}
+
 grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = -1, cv = 8)
 
 training_data = DataFrame({'text': [], 'class': []})
@@ -120,6 +120,8 @@ path = './data/'
 strScoreEVAL = str("{0:.4f}".format(score))
 strScoreTEST = str("{0:.4f}".format(grid.best_score_))
 file_path_and_name = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.txt'
+estimatorPath = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.pkl'
+joblib.dump(grid.best_estimator_, estimatorPath)
 if not os.path.exists(os.path.dirname(file_path_and_name)):
 	try:
 		os.makedirs(os.path.dirname(file_path_and_name))
