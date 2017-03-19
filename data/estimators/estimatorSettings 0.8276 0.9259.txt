@@ -1,0 +1,40 @@
+	classifier: MultinomialNB(alpha=0.1, class_prior=None, fit_prior=False)
+	classifier__alpha: 0.1
+	classifier__class_prior: None
+	classifier__fit_prior: False
+	steps: [('vectorizer', CountVectorizer(analyzer=u'word', binary=False, decode_error=u'strict',
+        dtype=<type 'numpy.int64'>, encoding=u'utf-8', input=u'content',
+        lowercase=False, max_df=1.0, max_features=1600, min_df=1,
+        ngram_range=(1, 4), preprocessor=None, stop_words=None,
+        strip_accents=None, token_pattern=u'(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)), ('tfidf_transformer', TfidfTransformer(norm=u'l2', smooth_idf=True, sublinear_tf=False,
+         use_idf=False)), ('classifier', MultinomialNB(alpha=0.1, class_prior=None, fit_prior=False))]
+	tfidf_transformer: TfidfTransformer(norm=u'l2', smooth_idf=True, sublinear_tf=False,
+         use_idf=False)
+	tfidf_transformer__norm: u'l2'
+	tfidf_transformer__smooth_idf: True
+	tfidf_transformer__sublinear_tf: False
+	tfidf_transformer__use_idf: False
+	vectorizer: CountVectorizer(analyzer=u'word', binary=False, decode_error=u'strict',
+        dtype=<type 'numpy.int64'>, encoding=u'utf-8', input=u'content',
+        lowercase=False, max_df=1.0, max_features=1600, min_df=1,
+        ngram_range=(1, 4), preprocessor=None, stop_words=None,
+        strip_accents=None, token_pattern=u'(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+	vectorizer__analyzer: u'word'
+	vectorizer__binary: False
+	vectorizer__decode_error: u'strict'
+	vectorizer__dtype: <type 'numpy.int64'>
+	vectorizer__encoding: u'utf-8'
+	vectorizer__input: u'content'
+	vectorizer__lowercase: False
+	vectorizer__max_df: 1.0
+	vectorizer__max_features: 1600
+	vectorizer__min_df: 1
+	vectorizer__ngram_range: (1, 4)
+	vectorizer__preprocessor: None
+	vectorizer__stop_words: None
+	vectorizer__strip_accents: None
+	vectorizer__token_pattern: u'(?u)\\b\\w\\w+\\b'
+	vectorizer__tokenizer: None
+	vectorizer__vocabulary: None

@@ -1,0 +1,33 @@
+	classifier: MultinomialNB(alpha=0.75, class_prior=None, fit_prior=True)
+	classifier__alpha: 0.75
+	classifier__class_prior: None
+	classifier__fit_prior: True
+	steps: [('vectorizer', CountVectorizer(analyzer=u'word', binary=False, decode_error=u'strict',
+        dtype=<type 'numpy.int64'>, encoding=u'utf-8', input=u'content',
+        lowercase=False, max_df=0.75, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern=u'(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)), ('classifier', MultinomialNB(alpha=0.75, class_prior=None, fit_prior=True))]
+	vectorizer: CountVectorizer(analyzer=u'word', binary=False, decode_error=u'strict',
+        dtype=<type 'numpy.int64'>, encoding=u'utf-8', input=u'content',
+        lowercase=False, max_df=0.75, max_features=None, min_df=1,
+        ngram_range=(1, 1), preprocessor=None, stop_words='english',
+        strip_accents=None, token_pattern=u'(?u)\\b\\w\\w+\\b',
+        tokenizer=None, vocabulary=None)
+	vectorizer__analyzer: u'word'
+	vectorizer__binary: False
+	vectorizer__decode_error: u'strict'
+	vectorizer__dtype: <type 'numpy.int64'>
+	vectorizer__encoding: u'utf-8'
+	vectorizer__input: u'content'
+	vectorizer__lowercase: False
+	vectorizer__max_df: 0.75
+	vectorizer__max_features: None
+	vectorizer__min_df: 1
+	vectorizer__ngram_range: (1, 1)
+	vectorizer__preprocessor: None
+	vectorizer__stop_words: 'english'
+	vectorizer__strip_accents: None
+	vectorizer__token_pattern: u'(?u)\\b\\w\\w+\\b'
+	vectorizer__tokenizer: None
+	vectorizer__vocabulary: None
