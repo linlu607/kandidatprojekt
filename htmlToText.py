@@ -24,12 +24,12 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
 runList = []
-runList.append(('training_fake/', 'LinksFakeNews.txt'))
-runList.append(('training_real/', 'LinkRealNews.txt'))
-runList.append(('LinksUnknownFake/', 'LinksUnknownFake.txt'))
-runList.append(('LinksUnknownReal/', 'LinksUnknownReal.txt'))
-runList.append(('LinkBBC/', 'LinksBBC.txt'))
-runList.append(('LinksFakeExtra/', 'LinksFakeExtra.txt'))
+runList.append(('training_fake/', './data/links/LinksFakeNews.txt'))
+runList.append(('training_real/', './data/links/LinkRealNews.txt'))
+runList.append(('LinksUnknownFake/', './data/links/LinksUnknownFake.txt'))
+runList.append(('LinksUnknownReal/', './data/links/LinksUnknownReal.txt'))
+runList.append(('LinkBBC/', './data/links/LinksBBC.txt'))
+runList.append(('LinksFakeExtra/', './data/links/LinksFakeExtra.txt'))
 
 for run, linkFile in runList:
     urlList = buildURLList(linkFile)
