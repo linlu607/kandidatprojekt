@@ -1,6 +1,7 @@
 # -*- coding: cp1252 -*-
 import os
 import numpy
+from time import time
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
@@ -10,29 +11,29 @@ from sklearn.externals import joblib
 from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.pipeline import Pipeline
 
-# Some constant strings
+# Some constants
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
 EVALUATION = [
-    ('./data/news/LinksUnknownFake/',   FAKE),
-    ('./data/news/LinksUnknownReal/',  REAL)
+    ('./data/news/LinksUnknownFake/', FAKE),
+    ('./data/news/LinksUnknownReal/', REAL)
 ]
 SOURCES = [
-    ('./data/news/training_fake/',      FAKE),
-    ('./data/news/LinksFakeExtra/',      FAKE),
-    ('./data/news/training_real/',    REAL),
-    ('./data/news/LinkBBC/',    REAL)
+    ('./data/news/training_fake/', FAKE),
+    #('./data/news/LinksFakeExtra/', FAKE),
+    ('./data/news/training_real/', REAL)
+    #('./data/news/LinkBBC/', REAL)
 ]
 param_grid  = {
     'vectorizer__max_df': (0.5, 0.75, 1.0),
-    'vectorizer__max_features': (None, 200, 1600),
-    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3)),  # unigrams to 5-grams
+    'vectorizer__max_features': (None, 200, 800, 1600),
+    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3), (1, 4), (1, 5)),  # unigrams to 5-grams
     'vectorizer__stop_words': ('english', None),
     'vectorizer__lowercase': (True, False),
-    ##'tfidf__use_idf': (True, False),
-    ##'tfidf__norm': ('l1', 'l2'),
-    'classifier__alpha': (1.0, 0.75, 0.5, 0.3, 0.25, 0.2, 0.1),
+    'tfidf_transformer__use_idf': (True, False),
+    'tfidf_transformer__norm': ('l1', 'l2'),
+    'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.1),
     'classifier__fit_prior': (True, False),
 }
 
@@ -57,12 +58,10 @@ def build_data_frame(path, classification):
     data_frame = DataFrame(rows, index=index)
     return data_frame
 
-# Setup pipeline Teporärt bort taget: ngram_range=(1, 3), stop_words='english', encoding="utf-8"
 pipeline = Pipeline([
     ('vectorizer',  CountVectorizer()),
-    #('tfidf_transformer',  TfidfTransformer()),
+    ('tfidf_transformer',  TfidfTransformer()),
     ('classifier',  MultinomialNB()) ])
-
 
 grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = -1, cv = 8)
 
@@ -72,38 +71,16 @@ for path, classification in SOURCES:
 
 training_data = training_data.reindex(numpy.random.permutation(training_data.index))
 
-##sk_fold = StratifiedKFold(n_splits=8)
-##scores = []
-##total_confusion = numpy.array([[0, 0], [0, 0]])
-##for training_indices, testing_indices in sk_fold.split(training_data['text'].values, training_data['class'].values):
-##    training_data_texts = training_data.iloc[training_indices]['text'].values
-##    training_data_classes = training_data.iloc[training_indices]['class'].values
-##
-##    pipeline.fit(training_data_texts, training_data_classes)
-##
-##    testing_data_texts = training_data.iloc[testing_indices]['text'].values
-##    testing_data_classes = training_data.iloc[testing_indices]['class'].values
-##
-##    predicted_classes = pipeline.predict(testing_data_texts)
-##
-##    total_confusion += confusion_matrix(testing_data_classes, predicted_classes)
-##    score = f1_score(testing_data_classes, predicted_classes, pos_label=FAKE)
-##    scores.append(score)
-##
-##print 'Cross-validation results:'
-##print('Total articles classified:', len(training_data))
-##print('Score:', sum(scores)/len(scores))
-### The average F1 score of the n_split tests
-##print('Confusion matrix:')
-##print(total_confusion)
+start = time()
 
 grid.fit(training_data['text'].values, training_data['class'].values)
 
+print("GridSearchCV took %.2f seconds" % (time() - start))
 print("Best score: %0.3f" % grid.best_score_)
 print("Best parameters set:")
 best_parameters = grid.best_estimator_.get_params()
-for param_name in sorted(best_parameters.keys()):
-    print("\t%s: %r" % (param_name, best_parameters[param_name]))
+#for param_name in sorted(best_parameters.keys()):
+#    print("\t%s: %r" % (param_name, best_parameters[param_name]))
 
 evaluation_data = DataFrame({'text': [], 'class':[]})
 for path, classification in EVALUATION:
@@ -116,39 +93,39 @@ predicted_classes = grid.predict(evaluation_data['text'].values)
 
 score = f1_score(evaluation_data['class'].values, predicted_classes, pos_label=FAKE)
 
-path = './data/'
+path = './data/estimators/'
 strScoreEVAL = str("{0:.4f}".format(score))
 strScoreTEST = str("{0:.4f}".format(grid.best_score_))
 file_path_and_name = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.txt'
+path = path + 'pickles/'
 estimatorPath = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.pkl'
-joblib.dump(grid.best_estimator_, estimatorPath)
-if not os.path.exists(os.path.dirname(file_path_and_name)):
+if not os.path.exists(os.path.dirname(path)):
 	try:
 		os.makedirs(os.path.dirname(file_path_and_name))
 	except OSError as exc: # Guard against race condition
         	if exc.errno != errno.EEXIST:
         		raise
-
+joblib.dump(grid.best_estimator_, estimatorPath)
 savedEstimator = open(file_path_and_name,"w")
 for param_name in sorted(best_parameters.keys()):
-	line = "\t%s: %r" % (param_name, best_parameters[param_name]) + NEWLINE
-	print line        
+	line = "\t%s: %r" % (param_name, best_parameters[param_name]) + NEWLINE      
 	savedEstimator.write(line.encode("utf8"))
         savedEstimator.flush()
 savedEstimator.close
 
 print 'Evaluation-set results:'
 print('Total articles classified:', len(evaluation_data))
-print('Score:', score)
+print("Score: %.2f" % score)
 print('Confusion matrix:')
 print confusion_matrix(evaluation_data['class'].values, predicted_classes)
 
 print 'Article:     Actual class:     Predicted class:'
 for article, actual, predicted in zip(evaluation_data.index.values, evaluation_data['class'].values, predicted_classes):
-    newArticle = ""
-    i = 0
-    for word in article.split(" "):
-        if i != 0:
-            newArticle = newArticle + word + " "
-        i = i + 1
-    print newArticle, actual, predicted
+	if actual != predicted:
+		newArticle = ""
+		i = 0
+		for word in article.split(" "):
+			if i != 0:
+				newArticle = newArticle + word + " "
+			i = i + 1
+    		print newArticle, actual, predicted
