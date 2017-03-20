@@ -40,8 +40,12 @@ def get_best_pipeline(path):
     for file_name in os.listdir(path):
         if float(file_name.split(" ")[1]) > pipeline_score and PATTERN.match(file_name.split(" ")[2]):
             print file_name
-            pipeline = joblib.load(path+file_name)
-            pipeline_score = float(file_name.split(" ")[1])
+            try:
+                pipeline = joblib.load(path+file_name)
+            except ImportError as imp:
+                print file_name + " is not an estimator for this version of scikit-learn"
+            else:
+                pipeline_score = float(file_name.split(" ")[1])
     print ("Loading a pipeline with an F1 score of %.2f on the evaluation set") % pipeline_score
     return pipeline
 

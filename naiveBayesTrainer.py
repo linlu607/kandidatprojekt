@@ -5,8 +5,8 @@ from time import time
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.grid_search import GridSearchCV
-#from sklearn.model_selection import GridSearchCV
+#from sklearn.grid_search import GridSearchCV
+from sklearn.model_selection import GridSearchCV
 from sklearn.externals import joblib
 from sklearn.metrics import confusion_matrix, f1_score
 from sklearn.pipeline import Pipeline
@@ -26,15 +26,15 @@ SOURCES = [
     #('./data/news/LinkBBC/', REAL)
 ]
 param_grid  = {
-    'vectorizer__max_df': (0.5, 0.75, 1.0),
-    'vectorizer__max_features': (None, 200, 800, 1600),
-    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3), (1, 4), (1, 5)),  # unigrams to 5-grams
-    'vectorizer__stop_words': ('english', None),
-    'vectorizer__lowercase': (True, False),
-    'tfidf_transformer__use_idf': (True, False),
-    'tfidf_transformer__norm': ('l1', 'l2'),
-    'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.1),
-    'classifier__fit_prior': (True, False),
+    #'vectorizer__max_df': (0.5, 0.75, 1.0),
+    #'vectorizer__max_features': (None, 200, 800, 1600),
+    'vectorizer__ngram_range': ((1, 1), (1, 4)),  # unigrams to 5-grams
+    #'vectorizer__stop_words': ('english', None),
+    #'vectorizer__lowercase': (True, False),
+    #'tfidf_transformer__use_idf': (True, False),
+    #'tfidf_transformer__norm': ('l1', 'l2'),
+    #'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.25),
+    #'classifier__fit_prior': (True, False),
 }
 
 def read_files(path):
@@ -59,11 +59,11 @@ def build_data_frame(path, classification):
     return data_frame
 
 pipeline = Pipeline([
-    ('vectorizer',  CountVectorizer()),
-    ('tfidf_transformer',  TfidfTransformer()),
-    ('classifier',  MultinomialNB()) ])
+    ('vectorizer',  CountVectorizer(lowercase = True, max_df = 1.0, max_features = 800)),
+    ('tfidf_transformer',  TfidfTransformer(norm = 'l2', use_idf = False)),
+    ('classifier',  MultinomialNB(fit_prior = False, alpha = 0.25)) ])
 
-grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = -1, cv = 8)
+grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = 1, cv = 8)
 
 training_data = DataFrame({'text': [], 'class': []})
 for path, classification in SOURCES:
@@ -100,17 +100,17 @@ file_path_and_name = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTE
 path = path + 'pickles/'
 estimatorPath = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.pkl'
 if not os.path.exists(os.path.dirname(path)):
-	try:
-		os.makedirs(os.path.dirname(file_path_and_name))
-	except OSError as exc: # Guard against race condition
-        	if exc.errno != errno.EEXIST:
-        		raise
+    try:
+        os.makedirs(os.path.dirname(file_path_and_name))
+    except OSError as exc: # Guard against race condition
+        if exc.errno != errno.EEXIST:
+            raise
 joblib.dump(grid.best_estimator_, estimatorPath)
 savedEstimator = open(file_path_and_name,"w")
 for param_name in sorted(best_parameters.keys()):
-	line = "\t%s: %r" % (param_name, best_parameters[param_name]) + NEWLINE      
-	savedEstimator.write(line.encode("utf8"))
-        savedEstimator.flush()
+    line = "\t%s: %r" % (param_name, best_parameters[param_name]) + NEWLINE      
+    savedEstimator.write(line.encode("utf8"))
+    savedEstimator.flush()
 savedEstimator.close
 
 print 'Evaluation-set results:'
@@ -121,11 +121,11 @@ print confusion_matrix(evaluation_data['class'].values, predicted_classes)
 
 print 'Article:     Actual class:     Predicted class:'
 for article, actual, predicted in zip(evaluation_data.index.values, evaluation_data['class'].values, predicted_classes):
-	if actual != predicted:
-		newArticle = ""
-		i = 0
-		for word in article.split(" "):
-			if i != 0:
-				newArticle = newArticle + word + " "
-			i = i + 1
-    		print newArticle, actual, predicted
+    if actual != predicted:
+        newArticle = ""
+        i = 0
+        for word in article.split(" "):
+            if i != 0:
+                newArticle = newArticle + word + " "
+                i = i + 1
+        print newArticle, actual, predicted
