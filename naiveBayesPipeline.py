@@ -10,7 +10,7 @@ from sklearn.pipeline import Pipeline
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
-PATTERN = re.compile('.*\.pkl')
+PATTERN = re.compile('.*\.pkl$')
 
 def read_files(path):
     for file_name in os.listdir(path):
