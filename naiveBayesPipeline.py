@@ -1,4 +1,5 @@
 import os
+import re
 import numpy
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
@@ -9,6 +10,7 @@ from sklearn.pipeline import Pipeline
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
+PATTERN = re.compile('.*\.pkl')
 
 def read_files(path):
     for file_name in os.listdir(path):
@@ -32,15 +34,16 @@ def build_data_frame(path):
     return data_frame
 
 def get_best_pipeline(path):
-	return joblib.load(path + 'estimatorSettings 0.9032 0.9630.pkl')
-	pipeline_score = 0.9032 #0.0
-#	for file_name in os.listdir(path):
-#		print file_name
-#		if float(file_name.split(" ")[1]) > pipeline_score:
-#			pipeline = joblib.load(path+file_name)
-#			pipeline_score = float(file_name.split(" ")[1])
-	print ("Loading a pipeline with an F1 score of %.2f on the evaluation set") % pipeline_score
-	return pipeline
+    pipeline_score = 0.0 #0.9032
+#   return joblib.load(path + 'estimatorSettings 0.9032 0.9630.pkl')
+    pipeline = None
+    for file_name in os.listdir(path):
+        if float(file_name.split(" ")[1]) > pipeline_score and PATTERN.match(file_name.split(" ")[2]):
+            print file_name
+            pipeline = joblib.load(path+file_name)
+            pipeline_score = float(file_name.split(" ")[1])
+    print ("Loading a pipeline with an F1 score of %.2f on the evaluation set") % pipeline_score
+    return pipeline
 
 pipeline = get_best_pipeline('./data/estimators/pickles/')
 
@@ -53,10 +56,10 @@ predicted_classes = pipeline.predict(data['text'].values)
 print "Articles classified: " + str(len(data))
 print 'Article:			Predicted class:'
 for article, predicted in zip(data.index.values, predicted_classes):
-	newArticle = ""
-	i = 0
-	for word in article.split(" "):
-		if i != 0:
-			newArticle = newArticle + word + " "
-		i = i + 1
-    	print newArticle, predicted
+    newArticle = ""
+    i = 0
+    for word in article.split(" "):
+        if i != 0:
+            newArticle = newArticle + word + " "
+        i = i + 1
+    print newArticle, predicted
