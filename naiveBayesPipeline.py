@@ -42,13 +42,13 @@ def get_best_pipeline(path):
             try:
                 pipeline = joblib.load(path+file_name)
             except ImportError as imp:
-                print file_name + " is not an estimator for this version of scikit-learn"
+                print file_name + " is not a classifiers for this version of scikit-learn"
             else:
                 pipeline_score = float(file_name.split(" ")[1])
     print ("Loading a pipeline with an F1 score of %.2f on the evaluation set") % pipeline_score
     return pipeline
 
-pipeline = get_best_pipeline('./data/estimators/pickles/')
+pipeline = get_best_pipeline('./data/classifiers/pickles/')
 
 data = DataFrame({'text': []})
 data = data.append(build_data_frame('./data/news/LinksUnknown/'))

@@ -18,6 +18,7 @@ def buildURLList():
 	urlList.append('http://cnn.it/')
 	urlList.append('http://huff.to/')
 	urlList.append('http://bbc.it/')
+	urlList.append('http://bbc.in/')
 	urlList.append('http://nyti.ms/')
 	urlList.append('http://fxn.ws/')
 	return urlList
@@ -76,7 +77,7 @@ def collectTweets(path_and_filename, seconds_to_collect):
 	# KEYWORDS
 	# Note: Important to not use dots in the URLs in the filter (see below)
 	print('Starting keyword filtering!')
-	stream.filter(track=['bit ly', 'cnn it', 'huff to', 'bbc it', 'nyti ms', 'fxn ws'])
+	stream.filter(track=['bit ly', 'cnn it', 'huff to', 'bbc it', 'bbc in', 'nyti ms', 'fxn ws'])
 	print("Done streaming!")
 
 

@@ -26,15 +26,15 @@ SOURCES = [
     #('./data/news/LinkBBC/', REAL)
 ]
 param_grid  = {
-    'vectorizer__max_df': (0.5, 0.75, 1.0),
-    'vectorizer__max_features': (None, 200, 800, 1600),
+    #'vectorizer__max_df': (0.5, 0.75, 1.0),
+    #'vectorizer__max_features': (None, 200, 800, 1600),
     'vectorizer__ngram_range': ((1, 1), (1, 4)),  # unigrams to 5-grams
     #'vectorizer__stop_words': ('english', None),
-    'vectorizer__lowercase': (True, False),
-    'tfidf_transformer__use_idf': (True, False),
-    'tfidf_transformer__norm': ('l1', 'l2'),
-    'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.1),
-    'classifier__fit_prior': (True, False),
+    #'vectorizer__lowercase': (True, False),
+    #'tfidf_transformer__use_idf': (True, False),
+    #'tfidf_transformer__norm': ('l1', 'l2'),
+    #'classifier__alpha': (1.0, 0.75, 0.5, 0.25, 0.1),
+    #'classifier__fit_prior': (True, False),
 }
 
 def read_files(path):
@@ -59,12 +59,12 @@ def build_data_frame(path, classification):
     return data_frame
 
 pipeline = Pipeline([
-    ('vectorizer',  CountVectorizer()),
-    ('tfidf_transformer',  TfidfTransformer()),
-    ('classifier',  MultinomialNB())
+    ('vectorizer',  CountVectorizer(lowercase=True, max_df=1.0, max_features=800)),
+    ('tfidf_transformer',  TfidfTransformer(norm='l2', smooth_idf=True, sublinear_tf=False, use_idf=False)),
+    ('classifier',  MultinomialNB(alpha=0.25, class_prior=None, fit_prior=False))
 ])
 
-grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = 4, cv = 8)
+grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = 1, cv = 8)
 
 training_data = DataFrame({'text': [], 'class': []})
 for path, classification in SOURCES:
@@ -94,12 +94,12 @@ predicted_classes = grid.predict(evaluation_data['text'].values)
 
 score = f1_score(evaluation_data['class'].values, predicted_classes, pos_label=FAKE)
 
-path = './data/estimators/'
+path = './data/classifiers/'
 strScoreEVAL = str("{0:.4f}".format(score))
 strScoreTEST = str("{0:.4f}".format(grid.best_score_))
-file_path_and_name = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.txt'
+file_path_and_name = path+'classifierSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.txt'
 path = path + 'pickles/'
-estimatorPath = path+'estimatorSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.pkl'
+estimatorPath = path+'classifierSettings ' + strScoreEVAL + ' ' + strScoreTEST + '.pkl'
 if not os.path.exists(os.path.dirname(path)):
     try:
         os.makedirs(os.path.dirname(file_path_and_name))
