@@ -34,8 +34,7 @@ def build_data_frame(path):
     return data_frame
 
 def get_best_pipeline(path):
-    pipeline_score = 0.0 #0.9032
-#   return joblib.load(path + 'estimatorSettings 0.9032 0.9630.pkl')
+    pipeline_score = 0.0
     pipeline = None
     for file_name in os.listdir(path):
         if float(file_name.split(" ")[1]) > pipeline_score and PATTERN.match(file_name.split(" ")[2]):
