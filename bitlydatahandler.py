@@ -1,6 +1,7 @@
 # Handles the Bitly data
 
 import json
+from urlparse import urlsplit
 import bitlyextractor
 import random
 from operator import itemgetter
@@ -8,10 +9,13 @@ from operator import itemgetter
 # Object to hold our json data
 tweetsData = []
 expandedData = []
+BBCPATTERN = 'www.bbc.co.uk'
+BREITBARTPATTERN = 'www.breitbart.com'
 
 # Reads a number of random Tweets from a file
 def handleTweets(tweetsPath, numToRead, outfile, newsOnly): 
 	file = open(outfile, 'a+')
+	longNewsURLs = open('./data/links/UnknownArticlesToBeExtracted.txt', 'a+')
 	
 	# Open the file
 	tweetsFile = open(tweetsPath, 'r')
@@ -56,7 +60,10 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		longURLs.append(url[1])
 		globalHashes.append(url[2])
 		userHashes.append(url[3])
-	
+		r = urlsplit(url[1])
+		if ((r.netloc == BBCPATTERN or r.netloc == BREITBARTPATTERN) and patternIsUnique(url[1])):
+                        longNewsURLs.write(str(url[1])+ '\n')
+	longNewsURLs.close()
 	# For each of the Bitly links from our collected tweets
 	for sample in samples:
 		# If the bitlyURL is found (it should always be)
@@ -180,6 +187,19 @@ def checkShortURL(e):
 		return shortURL
 	except AttributeError:
 		return shortURL
+
+def patternIsUnique(s):
+    with open('./data/links/UnknownArticlesToBeExtracted.txt') as f:
+        for line in f:
+            print str(line)
+            print str(s)
+            if(s + '\n' == line):
+                f.close()
+                print "it's not unique"
+                return False
+    f.close()
+    print "it's unique"
+    return True
 
 # This function is not currently used, but if we want some official news channels from Twitter, this is an incomplete list		
 def getNewsNames():

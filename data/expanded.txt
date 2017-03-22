@@ -1,0 +1,2 @@
+[{u'short_url': u'http://bbc.in/2nAhlDE', u'global_hash': u'2mOFd1D', u'long_url': u'http://www.bbc.co.uk/newsbeat/article/39349326/snake-found-on-a-plane-yes-really-snake-on-a-plane', u'user_hash': u'2nAhlDE'}]
+[{u'short_url': u'http://bbc.in/2nAhlDE', u'global_hash': u'2mOFd1D', u'long_url': u'http://www.bbc.co.uk/newsbeat/article/39349326/snake-found-on-a-plane-yes-really-snake-on-a-plane', u'user_hash': u'2nAhlDE'}]
