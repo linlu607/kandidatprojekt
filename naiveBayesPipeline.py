@@ -51,7 +51,7 @@ def get_best_pipeline(path):
 pipeline = get_best_pipeline('./data/classifiers/pickles/')
 
 data = DataFrame({'text': []})
-data = data.append(build_data_frame('./data/news/LinksUnknown/'))
+data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
 data = data.reindex(numpy.random.permutation(data.index))
 
 predicted_classes = pipeline.predict(data['text'].values)
