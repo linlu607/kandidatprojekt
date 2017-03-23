@@ -9,8 +9,10 @@ from operator import itemgetter
 # Object to hold our json data
 tweetsData = []
 expandedData = []
-BBCPATTERN = 'www.bbc.co.uk'
-BREITBARTPATTERN = 'www.breitbart.com'
+PATTERNLIST = [
+        'www.bbc.co.uk',
+        'www.breitbart.com'
+]
 
 # Reads a number of random Tweets from a file
 def handleTweets(tweetsPath, numToRead, outfile, newsOnly): 
@@ -61,8 +63,10 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		globalHashes.append(url[2])
 		userHashes.append(url[3])
 		r = urlsplit(url[1])
-		if ((r.netloc == BBCPATTERN or r.netloc == BREITBARTPATTERN) and patternIsUnique(url[1])):
-                        longNewsURLs.write(str(url[1])+ '\n')
+		for PATTERN in PATTERNLIST:
+                        if (PATTERN == r.netloc):
+                                if (patternIsUnique(url[1])):
+                                        longNewsURLs.write(str(url[1])+ '\n')
 	longNewsURLs.close()
 	# For each of the Bitly links from our collected tweets
 	for sample in samples:
@@ -191,14 +195,10 @@ def checkShortURL(e):
 def patternIsUnique(s):
     with open('./data/links/UnknownArticlesToBeExtracted.txt') as f:
         for line in f:
-            print str(line)
-            print str(s)
             if(s + '\n' == line):
                 f.close()
-                print "it's not unique"
                 return False
     f.close()
-    print "it's unique"
     return True
 
 # This function is not currently used, but if we want some official news channels from Twitter, this is an incomplete list		
