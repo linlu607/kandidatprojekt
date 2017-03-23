@@ -13,6 +13,17 @@ expandedData = []
 PATTERNLIST = [
 	'www.bbc.co.uk',
 	'www.breitbart.com'
+        'endingthefed.com'
+        'www.thepoliticalinsider.com'
+        'denverguardian.com'
+        'conservativestate.com'
+        'www.burrardstreetjournal.com'
+        'abcnews.com.co'
+        'libertynews.com'
+        'www.yesimright.com'
+        'twitchy.com'
+        'worldnewsdailyreport.com'
+        'donaldtrumpnews.co'
 ]
 
 # Reads a number of random Tweets from a file
