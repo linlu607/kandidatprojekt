@@ -28,7 +28,7 @@ SOURCES = [
 param_grid  = {
     'vectorizer__max_df': (0.5, 0.75, 1.0),
     'vectorizer__max_features': (None, 200, 800, 1600),
-    'vectorizer__ngram_range': ((1, 1), (1, 4)),  # unigrams to 5-grams
+    'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3), (1, 4), (1, 5)),  # unigrams to 5-grams
     'vectorizer__stop_words': ('english', None),
     'vectorizer__lowercase': (True, False),
     'tfidf_transformer__use_idf': (True, False),
