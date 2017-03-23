@@ -5,6 +5,10 @@ import time
 from time import strftime
 import bitlydatahandler
 
+import time
+
+start_time = time.time()
+
 if __name__ == '__main__':
 	# path = 'C:/Utveckling/BitlyDev/bitlytweets-master/data/'
 	# path = 'Z:/My Documents/BitlyDev/bitlytweets-master/data/'
@@ -44,6 +48,7 @@ if __name__ == '__main__':
 				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = news_file_path, newsOnly=1)
 				haveread.append(line)
 				runs += 1
+	print("--- %s seconds ---" % (time.time() - start_time))
 	print("DONE")
 	
 	

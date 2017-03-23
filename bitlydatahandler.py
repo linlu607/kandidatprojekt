@@ -5,13 +5,14 @@ from urlparse import urlsplit
 import bitlyextractor
 import random
 from operator import itemgetter
+import datetime
 
 # Object to hold our json data
 tweetsData = []
 expandedData = []
 PATTERNLIST = [
-        'www.bbc.co.uk',
-        'www.breitbart.com'
+	'www.bbc.co.uk',
+	'www.breitbart.com'
 ]
 
 # Reads a number of random Tweets from a file
@@ -64,12 +65,14 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		userHashes.append(url[3])
 		r = urlsplit(url[1])
 		for PATTERN in PATTERNLIST:
-                        if (PATTERN == r.netloc):
-                                if (patternIsUnique(url[1])):
-                                        longNewsURLs.write(str(url[1])+ '\n')
+			if (PATTERN == r.netloc):
+				if (patternIsUnique(url[1])):
+					longNewsURLs.write(str(url[1])+ '\n')
 	longNewsURLs.close()
 	# For each of the Bitly links from our collected tweets
+	tmp=0
 	for sample in samples:
+                tmp=tmp+1
 		# If the bitlyURL is found (it should always be)
 		if sample['short_url'] in shortURLs:
 			i = shortURLs.index(sample['short_url'])
@@ -79,6 +82,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 			clickBlock = bitlyextractor.getURLClicks(sample['bitly_global_hash'])
 			sample['countries'] = bitlyextractor.getLinkCountries(sample['short_url'])
 			sample['refs'] = bitlyextractor.getRefs(sample['short_url'])
+			print("number of bitlylinks extracted is: " , tmp)
 			if clickBlock != None:
 				for e in clickBlock:
 					sample['user_clicks'] = e.get('user_clicks')
@@ -117,16 +121,19 @@ def resolveBitlys(bitlysArray):
 	# The bitly bundle contains 15 Bitly URLs! (Cannot send more to Bitly)
 	bitlyBundle = []
 	start = 0
-	end = 14
+	end = 7
 	max = len(bitlysArray)
 	response = [] # The resolved info from Bitly
 	URLsAndHash = []
 	
 	# Build bundles of bitlys to resolve, max 15 at a time
+	tmp=0
 	while end <= max:
+                tmp=tmp+1
 		#print('We have more than or equal to 15 bitlys!')
 		bitlyBundle = itemgetter(slice(start, end))(bitlysArray)
 		try:
+                        print("we are curently slicing part number, (every part has 15 links) : ", tmp)
 			response = bitlyextractor.expandShortUrl(bitlyBundle) # TODO Error handling on the response
 			for e in response:
 				shortURL = checkShortURL(e)
@@ -137,8 +144,8 @@ def resolveBitlys(bitlysArray):
 		except:
 			print('Problems with the response from Bitly.')
 			return URLsAndHash
-		start += 15
-		end +=  15
+		start += 7
+		end +=  7
 
 	if(max < end) and (start <= max):
 		#print('We have less than 15 bitlys!')
@@ -194,10 +201,10 @@ def checkShortURL(e):
 
 def patternIsUnique(s):
     with open('./data/links/UnknownArticlesToBeExtracted.txt') as f:
-        for line in f:
-            if(s + '\n' == line):
-                f.close()
-                return False
+	for line in f:
+	    if(s + '\n' == line):
+		f.close()
+		return False
     f.close()
     return True
 

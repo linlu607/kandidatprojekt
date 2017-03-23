@@ -1,3 +1,4 @@
+# -*- coding: cp1252 -*-
 # Communicates with bitly.com to expand short URL's
 
 import bitly_api
@@ -22,7 +23,7 @@ def expandShortUrl(shortUrls):
 	try:
 		o = open(path+'expanded.txt', 'a+')
 		response = c.expand(shortUrl=shortUrls)
-		print(str(response))
+		print("länk extraherad")
 		o.write((str(response).encode('utf-8')) + '\n')
 		o.close()
 	except: 
@@ -33,7 +34,7 @@ def getRefs(link):
 	refs = None
 	try:
 		refs = c.link_referrers_by_domain(link)
-		print(str(refs))
+		print("refs-länk hittad")
 	except: 
 		print('Unable to retrieve refs')
 	return refs;
@@ -42,7 +43,7 @@ def getLinkCountries(link):
 	countries = None
 	try:
 		countries = c.link_countries(link)
-		print(str(countries))
+		print("land hittat")
 	except: 
 		print('Unable to retrieve countries')
 	return countries;
@@ -51,7 +52,7 @@ def getURLClicks(globalHash):
 	URLclicks = None
 	try:
 		URLclicks = c.clicks(globalHash)
-		print(str(URLclicks))
+		print("länkar har vi hittat hur många gånger de klickas")
 	except: 
 		print('Unable to retrieve clicks')
 	return URLclicks;
