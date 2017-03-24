@@ -4,16 +4,16 @@
 import bitly_api
 
 # Set up API auth
-login = 'o_1ej62d4rq7'
-api_key = 'R_a1f7decfc0f64426987e083fc9cedfcd'
-generic_token = 'e82b679532f66075a939553af072fc3a1b3d0888'
+##login = 'o_1ej62d4rq7'
+##api_key = 'R_a1f7decfc0f64426987e083fc9cedfcd'
+##generic_token = 'e82b679532f66075a939553af072fc3a1b3d0888'
 
 # Open connection
-c = bitly_api.Connection(login=login, api_key=api_key, access_token=generic_token)
+##c = bitly_api.Connection(login=login, api_key=api_key, access_token=generic_token)
 
 # Send request to bitly API and write response to file.
 # shortUrls is an array of up to 15 short URL's (bitly.com API max limit)
-def expandShortUrl(shortUrls):
+def expandShortUrl(shortUrls, c):
 	# File to write to
 	# path = 'C:/Utveckling/BitlyDev/bitlytweets-master/data/'
 	# path = 'Z:/My Documents/BitlyDev/bitlytweets-master/data/'
@@ -30,7 +30,7 @@ def expandShortUrl(shortUrls):
 		pass
 	return response;
 	
-def getRefs(link):
+def getRefs(link, c):
 	refs = None
 	try:
 		refs = c.link_referrers_by_domain(link)
@@ -39,7 +39,7 @@ def getRefs(link):
 		print('Unable to retrieve refs')
 	return refs;
 	
-def getLinkCountries(link):
+def getLinkCountries(link, c):
 	countries = None
 	try:
 		countries = c.link_countries(link)
@@ -48,7 +48,7 @@ def getLinkCountries(link):
 		print('Unable to retrieve countries')
 	return countries;
 	
-def getURLClicks(globalHash):
+def getURLClicks(globalHash, c):
 	URLclicks = None
 	try:
 		URLclicks = c.clicks(globalHash)

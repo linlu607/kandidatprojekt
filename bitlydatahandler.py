@@ -16,7 +16,7 @@ PATTERNLIST = [
 ]
 
 # Reads a number of random Tweets from a file
-def handleTweets(tweetsPath, numToRead, outfile, newsOnly): 
+def handleTweets(tweetsPath, numToRead, outfile, newsOnly, c): 
 	file = open(outfile, 'a+')
 	longNewsURLs = open('./data/links/UnknownArticlesToBeExtracted.txt', 'a+')
 	
@@ -50,7 +50,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		samples = pickSamples(bitlyDicts = bitlyDicts, numToRead = numToRead)
 
 	uniqueBitlys = pickUnique(bitlySamples = samples)
-	URLs = resolveBitlys(uniqueBitlys)
+	URLs = resolveBitlys(uniqueBitlys, c)
 	
 	shortURLs = []
 	longURLs = []
@@ -79,9 +79,9 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 			sample['long_url'] = longURLs[i]
 			sample['bitly_global_hash'] = globalHashes[i]
 			sample['bitly_user_hash'] = userHashes[i]
-			clickBlock = bitlyextractor.getURLClicks(sample['bitly_global_hash'])
-			sample['countries'] = bitlyextractor.getLinkCountries(sample['short_url'])
-			sample['refs'] = bitlyextractor.getRefs(sample['short_url'])
+			clickBlock = bitlyextractor.getURLClicks(sample['bitly_global_hash'], c)
+			sample['countries'] = bitlyextractor.getLinkCountries(sample['short_url'], c)
+			sample['refs'] = bitlyextractor.getRefs(sample['short_url'], c)
 			print("number of bitlylinks extracted is: " , tmp)
 			if clickBlock != None:
 				for e in clickBlock:
@@ -117,11 +117,11 @@ def pickUnique(bitlySamples):
 			bitlysArray.append(e['short_url'])
 	return bitlysArray
 	
-def resolveBitlys(bitlysArray):
+def resolveBitlys(bitlysArray, c):
 	# The bitly bundle contains 15 Bitly URLs! (Cannot send more to Bitly)
 	bitlyBundle = []
 	start = 0
-	end = 7
+	end = 14
 	max = len(bitlysArray)
 	response = [] # The resolved info from Bitly
 	URLsAndHash = []
@@ -134,18 +134,19 @@ def resolveBitlys(bitlysArray):
 		bitlyBundle = itemgetter(slice(start, end))(bitlysArray)
 		try:
                         print("we are curently slicing part number, (every part has 15 links) : ", tmp)
-			response = bitlyextractor.expandShortUrl(bitlyBundle) # TODO Error handling on the response
+			response = bitlyextractor.expandShortUrl(bitlyBundle, c) # TODO Error handling on the response
 			for e in response:
 				shortURL = checkShortURL(e)
 				longURL = checkLongURL(e)
 				globalHash = checkGlobalHash(e)
 				userHash = checkUserHash(e)
 				URLsAndHash.append((shortURL, longURL, globalHash, userHash))
-		except:
-			print('Problems with the response from Bitly.')
+		except Exception as ex:
+			print('Problems with the response from Bitly in resolveBitlys, max >= end.')
+			print ex
 			return URLsAndHash
-		start += 7
-		end +=  7
+		start += 15
+		end +=  15
 
 	if(max < end) and (start <= max):
 		#print('We have less than 15 bitlys!')
@@ -154,7 +155,7 @@ def resolveBitlys(bitlysArray):
 
 		# Ask the bitly extractor for the full URLs
 		try:
-			response = bitlyextractor.expandShortUrl(bitlyBundle)
+			response = bitlyextractor.expandShortUrl(bitlyBundle, c)
 			for e in response:
 				shortURL = checkShortURL(e)
 				longURL = checkLongURL(e)
@@ -162,7 +163,7 @@ def resolveBitlys(bitlysArray):
 				userHash = checkUserHash(e)
 				URLsAndHash.append((shortURL, longURL, globalHash, userHash))
 		except:
-			print('Problems with the response from Bitly.')
+			print('Problems with the response from Bitly in resolveBitlys, max < end.')
 			return URLsAndHash
 			
 	return URLsAndHash
