@@ -75,24 +75,27 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		# Save ID and bitly link in dict array
 		dict = {'id':tw['id'], 'short_url':tw['entities']['urls'][0]['expanded_url'], 'long_url':'', 'bitly_global_hash':'', 'bitly_user_hash':'', 'refs':'', 'countries':'', 'global_clicks':'', 'user_clicks':''}
 		bitlyDicts.append(dict)
-		if('bit.ly/' not in dict['short_url']):
-			bitlyNewsDicts.append(dict)
+##		if('bit.ly/' not in dict['short_url']):
+##			bitlyNewsDicts.append(dict)
 
 	# If the newsOnly flag is 1 we will pick specific news links (e.g. cnn.it), else we will pick bit.ly URLs
-	if(newsOnly == 1):
-		# Only news URLs
-		samples = pickSamples(bitlyDicts = bitlyNewsDicts, numToRead = numToRead)
-	else:
-		# Both news URLs and Bitly URLs
-		samples = pickSamples(bitlyDicts = bitlyDicts, numToRead = numToRead)
+##	if(newsOnly == 1):
+##		# Only news URLs
+##		samples = pickSamples(bitlyDicts = bitlyNewsDicts, numToRead = numToRead)
+##	else:
+##		# Both news URLs and Bitly URLs
+	samples = pickSamples(bitlyDicts = bitlyDicts, numToRead = numToRead)
 
+        print ("Number of samples: " , len(samples))
 	uniqueBitlys = pickUnique(bitlySamples = samples)
+	print ("Number of unique samples: " , len(uniqueBitlys))
 	URLs = resolveBitlys(uniqueBitlys)
 	print (time.time() - start_time)
 	shortURLs = []
 	longURLs = []
 	globalHashes = []
 	userHashes = []
+	newsSamples = []
 	
 	# We split the tupe URLs into three arrays
 	for url in URLs:
@@ -101,10 +104,19 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 		globalHashes.append(url[2])
 		userHashes.append(url[3])
 		r = urlsplit(url[1])
-                if(newsOnly == 0 and isUniqueNews(r, url[1])):
+                if(newsOnly == 1 and isUniqueNews(r, url[1])):
                         longNewsURLs.write(str(url[1])+ '\n')
+                        for s in samples:
+                                if (s['short_url'] == url[0]):
+                                        newsSamples.append(s)
+                                        print "match" , url[1]
+                                        break
 		
 	longNewsURLs.close()
+
+        if(newsOnly == 1):
+                samples = newsSamples
+	
 	# For each of the Bitly links from our collected tweets
 	
 	for sample in samples:
@@ -117,9 +129,10 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 			sample['bitly_user_hash'] = userHashes[i]
 		else:
 			print(str(sample) + ' could not be resolved.')
+
         print "Starting multi-threaded clickblock processing"
         pool = ThreadPool(5)
-        samples = pool.map(sampleClicks, samples)
+        uniqueBitlys = pool.map(sampleClicks, samples)
 	pool.close()
         pool.join()
         print "Finished multi-threaded clickblock processing"

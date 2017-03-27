@@ -29,7 +29,7 @@ if __name__ == '__main__':
 				lines.append(line)
 			except:
 				continue
-	
+		
 		for line in lines:
 			if((line not in haveread) and (line != '')):
 				# Read me
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 				# Random tweets
 				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = random_file_path, newsOnly=0)
 				# News tweets
-				#bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = news_file_path, newsOnly=1)
+				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=1000, outfile = news_file_path, newsOnly=1)
 				haveread.append(line)
 				runs += 1
 	print("DONE")
