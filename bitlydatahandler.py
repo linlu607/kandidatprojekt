@@ -132,7 +132,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 
         print "Starting multi-threaded clickblock processing"
         pool = ThreadPool(5)
-        uniqueBitlys = pool.map(sampleClicks, samples)
+        sample = pool.map(sampleClicks, samples)
 	pool.close()
         pool.join()
         print "Finished multi-threaded clickblock processing"
