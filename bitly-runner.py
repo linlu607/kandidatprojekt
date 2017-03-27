@@ -4,16 +4,6 @@
 import time
 from time import strftime
 import bitlydatahandler
-import bitly_api
-import time
-
-# Set up API auth
-login = 'o_1ej62d4rq7'
-api_key = 'R_a1f7decfc0f64426987e083fc9cedfcd'
-generic_token = 'e82b679532f66075a939553af072fc3a1b3d0888'
-# Open connection
-c = bitly_api.Connection(login=login, api_key=api_key, access_token=generic_token)
-start_time = time.time()
 
 if __name__ == '__main__':
 	# path = 'C:/Utveckling/BitlyDev/bitlytweets-master/data/'
@@ -49,12 +39,11 @@ if __name__ == '__main__':
 				# Create a file for the randomly selected Bitly links
 				random_file_path = path + time_for_filename + '_random.txt'
 				# Random tweets
-				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = random_file_path, newsOnly=0, c=c)
+				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = random_file_path, newsOnly=0)
 				# News tweets
-				bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = news_file_path, newsOnly=1, c=c)
+				#bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile = news_file_path, newsOnly=1)
 				haveread.append(line)
 				runs += 1
-	print("--- %s seconds ---" % (time.time() - start_time))
 	print("DONE")
 	
 	
