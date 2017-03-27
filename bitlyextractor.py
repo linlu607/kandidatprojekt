@@ -23,7 +23,7 @@ def expandShortUrl(shortUrls, c):
 	try:
 		o = open(path+'expanded.txt', 'a+')
 		response = c.expand(shortUrl=shortUrls)
-		print("länk extraherad")
+		#print("Länkar extraherad")
 		o.write((str(response).encode('utf-8')) + '\n')
 		o.close()
 	except: 
@@ -34,7 +34,7 @@ def getRefs(link, c):
 	refs = None
 	try:
 		refs = c.link_referrers_by_domain(link)
-		print("refs-länk hittad")
+		#print("refs-länk hittad")
 	except: 
 		print('Unable to retrieve refs')
 	return refs;
@@ -43,7 +43,7 @@ def getLinkCountries(link, c):
 	countries = None
 	try:
 		countries = c.link_countries(link)
-		print("land hittat")
+		#print("land hittat")
 	except: 
 		print('Unable to retrieve countries')
 	return countries;
@@ -52,7 +52,7 @@ def getURLClicks(globalHash, c):
 	URLclicks = None
 	try:
 		URLclicks = c.clicks(globalHash)
-		print("länkar har vi hittat hur många gånger de klickas")
+		#print("Vi har hittat hur många gånger länken klickats")
 	except: 
 		print('Unable to retrieve clicks')
 	return URLclicks;

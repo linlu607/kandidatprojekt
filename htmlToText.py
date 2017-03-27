@@ -15,7 +15,8 @@ def buildURLList(linkFile):
     lines = links.read()
     links.close()
     for line in lines.split(NEWLINE):
-        urlList.append(line)
+        if(line != ''):
+            urlList.append(line)
     return urlList
 
 print "Getting the news"
@@ -34,8 +35,13 @@ runList.append(('UnknowExtractedArticles/', './data/links/UnknownArticlesToBeExt
 
 for run, linkFile in runList:
     urlList = buildURLList(linkFile)
+    t = len(urlList)
+    print ("Number of articles to get:", t)
+    t = 1
     for url in urlList:
         try:
+            print ("Getting article number", t)
+            t = t + 1
             html = opener.open(url)
         except HTTPError as e:
             print 'The server couldn\'t fulfill the request.'
