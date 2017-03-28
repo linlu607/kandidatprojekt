@@ -14,7 +14,7 @@ sleepInterval = 10
 numberOfRuns = 5
 
 
-def findMostRecentFile(path):
+def findMostRecentNewsFile(path):
     year = 0
     month = 0
     day = 0
@@ -35,12 +35,12 @@ def findMostRecentFile(path):
 
 while run:
     if(colTime == 1):
-        path = findMostRecentFile("./data/")
+        path = findMostRecentNewsFile("./data/")
         print path
         with open(path, 'r') as file:
             data=file.read().split('\n')
         book = xlwt.Workbook(encoding="utf-8")
-        sheet1 = book.add_sheet("Sheet 1")
+        sheet1 = book.add_sheet("Clicks history")
         sheet1.write(0, 0, "URL")
         print time.asctime(time.localtime(time.time()))
         sheet1.write(0, 1, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))
@@ -53,6 +53,18 @@ while run:
                 sheet1.write(tmp, 0, url)
                 sheet1.write(tmp, colTime, clicks)
                 tmp=tmp+1
+        sheet2 = book.add_sheet("Classifier results")
+        sheet2.write(0, 0, "Article")
+        sheet2.write(0, 1, "Class by classifier")
+        classPath = "./data/news/classifications.txt"
+        with open(classPath, 'r') as classFile:
+            classData=classFile.read().split('\n')
+        tmp=1
+        for line in classData:
+            if line!='':
+                sheet2.write(tmp, 0, line.split(';')[0])
+                sheet2.write(tmp, 1, line.split(';')[1])
+                tmp = tmp + 1
     else:
         print path
         sheet1.write(0, colTime, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))

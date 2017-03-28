@@ -56,6 +56,8 @@ data = data.reindex(numpy.random.permutation(data.index))
 
 predicted_classes = pipeline.predict(data['text'].values)
 
+write_file = open("./data/news/classifications.txt","w")
+
 print "Articles classified: " + str(len(data))
 print 'Article:			Predicted class:'
 for article, predicted in zip(data.index.values, predicted_classes):
@@ -66,3 +68,6 @@ for article, predicted in zip(data.index.values, predicted_classes):
             newArticle = newArticle + word + " "
         i = i + 1
     print newArticle, predicted
+    line = newArticle + ';' + predicted + NEWLINE
+    write_file.write(line)
+write_file.close()
