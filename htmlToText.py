@@ -24,6 +24,7 @@ opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 runList = []
 runList.append(('UnknowExtractedArticles/', './data/links/UnknownArticlesToBeExtracted.txt'))
 
+
 for run, linkFile in runList:
     urlList = buildURLList(linkFile)
     t = len(urlList)
