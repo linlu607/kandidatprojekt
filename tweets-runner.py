@@ -15,7 +15,7 @@ if __name__ == '__main__':
 	path = './data/'
 	
 	runs = 0
-	timeout = 20
+	timeout = 1800
 	
 	# We will run the program until we have done X runs
 	while(runs < 1):

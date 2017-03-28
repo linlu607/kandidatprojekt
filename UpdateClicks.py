@@ -9,9 +9,9 @@ newsEnding = re.compile('.*news\.txt$')
 run = True
 path = ""
 #For how long the program should run before its starts again, in seconds
-sleepInterval = 10
+sleepInterval = 600
 #How many times should the program run
-numberOfRuns = 5
+numberOfRuns = 6
 
 
 def findMostRecentNewsFile(path):
@@ -78,9 +78,10 @@ while run:
                 tmp=tmp+1
 
     book.save("ResultsBitly.xls")
-    time.sleep( sleepInterval )
     colTime=colTime+1
     if(colTime > numberOfRuns):
         run = False
         print "DONE"
+    else:
+        time.sleep( sleepInterval )
 
