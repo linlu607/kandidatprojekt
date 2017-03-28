@@ -1,4 +1,3 @@
-# -*- coding: cp1252 -*-
 import xlwt
 import ast
 import datetime
@@ -18,7 +17,7 @@ while run:
         sheet1 = book.add_sheet("Sheet 1")
         sheet1.write(0, 0, "URL")
         print time.asctime(time.localtime(time.time()))
-        sheet1.write(0, 1, u'Data inläst till excelarket: ' + str(time.asctime(time.localtime(time.time()))))
+        sheet1.write(0, 1, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))
         tmp=1
         for line in data:
             if line!='':
@@ -29,7 +28,7 @@ while run:
                 sheet1.write(tmp, colTime, clicks)
                 tmp=tmp+1
     else:
-        sheet1.write(0, colTime, u'Data inläst till excelarket: ' + str(time.asctime(time.localtime(time.time()))))
+        sheet1.write(0, colTime, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))
         print time.asctime(time.localtime(time.time()))
         updatedData = bitlydatahandler.updateClicks(path)
         tmp=1
@@ -43,5 +42,6 @@ while run:
     book.save("ResultsBitly.xls")
     time.sleep( 3600 )
     colTime=colTime+1
-    if(colTime > 5):
+    if(colTime > 24):
         run = False
+
