@@ -8,6 +8,7 @@ from operator import itemgetter
 import datetime
 import time
 import bitly_api
+import ast
 from multiprocessing.dummy import Pool as ThreadPool
 
 # Set up API auth
@@ -143,6 +144,19 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 			print(str(sample) + ' could not be resolved.')
 	file.close()
 	print (time.time() - start_time)
+
+def updateClicks(path):
+        print "Starting update"
+        updatedClicks = []
+        with open(path, 'r') as f:
+                data=f.read().split('\n')
+        print "Lines in data: " , len(data)-1
+        for line in data:
+		if line!='':
+                        dataDict = ast.literal_eval(line)
+                        dataDict = sampleClicks(dataDict)
+                        updatedClicks.append(dataDict)
+        return updatedClicks
 
 def sampleClicks(sample):
         #print "Getting clickblock, countries and refs."
