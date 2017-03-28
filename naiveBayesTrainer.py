@@ -1,15 +1,9 @@
 # -*- coding: cp1252 -*-
 import os
-import numpy
 from time import time
 from pandas import DataFrame
-from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-from sklearn.naive_bayes import MultinomialNB
-#from sklearn.grid_search import GridSearchCV
-from sklearn.model_selection import GridSearchCV
 from sklearn.externals import joblib
 from sklearn.metrics import confusion_matrix, f1_score
-from sklearn.pipeline import Pipeline
 
 # Some constants
 NEWLINE = '\n'
