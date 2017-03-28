@@ -16,3 +16,19 @@ The file names are the twitter files to process. For each such file,
 ******* helper files *********
 bitlyextractor, bitlyfinder and bitlydatahandler are helper filers. 
 I use a directory "data" for the data and a sub-directory "tweets" in "data" for the tweets.
+
+*****How to run the program *****
+
+to run the program you will need alot of extra packet from python, to do this you can use pip install,
+the packet that you need to install is:
+
+xlwt (is used to save to excel)
+tweepy (twitter API)
+bitly_api (bitlys api)
+For the naive bayes classifier you need several packages
+pandas (use pipinstall)
+****This two is a little bit tricky to install on windows due to you need a
+special winddows version, you can find the packeges on this page: http://www.lfd.uci.edu/~gohlke/pythonlibs/*****
+Scipy
+scikit-learn
+*****************

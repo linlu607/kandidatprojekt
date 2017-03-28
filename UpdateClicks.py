@@ -1,6 +1,5 @@
 import xlwt
 import ast
-import datetime
 import time
 import re
 import os
@@ -9,6 +8,11 @@ colTime=1
 newsEnding = re.compile('.*news\.txt$')
 run = True
 path = ""
+#For how long the program should run before its starts again, in seconds
+sleepInterval = 10
+#How many times should the program run
+numberOfRuns = 5
+
 
 def findMostRecentFile(path):
     year = 0
@@ -28,6 +32,7 @@ def findMostRecentFile(path):
                         if os.path.isfile(file_path):
                             return file_path
     return None
+
 while run:
     if(colTime == 1):
         path = findMostRecentFile("./data/")
@@ -61,9 +66,9 @@ while run:
                 tmp=tmp+1
 
     book.save("ResultsBitly.xls")
-    time.sleep( 10 )
+    time.sleep( sleepInterval )
     colTime=colTime+1
-    if(colTime > 5):
+    if(colTime > numberOfRuns):
         run = False
         print "DONE"
 
