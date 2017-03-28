@@ -34,7 +34,7 @@ def run():
                 # Create a file for the randomly selected Bitly links
                 random_file_path = path + time_for_filename + '_random.txt'
                 # Random tweets
-                bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile=random_file_path, newsOnly=0)
+                #bitlydatahandler.handleTweets(tweetsPath=line, numToRead=100, outfile=random_file_path, newsOnly=0)
                 # News tweets
                 bitlydatahandler.handleTweets(tweetsPath=line, numToRead=500, outfile=news_file_path, newsOnly=1)
                 haveread.append(line)
