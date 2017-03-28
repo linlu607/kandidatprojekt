@@ -2,10 +2,7 @@ import os
 import urllib2
 from urllib2 import Request, urlopen, URLError, HTTPError, HTTPRedirectHandler
 from bs4 import BeautifulSoup
-from bs4 import Comment
-import time
 import re
-from time import strftime
 
 NEWLINE = '\n'
 
@@ -25,12 +22,6 @@ opener = urllib2.build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
 runList = []
-#runList.append(('training_fake/', './data/links/LinksFakeNews.txt'))
-#runList.append(('training_real/', './data/links/LinkRealNews.txt'))
-#runList.append(('LinksUnknownFake/', './data/links/LinksUnknownFake.txt'))
-#runList.append(('LinksUnknownReal/', './data/links/LinksUnknownReal.txt'))
-#runList.append(('LinkBBC/', './data/links/LinksBBC.txt'))
-#runList.append(('LinksFakeExtra/', './data/links/LinksFakeExtra.txt'))
 runList.append(('UnknowExtractedArticles/', './data/links/UnknownArticlesToBeExtracted.txt'))
 
 for run, linkFile in runList:
