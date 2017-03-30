@@ -79,6 +79,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
                 'bitly_global_hash': '', 'bitly_user_hash': '', 'refs': '', 'countries': '', 'global_clicks': '',
                 'user_clicks': ''}
         bitlyDicts.append(dict)
+    print ("Number of tweets: ", len(tweetsData))
     ##		if('bit.ly/' not in dict['short_url']):
     ##			bitlyNewsDicts.append(dict)
 
