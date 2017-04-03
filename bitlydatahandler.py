@@ -219,7 +219,7 @@ def resolveBitlys(bitlysArray):
         if (max < end) and (start < max):
             end = max
             run = False
-        elif (max < end) and (start = max):
+        elif (max < end) and (start == max):
             end = max
             break
         bundles.append(itemgetter(slice(start, end))(bitlysArray))
@@ -229,8 +229,10 @@ def resolveBitlys(bitlysArray):
     URLsAndHash = pool.map(resolveBitlyBundle, bundles)
     pool.close()
     pool.join()
+    print len(e)
     for e in URLsAndHash:
         results.extend(e)
+    print len(results)
     return results
 
 
