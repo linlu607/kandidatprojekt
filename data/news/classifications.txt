@@ -1,8 +1,1 @@
-South Korea Human remains found.txt ;fake
-Trump border wall ask B.txt ;real
-Inmates Death In A Hot.txt ;real
-Its time for Devin.txt ;fake
-Jeb Bush Trump Has Become.txt ;fake
-Reports ICE Agents Detain Illegal.txt ;fake
-American University of Afghanistan reopens.txt ;real
-How the phone case became.txt ;real
+India warns UK immigration policy.txt ;real

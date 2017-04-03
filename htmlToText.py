@@ -6,13 +6,12 @@ import re
 from multiprocessing.dummy import Pool as ThreadPool
 
 NEWLINE = '\n'
+opener = urllib2.build_opener()
+opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
+
 
 def run():
-
     print "Getting the news"
-
-    opener = urllib2.build_opener()
-    opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
     linkFile = './data/links/UnknownArticlesToBeExtracted.txt'
 

@@ -21,15 +21,19 @@ if saveClicks == "y":
 tweetsRunner.collectTweets(timeout)
 
 if runBitly == "y":
+    print "Runing bitlys"
     bitlyRunner.run()
 
 if runHtmlExtractor == "y":
+    print "Runing html"
     htmlToText.run()
 
 if runNaiveBayes == "y":
+    print "Runing Bayes"
     naiveBayesPipeline.run()
 
 if saveClicks == "y":
+    print "Runing updates"
     UpdateClicks.main(turns, sleeplenght)
 
 print timeout
