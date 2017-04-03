@@ -69,23 +69,23 @@ def saveText(url):
 
         path = './data/news/UnknowExtractedArticles/'
 
-        title = ""
-        i = 0
-        if soup.title is None :
-            title = 'noTitle'
-        else:
-            for part in soup.title.string.split(" "):
-                temp = ""
-                for character in list(part):
-                    if character.isalpha():
-                        temp = temp + character
-                if len(temp) > 0 and len(title) > 0:
-                    title = title + " " + temp
-                elif len(temp) > 0:
-                    title = temp
-                i = i + 1
-                if i > 4:
-                    break
+        title = str(url)[:30]
+##        i = 0
+##        if soup.title is None :
+##            title = 'noTitle'
+##        else:
+##            for part in soup.title.string.split(" "):
+##                temp = ""
+##                for character in list(part):
+##                    if character.isalpha():
+##                        temp = temp + character
+##                if len(temp) > 0 and len(title) > 0:
+##                    title = title + " " + temp
+##                elif len(temp) > 0:
+##                    title = temp
+##                i = i + 1
+##                if i > 4:
+##                    break
 
         file_path_and_name = path+'news ' + title.encode("utf8") + '.txt'
         if not os.path.exists(os.path.dirname(file_path_and_name)):

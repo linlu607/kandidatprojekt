@@ -240,7 +240,8 @@ def resolveBitlyBundle(bitlyBundle):
     resolvedBundle = []
     try:
         # This I/O stuff could be on a thread. At the most five threads.
-        print("We are curently extracting %d links" % (len(bitlyBundle)))
+        if(len(bitlyBundle) < 15):
+            print("We are curently extracting %d links, this should be the last set of links" % (len(bitlyBundle)))
         response = bitlyextractor.expandShortUrl(bitlyBundle, c)  # TODO Error handling on the response
         for e in response:
             shortURL = checkShortURL(e)
