@@ -229,7 +229,7 @@ def resolveBitlys(bitlysArray):
     URLsAndHash = pool.map(resolveBitlyBundle, bundles)
     pool.close()
     pool.join()
-    print len(e)
+    print len(URLsAndHash)
     for e in URLsAndHash:
         results.extend(e)
     print len(results)
