@@ -71,7 +71,6 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
             continue
 
     bitlyDicts = []
-    bitlyNewsDicts = []
     # Put URL info from the Tweets data in the tweets array
     for tw in tweetsData:
         # Save ID and bitly link in dict array
@@ -80,15 +79,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
                 'user_clicks': ''}
         bitlyDicts.append(dict)
     print ("Number of tweets: ", len(tweetsData))
-    ##		if('bit.ly/' not in dict['short_url']):
-    ##			bitlyNewsDicts.append(dict)
 
-    # If the newsOnly flag is 1 we will pick specific news links (e.g. cnn.it), else we will pick bit.ly URLs
-    ##	if(newsOnly == 1):
-    ##		# Only news URLs
-    ##		samples = pickSamples(bitlyDicts = bitlyNewsDicts, numToRead = numToRead)
-    ##	else:
-    ##		# Both news URLs and Bitly URLs
     samples = pickSamples(bitlyDicts=bitlyDicts, numToRead=numToRead)
 
     print ("Number of samples: ", len(samples))
@@ -225,9 +216,12 @@ def resolveBitlys(bitlysArray):
     # Build bundles of bitlys to resolve, max 15 at a time
     while run:
         # print('We have more than or equal to 15 bitlys!')
-        if (max < end) and (start <= max):
+        if (max < end) and (start < max):
             end = max
             run = False
+        elif (max < end) and (start = max):
+            end = max
+            break
         bundles.append(itemgetter(slice(start, end))(bitlysArray))
         start += 15
         end += 15
