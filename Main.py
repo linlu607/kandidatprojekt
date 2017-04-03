@@ -2,12 +2,18 @@
 import tweetsRunner
 import bitlyRunner
 import UpdateClicks
+import htmlToText
+import naiveBayesPipeline
 
-timeout = input("for how long would you like to collect tweets in seconds? ", )
+timeout = input("In seconds, for how long would you like to collect tweets? ", )
 
-runBitly = raw_input("would you like to extract bitly info to? (y/n)")
+runBitly = raw_input("Would you like to extract bitly info too? (y/n)")
 
-saveClicks = raw_input("would you like to save clicks to excelfile? (y/n)")
+runHtmlExtractor = raw_input("Would you like to extract articles from identified links? (y/n)")
+
+runNaiveBayes = raw_input("Would you like to classify extracted articles? (y/n)")
+
+saveClicks = raw_input("Would you like to save clicks to excelfile? (y/n)")
 if saveClicks == "y":
     sleeplenght=int(raw_input("How often would you like to update clicks, answer in seconds "))
     turns = int(raw_input("How many times would you like to save?"))
@@ -17,6 +23,11 @@ tweetsRunner.collectTweets(timeout)
 if runBitly == "y":
     bitlyRunner.run()
 
+if runHtmlExtractor == "y":
+    htmlToText.run()
+
+if runNaiveBayes == "y":
+    naiveBayesPipeline.run()
 
 if saveClicks == "y":
     UpdateClicks.main(turns, sleeplenght)

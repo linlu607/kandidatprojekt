@@ -12,6 +12,32 @@ REAL = 'real'
 FAKE = 'fake'
 PATTERN = re.compile('.*\.pkl$')
 
+def run():
+    pipeline = get_best_pipeline('./data/classifiers/pickles/')
+
+    data = DataFrame({'text': []})
+    data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
+    data = data.reindex(numpy.random.permutation(data.index))
+
+    predicted_classes = pipeline.predict(data['text'].values)
+
+    write_file = open("./data/news/classifications.txt","w")
+
+    print "Articles classified: " + str(len(data))
+    print 'Article:			Predicted class:'
+    for article, predicted in zip(data.index.values, predicted_classes):
+        newArticle = ""
+        i = 0
+        for word in article.split(" "):
+            if i != 0:
+                newArticle = newArticle + word + " "
+            i = i + 1
+        print newArticle, predicted
+        line = newArticle + ';' + predicted + NEWLINE
+        write_file.write(line)
+    write_file.close()
+
+
 def read_files(path):
     for file_name in os.listdir(path):
         file_path = os.path.join(path, file_name)
@@ -47,27 +73,3 @@ def get_best_pipeline(path):
                 pipeline_score = float(file_name.split(" ")[1])
     print ("Loading a pipeline with an F1 score of %.2f on the evaluation set") % pipeline_score
     return pipeline
-
-pipeline = get_best_pipeline('./data/classifiers/pickles/')
-
-data = DataFrame({'text': []})
-data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
-data = data.reindex(numpy.random.permutation(data.index))
-
-predicted_classes = pipeline.predict(data['text'].values)
-
-write_file = open("./data/news/classifications.txt","w")
-
-print "Articles classified: " + str(len(data))
-print 'Article:			Predicted class:'
-for article, predicted in zip(data.index.values, predicted_classes):
-    newArticle = ""
-    i = 0
-    for word in article.split(" "):
-        if i != 0:
-            newArticle = newArticle + word + " "
-        i = i + 1
-    print newArticle, predicted
-    line = newArticle + ';' + predicted + NEWLINE
-    write_file.write(line)
-write_file.close()
