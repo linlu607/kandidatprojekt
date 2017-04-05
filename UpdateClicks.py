@@ -12,47 +12,38 @@ path = ""
 #How many times should the program run
 #numberOfRuns = 5
 
-def findMostRecentNewsFile(path):
-    year = 0
-    month = 0
-    day = 0
-    timeOfDay = 0
+def findNewsFiles(path):
+    file_paths = []
     for file_name in os.listdir(path):
         if(newsEnding.match(file_name)):
-            if(int(file_name.split("-")[0]) >= year and int(file_name.split("-")[1]) >= month):
-                year = int(file_name.split("-")[0])
-                month = int(file_name.split("-")[1])
-                if(int(file_name.split("-")[2].split("_")[0]) >= day):
-                    day = int(file_name.split("-")[2].split("_")[0])
-                    if(int(file_name.split("-")[2].split("_")[1]) > timeOfDay):
-                        timeOfDay = int(file_name.split("-")[2].split("_")[1])
-                        file_path = os.path.join(path, file_name)
-                        if os.path.isfile(file_path):
-                            return file_path
-    return None
+            file_path = path + file_name
+            file_paths.append(file_path)
+    return file_paths
+
 def main(numberOfRuns, sleepInterval):
     run=True
     colTime=1
     while run:
         if(colTime == 1):
-            path = findMostRecentNewsFile("./data/")
-            print path
-            with open(path, 'r') as file:
-                data=file.read().split('\n')
-            book = xlwt.Workbook(encoding="utf-8")
-            sheet1 = book.add_sheet("Clicks history")
-            sheet1.write(0, 0, "URL")
-            print time.asctime(time.localtime(time.time()))
-            sheet1.write(0, 1, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))
+            paths = findNewsFiles("./data/")
             tmp=1
-            for line in data:
-                if line!='':
-                    dataDict = ast.literal_eval(line)
-                    url=dataDict["long_url"]
-                    clicks=dataDict["global_clicks"]
-                    sheet1.write(tmp, 0, url)
-                    sheet1.write(tmp, colTime, clicks)
-                    tmp=tmp+1
+            for path in paths:
+                with open(path, 'r') as file:
+                    data=file.read().split('\n')
+                book = xlwt.Workbook(encoding="utf-8")
+                sheet1 = book.add_sheet("Clicks history")
+                sheet1.write(0, 0, "URL")
+                print time.asctime(time.localtime(time.time()))
+                sheet1.write(0, 1, u'Antal click vid tiden: ' + str(time.asctime(time.localtime(time.time()))))
+                
+                for line in data:
+                    if line!='':
+                        dataDict = ast.literal_eval(line)
+                        url=dataDict["long_url"]
+                        clicks=dataDict["global_clicks"]
+                        sheet1.write(tmp, 0, url)
+                        sheet1.write(tmp, colTime, clicks)
+                        tmp=tmp+1
             sheet2 = book.add_sheet("Classifier results")
             sheet2.write(0, 0, "Article")
             sheet2.write(0, 1, "Class by classifier")

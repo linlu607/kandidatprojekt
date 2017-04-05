@@ -1,3 +1,4 @@
+# -*- coding: cp1252 -*-
 # Handles the Bitly data
 
 import json
@@ -51,6 +52,7 @@ PATTERNLIST = [
     'donaldtrumpnews.co'
 ]
 
+shortURLFilePath = './data/seenShortURLs.txt'
 
 # Reads a number of random Tweets from a file
 def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
@@ -70,16 +72,31 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
         except:
             continue
 
+    shortURLFile = open(shortURLFilePath, "r")
+    shortURLDict = {}
+    for line in shortURLFile:
+        if line != '':
+            shortURLDict = ast.literal_eval(line)
+    
     bitlyDicts = []
     # Put URL info from the Tweets data in the tweets array
     for tw in tweetsData:
         # Save ID and bitly link in dict array
-        dict = {'id': tw['id'], 'short_url': tw['entities']['urls'][0]['expanded_url'], 'long_url': '',
-                'bitly_global_hash': '', 'bitly_user_hash': '', 'refs': '', 'countries': '', 'global_clicks': '',
-                'user_clicks': ''}
-        bitlyDicts.append(dict)
+        if (tw['entities']['urls'][0]['expanded_url'] not in shortURLDict):
+            dict = {'id': tw['id'], 'short_url': tw['entities']['urls'][0]['expanded_url'], 'long_url': '',
+                    'bitly_global_hash': '', 'bitly_user_hash': '', 'refs': '', 'countries': '', 'global_clicks': '',
+                    'user_clicks': ''}
+            bitlyDicts.append(dict)
+            #Glomm inte att lagga till url:en till dictionary:n over tidigare anvanda sedda url:er.
+            shortURLDict[tw['entities']['urls'][0]['expanded_url']] = '1'
+        else:
+            #Inkrementera value till key:n for den hittade url:en
+            shortURLDict[tw['entities']['urls'][0]['expanded_url']] = str(int(shortURLDict[tw['entities']['urls'][0]['expanded_url']])+1)
     print ("Number of tweets: ", len(tweetsData))
-
+    shortURLFile.close()
+    shortURLFile = open(shortURLFilePath, "w")
+    shortURLFile.write(str(shortURLDict))
+    shortURLFile.close()
     samples = pickSamples(bitlyDicts=bitlyDicts, numToRead=numToRead)
 
     print ("Number of samples: ", len(samples))
