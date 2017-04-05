@@ -42,5 +42,5 @@ def run(tweetsPath):
 ##        haveread.append(line)
         runs += 1
     #print("DONE")
-    return "DONE"
+    return news_file_path
     #lock.release()

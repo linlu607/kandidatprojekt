@@ -3,13 +3,49 @@ import tweetsRunner
 import bitlyRunner
 import UpdateClicks
 import htmlToText
+import bitlydatahandler
 import naiveBayesPipeline
-from multiprocessing import Process, active_children, Pool, Lock
+import Queue as NormalQueue
+import time
+from multiprocessing import Process, active_children, Pool, Queue
 
 def b(tweetsPath):
     res = bitlyRunner.run(tweetsPath)
     return res
+
+def u(q, sleep, turns):
+    updatingQueue = Queue.priorityQueue()
+    timeOfUpdateQueue = Queue.priorityQueue()
+    timeOfNextUpdate = 0
+    while True:
+        if(timeOfNextUpdate != 0):
+            if time.time() >= timeOfNextUpdate:
+                path = updatingQueue.get()
+                res = bitlydatahandler.updateClicks(path)
+                with open(updatePath, "w") as f:
+                    for sample in res:
+                        f.write(sample + "\n")
+                if timeOfUpdateQueue.empty() is False:
+                    timeOfNextUpdate = timeOfUpdateQueue.get()
+                else:
+                    break
+            else:
+                time.sleep(10)
+        if q.empty() is False:
+            newsPath = q.get()
+            t = time.time()
+            i = 1
+            while i <= turns:
+                updatingQueue.put(((t +(sleep * i)),newsPath))
+                timeOfUpdateQueue.put(t +(sleep * i))
+                i = i + 1
+                if timeOfNextUpdate == 0:
+                    timeOfNextUpdate = t +(sleep * i)
+    
 if (__name__ == '__main__'):
+
+    q = Queue()
+    sleeplength = 0
     timeout = input("In seconds, for how long would you like to collect tweets? ", )
 
     runs = input("For how many runs would you like to collect tweets? ", )
@@ -22,7 +58,7 @@ if (__name__ == '__main__'):
 
     saveClicks = raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
-        sleeplenght=int(raw_input("How often would you like to update clicks, answer in seconds "))
+        sleeplength=int(raw_input("How often would you like to update clicks, answer in seconds "))
         turns = int(raw_input("How many times would you like to save?"))
 
     open('./data/seenShortURLs.txt', 'w').close()
@@ -31,22 +67,21 @@ if (__name__ == '__main__'):
     open('./data/links/UnknownArticlesToBeExtracted.txt', 'w').close()
     open('./data/news/classifications.txt', 'w').close()
     #Erase contents in some .txt
-
     pool = Pool(2)
-
+    if sleeplength > 0:
+        p = Process(target=u, args=(q,sleeplength,turns,)).start()
     i = 0
     while i < runs:
         tweetsPath = tweetsRunner.collectTweets(timeout)
         i = i + 1
         if runBitly == "y":
             print "Runing bitlys"
-            #TODO: start on async on a new thread
-            res = pool.apply_async(b, (tweetsPath,))
-            #Process(target=b, args=(tweetsPath,)).start()
-            #print "Runing bitlys in process %d" % p.pid
-
+            pool.apply_async(b, (tweetsPath,), callback=q.put)
+            #q.put(res)
     pool.close()
     pool.join()
+    if sleeplength > 0:
+        p.join
 
     if runHtmlExtractor == "y":
         print "Runing html"
