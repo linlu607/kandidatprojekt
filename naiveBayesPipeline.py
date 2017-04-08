@@ -17,25 +17,28 @@ def run():
 
     data = DataFrame({'text': []})
     data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
-    data = data.reindex(numpy.random.permutation(data.index))
+    if data.size == 0:
+        print "No articlesavailable to classify"
+    else:
+        data = data.reindex(numpy.random.permutation(data.index))
 
-    predicted_classes = pipeline.predict(data['text'].values)
+        predicted_classes = pipeline.predict(data['text'].values)
 
-    write_file = open("./data/news/classifications.txt","w")
+        write_file = open("./data/news/classifications.txt","w")
 
-    print "Articles classified: " + str(len(data))
-    print 'Article:			Predicted class:'
-    for article, predicted in zip(data.index.values, predicted_classes):
-        newArticle = ""
-        i = 0
-        for word in article.split(" "):
-            if i != 0:
-                newArticle = newArticle + word + " "
-            i = i + 1
-        print newArticle, predicted
-        line = newArticle + ';' + predicted + NEWLINE
-        write_file.write(line)
-    write_file.close()
+        print "Articles classified: " + str(len(data))
+        print 'Article:			Predicted class:'
+        for article, predicted in zip(data.index.values, predicted_classes):
+            newArticle = ""
+            i = 0
+            for word in article.split(" "):
+                if i != 0:
+                    newArticle = newArticle + word + " "
+                i = i + 1
+            print newArticle, predicted
+            line = newArticle + ';' + predicted + NEWLINE
+            write_file.write(line)
+        write_file.close()
 
 
 def read_files(path):

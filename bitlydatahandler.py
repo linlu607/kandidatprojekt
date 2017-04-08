@@ -160,14 +160,21 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
 def updateClicks(path):
         print "Starting update"
         updatedClicks = []
+        dataDict = []
         with open(path, 'r') as f:
                 data=f.read().split('\n')
         print "Lines in data: " , len(data)-1
         for line in data:
 		if line!='':
-                        dataDict = ast.literal_eval(line)
-                        dataDict = sampleClicks(dataDict)
-                        updatedClicks.append(dataDict)
+                        dataDict.append(ast.literal_eval(line)) # dataDict = ast.literal_eval(line)
+                        #dataDict = sampleClicks(dataDict)
+                        #updatedClicks.append(dataDict)
+        pool = ThreadPool(5)
+        sample = pool.map(sampleClicks, dataDict)
+        pool.close()
+        pool.join()
+        for e in sample:
+            updatedClicks.extend(e)
         return updatedClicks
 
 def sampleClicks(sample):
@@ -246,10 +253,10 @@ def resolveBitlys(bitlysArray):
     URLsAndHash = pool.map(resolveBitlyBundle, bundles)
     pool.close()
     pool.join()
-    print len(URLsAndHash)
+    print "The number of workers run for resolving bitlys were:", len(URLsAndHash)
     for e in URLsAndHash:
         results.extend(e)
-    print len(results)
+    print "Number of bitlys resolved:", len(results)
     return results
 
 
