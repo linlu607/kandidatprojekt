@@ -24,12 +24,12 @@ def u(q, sleep, turns, lock):
     print "Starting update process"
     while run:
         # timeOfNextUpdate never becomes not null.
-        print "The time of the next update is: %.2f" % timeOfNextUpdate
+        # print "The time of the next update is: %.2f" % timeOfNextUpdate
         if(timeOfNextUpdate != 0):
             print "The next update is in: %.2f" % (timeOfNextUpdate - time.time())
             if time.time() >= timeOfNextUpdate:
                 path = updatingQueue.get()[1]
-                print "The next news-file is: " + str(path)
+                #print "The next news-file is: " + str(path)
                 startGetting = time.time()
                 lock.acquire()
                 startBitly = time.time()
@@ -38,9 +38,9 @@ def u(q, sleep, turns, lock):
                 print "bitlys updated in %.2f seconds" % (time.time() - startBitly)
                 lock.release()
                 time_for_filename = time.strftime("%Y-%m-%d_%H%M%S")
-                print "u has been released, %.2f seconds after requesting lock" % (time.time() - startGetting)
+                #print "u has been released, %.2f seconds after requesting lock" % (time.time() - startGetting)
                 updatePath = path[:(len(path)-4)] + "_(" + time_for_filename + ").txt"
-                print updatePath
+                #print updatePath
                 # put the IO on a thread
                 # Actually: The write of the updated data on bitlys collected over 10 s. is less than 0.01 s.
                 # not much speed to gain here.
