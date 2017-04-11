@@ -97,7 +97,7 @@ if (__name__ == '__main__'):
     saveClicks = raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
         sleeplength=int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = int(raw_input("How many times would you like to save?"))
+        turns = int(raw_input("How many times would you like to update?"))
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
@@ -133,16 +133,14 @@ if (__name__ == '__main__'):
     if runHtmlExtractor == "y":
         print "Runing html"
         htmlToText.run()
-        
-    if saveClicks == "y":
-        #TODO: Doesn't work right. FIX!
-        #Actually, splitt it into two classes, one for updating clicks and one for writing to xml.
-        print "Runing updates"
-        #UpdateClicks.main(turns, sleeplength)
 
     if runNaiveBayes == "y":
         print "Runing Bayes"
         naiveBayesPipeline.run()
+    
+    if saveClicks == "y":
+        print "Runing updates"
+        UpdateClicks.main()
 
     print "FINISHED"
     done = raw_input("You can close the program now by pressing any key")

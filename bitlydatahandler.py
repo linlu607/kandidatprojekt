@@ -170,11 +170,9 @@ def updateClicks(path):
                         #dataDict = sampleClicks(dataDict)
                         #updatedClicks.append(dataDict)
         pool = ThreadPool(5)
-        sample = pool.map(sampleClicks, dataDict)
+        updatedClicks = pool.map(sampleClicks, dataDict)
         pool.close()
         pool.join()
-        for e in sample:
-            updatedClicks.extend(e)
         return updatedClicks
 
 def sampleClicks(sample):

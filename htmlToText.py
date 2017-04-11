@@ -18,10 +18,17 @@ def run():
     urlList = buildURLList(linkFile)
 
     pool = ThreadPool(8)
-    pool.map(saveText, urlList)
+    urlAndTitle = pool.map(saveText, urlList)
     pool.close()
     pool.join()
-    
+    dict ={}
+    for e in urlAndTitle:
+        dict[e[0]] = e[1]
+    saveURLAndTitleFile = open('./data/links/articleURLAndTitle.txt', 'w')
+    for e in dict.iteritems():
+        print e
+    saveURLAndTitleFile.write(str(dict))
+    saveURLAndTitleFile.close()
     print "Done"
         
 
@@ -46,7 +53,7 @@ def saveText(url):
 
         # kill all script and style elements
         for script in soup(["script", "style"]):
-            script.extract()    # rip it out
+            script.extract()
 
         # get rid of the annoying comment sections
         for comment in soup.findAll("div", class_=re.compile('(C|c)omment.*')):
@@ -63,8 +70,6 @@ def saveText(url):
         text = NEWLINE.join(chunk for chunk in chunks if chunk)
 
         print "Article parsed, reading."
-
-        # Stuff should happen here
 
         print "Commiting to memory"
 
@@ -105,6 +110,7 @@ def saveText(url):
                 savedArticle.flush()
         savedArticle.close
         print "Article saved"
+        return (title.encode("utf8") + '.txt', url)
 
 
 def buildURLList(linkFile):

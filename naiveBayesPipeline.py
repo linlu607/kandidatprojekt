@@ -1,6 +1,7 @@
 import os
 import re
 import numpy
+import ast
 from pandas import DataFrame
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn.naive_bayes import MultinomialNB
@@ -14,12 +15,15 @@ PATTERN = re.compile('.*\.pkl$')
 
 def run():
     pipeline = get_best_pipeline('./data/classifiers/pickles/')
-
     data = DataFrame({'text': []})
     data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
     if data.size == 0:
         print "No articlesavailable to classify"
     else:
+        urlAndArticle = {}
+        with open('./data/links/articleURLAndTitle.txt' , 'r') as t:
+            urlAndArticle = ast.literal_eval(t.read())
+        
         data = data.reindex(numpy.random.permutation(data.index))
 
         predicted_classes = pipeline.predict(data['text'].values)
@@ -29,6 +33,7 @@ def run():
         print "Articles classified: " + str(len(data))
         print 'Article:			Predicted class:'
         for article, predicted in zip(data.index.values, predicted_classes):
+            url = urlAndArticle[article[41:]]
             newArticle = ""
             i = 0
             for word in article.split(" "):
@@ -36,7 +41,7 @@ def run():
                     newArticle = newArticle + word + " "
                 i = i + 1
             print newArticle, predicted
-            line = newArticle + ';' + predicted + NEWLINE
+            line = newArticle + ';' + predicted + ';' + url + NEWLINE
             write_file.write(line)
         write_file.close()
 

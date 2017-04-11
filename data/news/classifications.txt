@@ -1,113 +1,31 @@
-Gorsuch confirmed to Supreme Court.txt ;real
-Norway to build worlds first.txt ;real
-How to cope when your.txt ;real
-Hours before airstrikes Hillary Clinton.txt ;fake
-Will the Syria chemical attack.txt ;real
-ExclusiveSen Rand Paul Would an.txt ;fake
-BBC Earth Chicken.txt ;real
-BBC Radio London.txt ;real
-How Trumps Syria airstrike is.txt ;fake
-BBC Travel The.txt ;real
-Michael Caine I Voted Brexit.txt ;fake
-Whos who in the Trump.txt ;fake
-Australia Floats Plan To Keep.txt ;real
-Our fixation with maths doesnt.txt ;real
-Super League Warrington Wolves.txt ;real
-Amazing Mom Gives Birth To.txt ;real
-Satellite images show before after.txt ;real
-Secret footage obtained of the.txt ;real
-Majority of potential UK fracking.txt ;real
-Cotswold shinkicking event cancelled due.txt ;real
-Davi to Hollywood Elite Invite.txt ;real
-شركة بيبسي تسحب إعلانا أثار.txt ;fake
-Ford sees a future in.txt ;real
-Ricki Ortiz Transgender Street Fighter.txt ;real
-World Leaders Praise US Strike.txt ;fake
-Masters Best shots from.txt ;real
-Marines American flag set on.txt ;real
-Russia develops hypersonic mph.txt ;real
-That time Sean Spicer was.txt ;fake
-Graphenebased sieve turns seawater into.txt ;real
-How to Find a Love.txt ;real
-EDL Birmingham Demo Countered By.txt ;real
-Reasons Why Fostering A.txt ;real
-Neil Gorsuch confirmed to the.txt ;fake
-MORNING BRIEF Syrian base hit.txt ;fake
-Revealed the huge profits earned.txt ;real
-Syria airstrikes Mr Trump dont.txt ;real
-Adam Schiff should recuse himself.txt ;real
-Syria chemical attack US probes.txt ;real
-Old Baileys first nonwhite judge.txt ;real
-Dog rescued three days after.txt ;real
-Swedish Feminist Party Leader Men.txt ;real
-The challenge now facing brainbox.txt ;fake
-Chinese Grand Prix Lewis.txt ;real
-BBC Future How.txt ;real
-What does boycotting palm oil.txt ;real
-NYT Mexico Owns California and.txt ;fake
-Ifeoma WhiteThorpe Teen gets into.txt ;real
-Egypt just found another ancient.txt ;real
-Report Jared Kushner Hires Top.txt ;fake
-Patients with learning disabilities missing.txt ;real
-US Created Jobs in.txt ;fake
-Trade changes could affect vital.txt ;real
-Dalai Lama says its up.txt ;real
-The world reacts to Trumps.txt ;real
-Syria war US launches missile.txt ;real
-Secret Teacher Social media is.txt ;real
-Ways To Be More.txt ;real
-Crashed WW Spitfires first flight.txt ;real
-HIV vaccine trial gets go.txt ;real
-Syrians in US react to.txt ;fake
-Tomahawk missiles Explaining the weapons.txt ;fake
-Syria missile strike Trump authorizes.txt ;fake
-Stoke City v Liverpool.txt ;real
-Susan Rice Obama colleagues take.txt ;fake
-Por qué Estados Unidos decidió.txt ;fake
-Clean Air Is A Right.txt ;real
-Foreign Secretary Boris Johnson to.txt ;real
-Ortiz Key Players in Puerto.txt ;real
-The Role Of Health Technology.txt ;real
-US threatens more pressure on.txt ;real
-Syria missile attack Satellite photos.txt ;real
-Richard Blumenthal on Syria policy.txt ;fake
-Kremlin Risk of USRussia collision.txt ;fake
-Russian warship steams toward US.txt ;fake
-As it happened Global reaction.txt ;fake
-Sweden Attack Man From Uzbekistan.txt ;fake
-The man building a flying.txt ;real
-Malibu Elites Declare Beach Community.txt ;fake
-Kellyanne Conway on Trump shakeup.txt ;real
-Syria strike sends powerful message.txt ;real
-Ben Cardin You cant bomb.txt ;fake
-BBC Blogs BBC Introducing.txt ;fake
-Trump Orders Strikes Against Syrian.txt ;fake
-Syria strikes The story behind.txt ;fake
-Kentucky coal museum switching to.txt ;real
-Russia denies complicity in chemical.txt ;fake
-Stockholm truck attack kills.txt ;real
-What this photo of Trumps.txt ;fake
-Hillary Clinton Trump cant speak.txt ;fake
-How Weight Loss is Like.txt ;real
-Was Trumps Syria strike legal.txt ;real
-Greek Thomson Scotlands other great.txt ;real
-Getting the Facts Straight on.txt ;real
-Part of I collapses in.txt ;real
-Japanese scientists want to be.txt ;real
-BBC Radio.txt ;real
-Scientists discover atmosphere around distant.txt ;real
-Whos with the US on.txt ;fake
-Nadeem Aslam I take delight.txt ;real
-Don Rickles The king of.txt ;real
-Susan Rice Scandal Facts.txt ;fake
-Lets stop pretending were not.txt ;real
-Monterrey Open Heather Watson beaten.txt ;real
-Syria chemical attack Teen who.txt ;real
-Stockholm terror attack Man arrested.txt ;real
-Trumps senseless Syria strikes accomplish.txt ;fake
-Disability services transform students lives.txt ;real
-Girl with alopecia wins hair.txt ;real
-In departure from Trump US.txt ;fake
-Amnesty Nigeria military kills.txt ;real
-Iran issues threat over US.txt ;fake
-South Africa President Jacob Zuma.txt ;real
+Russia Banned Pictures Of Vladimir.txt ;real;http://www.huffingtonpost.com/entry/vladimir-putin-gay-clown-the-late-show_us_58e870b4e4b05413bfe34b17
+Trump on pace to surpass.txt ;fake;http://www.cnn.com/2017/04/10/politics/donald-trump-obama-travel-costs/index.html
+Hardline Islamic Cleric Invited by.txt ;fake;http://www.breitbart.com/london/2017/04/11/hardline-islamic-cleric-invited-charity-uk-fundraising-tour/
+United Airlines is innocent.txt ;real;http://www.foxnews.com/opinion/2017/04/11/united-airlines-is-innocent.html
+Tillerson visits Russia as tensions.txt ;fake;http://www.cnn.com/2017/04/11/politics/rex-tillerson-putin-russia-g7/index.html
+Truck smashed into gun shop.txt ;fake;http://www.cnn.com/video/data/2.0/video/us/2017/04/11/gun-store-heist-surveillance-jnd-orig-vstan.cnn.html?sr=twCNN041117gun-store-heist-surveillance-jnd-orig-vstan.cnn0310PMVODtopLink&linkId=36402131
+Foreigners Now Account for.txt ;real;http://www.breitbart.com/big-government/2017/04/10/foreigners-now-account-for-61-of-federal-arrests/
+Figure skating star Mao Asada.txt ;real;http://www.bbc.co.uk/news/world-asia-39562942
+Charities sound the alarm on.txt ;real;http://www.bbc.co.uk/news/uk-39485348
+BBC Earth Chicken.txt ;real;http://www.bbc.com/earth/story/20150512-bird-grows-face-of-dinosaur?ocid=twert
+United CEO defends actions of.txt ;real;http://www.foxnews.com/travel/2017/04/11/united-ceo-defends-actions-staff-in-viral-video-as-lawmakers-call-for-investigation.html
+People think Im.txt ;real;http://www.bbc.co.uk/newsbeat/article/39526723/people-think-im-drunk-but-i-have-parkinsons
+Podcast Review To The Manor.txt ;real;http://www.huffingtonpost.com/marc-hershon/podcast-review-to-the-man_b_7092926.html
+The man building a flying.txt ;real;http://www.cnn.com/2017/04/07/africa/jet-car-nigerian-inventor-flying/index.html
+Florida sheriff under fire over.txt ;fake;http://www.foxnews.com/us/2017/04/11/florida-sheriff-under-fire-over-anti-drug-video-defends-tactics-dont-negotiate.html
+United Airlines PR debacle escalates.txt ;real;http://www.foxnews.com/tech/2017/04/11/united-airlines-pr-debacle-escalates-as-unitedjourney-campaign-hijacked-on-social-media.html
+Arsenal What is the Gunners.txt ;real;http://www.bbc.co.uk/sport/football/39571652
+EXCLUSIVE Islamic State Supporters.txt ;real;http://www.breitbart.com/jerusalem/2017/04/11/exclusive-islamic-state-supporters-call-suicide-attacks-targeting-christians-following-egyptian-church-bombings/
+Houston Will Be Hostile Territory.txt ;real;http://www.breitbart.com/texas/2017/04/11/houston-will-hostile-territory-gangs-says-texas-governor/
+Pew Study Egypt China Iran.txt ;fake;http://www.breitbart.com/national-security/2017/04/11/pew-study-egypt-china-iran-most-restrictive-of-religion/
+Brows The Sunday Times.txt ;real;https://www.thetimes.co.uk/stylebeautyawards/nominations/brows/
+G Tillerson arrives in Moscow.txt ;fake;http://www.cnn.com/2017/04/11/europe/syria-russia-putin-g7-tillerson/index.html
+Eric Trump just said something.txt ;real;http://www.cnn.com/2017/04/11/politics/ivanka-trump-eric-trump-white-house/index.html?sr=twpol041117ivanka-trump-eric-trump-white-house0401PMVODtopLink&linkId=36406712
+Tillerson issues ultimatum to Russia.txt ;real;http://www.foxnews.com/politics/2017/04/11/tillerson-top-foreign-diplomats-discuss-syria-crisis-on-sidelines-g7.html
+Police attempt to change scope.txt ;real;https://www.theguardian.com/uk-news/2017/apr/05/police-attempt-change-scope-undercover-officers-inquiry
+Pennsylvania Easter egg hunt canceled.txt ;real;http://www.foxnews.com/us/2017/04/11/pennsylvania-fire-company-cancels-easter-egg-hunt-over-unruly-parents.html
+White House pets.txt ;fake;http://www.cnn.com/2013/08/20/politics/gallery/presidential-pets/?sr=twpol041117presidential-pets0447PMGalLink&linkId=36408898
+Obamas DOJ Protected Alien Child.txt ;fake;http://www.breitbart.com/texas/2017/04/08/obamas-doj-protected-alien-child-rapist-now-accused-murder/
+France migrants Huge fire guts.txt ;real;http://www.bbc.co.uk/news/world-europe-39562742
+DELINGPOLE EPAs ObamaEra Endangerment Finding.txt ;fake;http://www.breitbart.com/big-government/2017/04/10/delingpole-epas-obama-era-endangerment-finding-a-disgrace-to-science-menace-to-economy/
+More Than Percent of.txt ;fake;http://www.breitbart.com/big-government/2015/09/10/more-than-90-percent-of-middle-eastern-refugees-on-food-stamps/
