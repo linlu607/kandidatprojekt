@@ -1,4 +1,5 @@
 import os
+import shutil
 import urllib2
 from urllib2 import Request, urlopen, URLError, HTTPError, HTTPRedirectHandler
 from bs4 import BeautifulSoup
@@ -11,6 +12,8 @@ opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
 
 def run():
+    print "Clearing old news"
+    clearExtractionDirectory()
     print "Getting the news"
 
     linkFile = './data/links/UnknownArticlesToBeExtracted.txt'
@@ -122,3 +125,13 @@ def buildURLList(linkFile):
         if(line != ''):
             urlList.append(line)
     return urlList
+
+def clearExtractionDirectory():
+    folder = './data/news/UnknowExtractedArticles/'
+    for the_file in os.listdir(folder):
+        file_path = os.path.join(folder, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(e)

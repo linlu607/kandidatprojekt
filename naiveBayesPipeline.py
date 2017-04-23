@@ -18,7 +18,7 @@ def run():
     data = DataFrame({'text': []})
     data = data.append(build_data_frame('./data/news/UnknowExtractedArticles/'))
     if data.size == 0:
-        print "No articlesavailable to classify"
+        print "No articles available to classify"
     else:
         urlAndArticle = {}
         with open('./data/links/articleURLAndTitle.txt' , 'r') as t:

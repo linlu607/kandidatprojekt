@@ -1,0 +1,12 @@
+#
+####### Requirements on Windows #######
+#
+###### Requirements without Version Specifiers ######
+#
+beautifulsoup4
+xlwt
+bitly-api
+#
+###### A particular file ######
+https://github.com/tweepy/tweepy.git
+#
