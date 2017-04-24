@@ -52,6 +52,7 @@ def u(q, sleep, turns, lock):
                 #print "Is the updating queue empty: " , updatingQueue.empty()
                 if timeOfUpdateQueue.empty() is False:
                     timeOfNextUpdate = timeOfUpdateQueue.get()
+                    print "Next update is in %.2f seconds." % (timeOfNextUpdate - time.time())
                 else:
                     run = False
                     print "Done updating"
