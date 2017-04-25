@@ -84,20 +84,20 @@ if (__name__ == '__main__'):
     q = manager.Queue()
     lock = manager.Lock()
     sleeplength = 0
-    timeout = input("In seconds, for how long would you like to collect tweets? ", )
+    timeout = 300 #input("In seconds, for how long would you like to collect tweets? ", )
 
-    runs = input("For how many runs would you like to collect tweets? ", )
+    runs = 2 #input("For how many runs would you like to collect tweets? ", )
 
-    runBitly = raw_input("Would you like to extract bitly info too? (y/n)")
+    runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
 
-    runHtmlExtractor = raw_input("Would you like to extract articles from identified links? (y/n)")
+    runHtmlExtractor = "y" #raw_input("Would you like to extract articles from identified links? (y/n)")
 
-    runNaiveBayes = raw_input("Would you like to classify extracted articles? (y/n)")
+    runNaiveBayes = "y" #raw_input("Would you like to classify extracted articles? (y/n)")
 
-    saveClicks = raw_input("Would you like to save clicks to excelfile? (y/n)")
+    saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
-        sleeplength=int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = int(raw_input("How many times would you like to update?"))
+        sleeplength = 120 #int(raw_input("How often would you like to update clicks, answer in seconds "))
+        turns = 30 #int(raw_input("How many times would you like to update?"))
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()

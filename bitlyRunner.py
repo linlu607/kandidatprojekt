@@ -38,7 +38,7 @@ def run(tweetsPath):
         # Random tweets
         #bitlydatahandler.handleTweets(tweetsPath=tweetsPath, numToRead=100, outfile=random_file_path, newsOnly=0)
         # News tweets (could do with 3000?)
-        bitlydatahandler.handleTweets(tweetsPath=tweetsPath, numToRead=100, outfile=news_file_path, newsOnly=1)
+        bitlydatahandler.handleTweets(tweetsPath=tweetsPath, numToRead=500, outfile=news_file_path, newsOnly=1)
 ##        haveread.append(line)
         runs += 1
     #print("DONE")
