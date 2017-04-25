@@ -85,7 +85,7 @@ if (__name__ == '__main__'):
     q = manager.Queue()
     lock = manager.Lock()
     sleeplength = 0
-    timeout = 300 #input("In seconds, for how long would you like to collect tweets? ", )
+    timeout = 10 #input("In seconds, for how long would you like to collect tweets? ", )
 
     runs = 2 #input("For how many runs would you like to collect tweets? ", )
 
@@ -97,13 +97,14 @@ if (__name__ == '__main__'):
 
     saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
-        sleeplength = 120 #int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = 30 #int(raw_input("How many times would you like to update?"))
+        sleeplength = 20 #int(raw_input("How often would you like to update clicks, answer in seconds "))
+        turns = 20 #int(raw_input("How many times would you like to update?"))
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
     open('./data/runme.txt', 'w').close()
     open('./data/links/UnknownArticlesToBeExtracted.txt', 'w').close()
+    open('./data/links/articleURLAndTitle.txt', 'w').close()
     open('./data/news/classifications.txt', 'w').close()
     #Erase contents in some .txt
     if sleeplength > 0:
@@ -144,4 +145,4 @@ if (__name__ == '__main__'):
         UpdateClicks.main()
 
     print "FINISHED"
-    done = raw_input("You can close the program now by pressing any key")
+    # done = raw_input("You can close the program now by pressing any key")
