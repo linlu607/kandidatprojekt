@@ -65,24 +65,28 @@ def main():
             if line!='':
                 dataDict = ast.literal_eval(line)
                 url=dataDict["long_url"]
-                classification = dictionaryOfURLandClass[url]
                 clicks=dataDict["global_clicks"]
-                if(classification != "fake"):
-                    sheet1.write(rowReal, 0, url)
-                    sheet1.write(rowReal, 1, classification)
-                    sheet1.write(rowReal, colTime, clicks)
-                    rowReal=rowReal+1
-                    counterReal = counterReal + 1
-                else:
-                    sheet2.write(rowFake, 0, url)
-                    sheet2.write(rowFake, 1, classification)
-                    sheet2.write(rowFake, colTime, clicks)
-                    rowFake=rowFake+1
-                    counterFake = counterFake + 1
+                try:   
+                    classification = dictionaryOfURLandClass[url]
+                    if(classification != "fake"):
+                        sheet1.write(rowReal, 0, url)
+                        sheet1.write(rowReal, 1, classification)
+                        sheet1.write(rowReal, colTime, clicks)
+                        rowReal=rowReal+1
+                        counterReal = counterReal + 1
+                    else:
+                        sheet2.write(rowFake, 0, url)
+                        sheet2.write(rowFake, 1, classification)
+                        sheet2.write(rowFake, colTime, clicks)
+                        rowFake=rowFake+1
+                        counterFake = counterFake + 1
+                except KeyError as e:
+                    print "THIS URL HAS BEEN SAVED WEIRDLY." #"A CLASS (unknown) WILL BE ASSIGNED HERE EVENTHOUGH IT MAY HAVE BEEN ASSIGNED A CLASS PREVIOUSLY!"
+                    print url
         
         updatePaths = findUpdateFiles("./data/", path)
         updateArray = []
-        print "Is updatePaths for " + path + " empty?", updatePaths.empty()
+        print "Is updatePaths for " + path + " empty (False = there's stuff to do)?", updatePaths.empty()
         while updatePaths.empty() is False:
             updatePath = updatePaths.get()
             colTime = colTime + 1
@@ -97,15 +101,19 @@ def main():
             for sampleUpdate in updateArray:
                 clicks = sampleUpdate["global_clicks"]
                 url=sampleUpdate["long_url"]
-                classification = dictionaryOfURLandClass[url]
-                if(classification != "fake"):
-                    sheet1.write(rowReal, colTime, clicks)
-                    rowReal=rowReal+1
-                else:
-                    sheet2.write(rowFake, colTime, clicks)
-                    rowFake=rowFake+1 
+                try:
+                    classification = dictionaryOfURLandClass[url]
+                    if(classification != "fake"):
+                        sheet1.write(rowReal, colTime, clicks)
+                        rowReal=rowReal+1
+                    else:
+                        sheet2.write(rowFake, colTime, clicks)
+                        rowFake=rowFake+1
+                except KeyError as e:
+                    print "THAT WEIRD URL STRIKES AGAIN, THIS TIME IN UPDATING!"
         rowReal = rowReal + 2
         rowFake = rowFake + 2
-
+    
     book.save("ResultsBitly.xls")
+    print "Done updating, done saving excel."
 

@@ -26,14 +26,16 @@ def run():
     pool.join()
     dict ={}
     for e in urlAndTitle:
-        dict[e[0]] = e[1]
+        try:
+            dict[e[0]] = e[1]
+        except TypeError as t:
+            print "An entire object is None"
     saveURLAndTitleFile = open('./data/links/articleURLAndTitle.txt', 'w')
     for e in dict.iteritems():
         print e
     saveURLAndTitleFile.write(str(dict))
     saveURLAndTitleFile.close()
-    print "Done"
-        
+    print "Done"       
 
 def saveText(url):
     try:

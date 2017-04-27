@@ -26,7 +26,7 @@ def u(q, sleep, turns, lock):
         # timeOfNextUpdate never becomes not null.
         # print "The time of the next update is: %.2f" % timeOfNextUpdate
         if(timeOfNextUpdate != 0):
-            print "The next update is in: %.2f" % (timeOfNextUpdate - time.time())
+            # print "The next update is in: %.2f" % (timeOfNextUpdate - time.time())
             if time.time() >= timeOfNextUpdate:
                 path = updatingQueue.get()[1]
                 #print "The next news-file is: " + str(path)
@@ -87,7 +87,7 @@ if (__name__ == '__main__'):
     sleeplength = 0
     timeout = 600 #input("In seconds, for how long would you like to collect tweets? ", )
 
-    runs = 24 #input("For how many runs would you like to collect tweets? ", )
+    runs = 18 #input("For how many runs would you like to collect tweets? ", )
 
     runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
 
@@ -98,7 +98,7 @@ if (__name__ == '__main__'):
     saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
         sleeplength = 3600 #int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = 10 #int(raw_input("How many times would you like to update?"))
+        turns = 8 #int(raw_input("How many times would you like to update?"))
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
@@ -112,7 +112,7 @@ if (__name__ == '__main__'):
         p.start()
         print p.pid
     
-    pool = Pool(3)
+    pool = Pool(2)
 ##    if sleeplength > 0:
 ##        pool.apply_async(u, (q,sleeplength,turns,lock,))
     i = 0
