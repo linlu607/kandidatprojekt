@@ -50,7 +50,7 @@ class StdOutListener(tweepy.StreamListener):
                     tweetsFile.write(data)
                     return True
                 else:
-                    tweetsFile.close
+                    tweetsFile.close()
                     return False
         return True
 

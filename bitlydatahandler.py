@@ -71,7 +71,7 @@ def handleTweets(tweetsPath, numToRead, outfile, newsOnly):
             tweetsData.append(tweet)
         except:
             continue
-
+    tweetsFile.close()
     shortURLFile = open(shortURLFilePath, "r")
     shortURLDict = {}
     for line in shortURLFile:

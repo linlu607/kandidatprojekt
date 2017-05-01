@@ -1,0 +1,68 @@
+4 Basic B2B SEO Mistakes: Are You Making Them? | The Huffington Post
+I know, I know - you’ve heard it all before about SEO this and SEO that.
+One of the things I often hear from my clients is that there is so much mis-information about SEO that they often don’t know where to turn.
+It’s really hard to know who to trust now that everyone seems to label themselves an ‘SEO Expert’ these days.
+So that got me thinking about the best way to answer this question: What makes a successful B2B Website?
+I thought that the best way to find out would be to do some research and let the numbers speak for themselves.
+So here’s what I did, and here’s what I found out. It may surprise you…
+Our research Benchmarked 440 B2B Industry Average websites against 100 Best in Class Websites in the following sectors: Accountancy, Commercial Cleaning, Printers, Telemarketing and Training.
+Best in Class were chosen because they all appear in the top 3 results in Google searches. The Industry Average get a top 3 ranking in 25% of cases.
+The objective of the study was to identify which factors separated the two groups. We looked at a whole range of factors both on page (metatags, no. pages, mobile friendly, use of HTTPS) as well as off page factors (referring domains, Google reviews).
+As you can imagine there was a ton of data, but we boiled it all down to the 4 most common mistakes.
+So if you’re not currently in the top 3 in Google then read on if you want to get more traffic and more business from Google.
+Common B2B SEO Mistake #1 - No Industry And Location Specific Metatags
+This one definitely counts as a quick win. It’s easy to spot and it’s easy to fix.
+Basically your Metatags are one of the main ways you tell Google what it is that you do. They are just text that are added to the code of each page to let Google quickly understand the content on that page.
+The most important one is the Page Title Element. It can be around 67 to 70 characters in length. You can see it clearly when you do a search in Google.
+What we discovered was that 61% of Best in Class websites used their industry and location in the Page Title whereas only 21% of Industry Average did.
+This can be fixed in minutes and you don’t need to be a techie to do this.
+One word of warning, you need to do this on every page of your website.
+You also need to mix it up and make it relevant to every page. If we use the printer example then maybe you have a page for Litho Printing and one for Digital Printing. For each page make custom Titles to cover these e.g. Litho Printing Newcastle - COMPANY NAME HERE.
+If you use a Website Builder Tool or a Content Management System like WordPress then you can easily update them.
+If not then you just need to get a designer to make the change for you. If you don’t have a designer then use a freelancer site like upwork or guru. These aren’t really technical tasks. Just give them the list of pages and the new Titles you want to use.
+Finally, another Metatag is the Meta Description which is about 180 characters long. This isn’t as important as the Page Title but you should pay attention to it. Make it read naturally and include your industry and location in there too.
+Run a local search in Google. Check the top results. Notice anything the top 3 (‘The 3 Pack’) have in common?
+Best in Class businesses have double the number of reviews of lower ranking sites
+But before you go running off to get tons of Google reviews just hold your horses.
+Firstly, our research showed that on average it’s a low bar to jump. The Best in Class averaged at around 1 review whilst lower ranked sites came in at less than half that.
+The reason we urge you to be cautious is that if you suddenly get 30 reviews in a week then that will raise alarm bells back at Google. Who knows what could happen but you could even get your listing removed. Now you don’t want that to happen do you?
+So just get into the habit of asking for reviews. Start off with your best clients - you know who they are. Most people are more than happy to leave a review for you. If necessary give them some clear instructions and a link to your Google listing.
+There’s no need to offer enticements or anything like that. Just ask politely for a review and say that it will help your business.
+Over time you’ll find that you start picking up reviews and soon you’ll be sitting pretty at the top of Google with more reviews than your competitors.
+Another area where our research was clear was in terms of the number of pages. Best in Class sites averages 104 pages whilst the Industry Average was just 48.
+Over the long term the best way to create more pages is through a company blog as part of a content marketing strategy.
+But if you’re looking for a quick win that doesn’t involve coming up with new and original content then you should look at increasing the number of service pages.
+One thing I see over and over again is a generic ‘Services’ page which just lists all of the services a company provides.
+I can understand that maybe when your website was built originally you didn’t have the budget to pay for extra pages but that is a false economy.
+The reason for that is that you are just spreading yourself too thinly both for Google and for your prospective customers.
+For example, if you are an accountant and you offer a whole range of services such as annual returns, VAT filing, Payroll, Tax Planning, etc., then it’s much better to have a page for each one. That way, if someone is searching on eg: Tax Planning accountant Bristol and you have a page on your site called ‘Tax Planning Accountant Bristol’ then the chances are that when they get there they are going to find what they want rather than just going to a ‘Services’ page that lists ‘Tax Planning’ as a service.
+Google picks this up too. It notices that that particular page gets a higher Click Through Rate (CTR) than other pages around it and also that people stay on that page longer because it is more relevant.
+In terms of length try to aim for a minimum of 500 words per page. Dig through your hard drive, go through emails to clients or just create Frequently Asked Questions but make those pages long - Google loves all that content.
+Of course, longer term you need to develop a Content Marketing Strategy and the best place to start is with a company blog.
+I’d strongly recommend WordPress and you can just create a blog section of your website. WordPress can be installed through your web hosting control panel in a couple of clicks using a tool like Softaculous.
+Now there are loads of good reasons for starting a blog, but many business owners scratch their heads when I suggest they should set up a blog. But even if you’re in a boring industry there’s always an angle you can find to write about something.
+The trick is to remember that you are a problem solver. Don’t think of your blog as the place to pitch. Leave that to the main service pages of your blog.
+Consider who your audience is. If you’re a Training Company then they will be individuals or businesses who require training.
+Once you’ve got a picture of your ‘Ideal Client’ you need to develop a content plan. Just put yourself in their shoes. What are the questions they are asking themselves? These are the questions you need to answer in your blog.
+Of course, try to make it slightly more exciting by developing a great headline that will stand out in the Google listings. For example, you could have a title such as ‘Best Training Courses For Chefs. But you’ll get much better results if you tried ‘5 Fantastic Cooking Courses That Will Turn You Into A Master Chef!’.
+This is important for your CTR as I mentioned above. If your content gets more clicks and people stay on the page longer then you’ll be heading up the rankings.
+Create a list of topics and then commit yourself to a blogging schedule. If you can only do one post per week then fine, but just stick to it. If you’re no good at writing then consider hiring a copywriter.
+Of course, every piece of content you create needs to be optimised so make sure that things like metatags, Headings. Internal linking and keyword rich URLs are done for every blog post.
+Finally, once you’ve clicked the publish button the hard work starts. You need to promote your content. Mail out to your email list, push it social media and keep pushing it long after it has been published.
+Once you’re into the swing of it you’ll find it a natural part of your routine and it will pay dividends for you well into the future.
+Backlinks are when other websites link to you. Easier said than done, especially getting links from high authority sites.
+But our research showed that Best in Class get links from 44 different websites whereas lower ranking sites get just 17.
+Best in Class have more than double number of websites linking to them
+Again, that is not a high bar to jump and you can definitely do it.
+Start by checking how many backlinks you have and then check your main competitors.
+Now you understand how you compare to the competition you can start to go after them.
+There are some easy wins like Name, Address and Phone (NAP) Citations. There are loads of places to get NAP Citations.
+Also look locally. Can you sponsor an event? What about local suppliers that you use. If they have a website ask them if they’d like a testimonial from you that they can use on their website in return for a link to you.
+Also look at Authority Directories like business.com - sure some will have a cost but it’s worth it to get that backlink and you can just tick that off and move onto the next one.
+As with Google Reviews. No need to go crazy getting hundreds of links in a week. You’re playing a long game here.
+Our research indicates that many businesses score low on the SEO Basics. These small details appear to be separating the ‘Best from the Rest’.
+If you are determined to get a top ranking then you should prioritize fixing your Metatags to include your industry and location, get more google reviews, create more content and get more backlinks.
+So are you making any of these mistakes? Do you have a blog? Let us know in the comments below.
+This post is hosted on the Huffington Post's Contributor platform. Contributors control their own work and post freely to our site. If you need to flag this entry as abusive, send us an email.
+Start your workday the right way with the news that matters most.
+Copyright © 2017 TheHuffingtonPost.com, Inc.    "The Huffington Post" is a registered trademark of TheHuffingtonPost.com, Inc.

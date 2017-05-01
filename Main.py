@@ -8,6 +8,7 @@ import naiveBayesPipeline
 import Queue as NormalQueue
 import time
 from multiprocessing import Process, Pool, Manager
+#from memory_profiler import profile
 
 def b(tweetsPath, lock):
     lock.acquire()
@@ -78,53 +79,34 @@ def u(q, sleep, turns, lock):
                     print "First update time added. It is in %.2f seconds." % (timeOfNextUpdate - time.time())
                 i = i + 1
     return "DONE"
-    
-if (__name__ == '__main__'):
 
+#@profile
+def runfunc(sleeplength, timeout, runs, runBitly, runHtmlExtractor, runNaiveBayes, saveClicks):
     manager = Manager()
     q = manager.Queue()
     lock = manager.Lock()
-    sleeplength = 0
-    timeout = 600 #input("In seconds, for how long would you like to collect tweets? ", )
-
-    runs = 18 #input("For how many runs would you like to collect tweets? ", )
-
-    runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
-
-    runHtmlExtractor = "y" #raw_input("Would you like to extract articles from identified links? (y/n)")
-
-    runNaiveBayes = "y" #raw_input("Would you like to classify extracted articles? (y/n)")
-
-    saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
-    if saveClicks == "y":
-        sleeplength = 3600 #int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = 8 #int(raw_input("How many times would you like to update?"))
-
-    open('./data/seenShortURLs.txt', 'w').close()
-    open('./data/expanded.txt', 'w').close()
-    open('./data/runme.txt', 'w').close()
-    open('./data/links/UnknownArticlesToBeExtracted.txt', 'w').close()
-    open('./data/links/articleURLAndTitle.txt', 'w').close()
-    open('./data/news/classifications.txt', 'w').close()
-    #Erase contents in some .txt
     if sleeplength > 0:
         p = Process(target=u, args=(q,sleeplength,turns,lock,))
         p.start()
         print p.pid
     
-    pool = Pool(2)
-##    if sleeplength > 0:
-##        pool.apply_async(u, (q,sleeplength,turns,lock,))
+    pool = Pool(processes=1,maxtasksperchild=2)
     i = 0
     while i < runs:
+##        if (i % 2 == 0):
         tweetsPath = tweetsRunner.collectTweets(timeout)
         i = i + 1
         if runBitly == "y":
             print "Runing bitlys"
+            # Which version do we want here?
             pool.apply_async(b, (tweetsPath,lock,), callback=q.put)
+            #q.put(b(tweetsPath,lock))
+##        else:
+##            time.sleep(timeout)
+##            i = i + 1
     pool.close()
     pool.join()
-    time.sleep(sleeplength)
+    # time.sleep(sleeplength)
     if sleeplength > 0:
         p.join()
         print "P should have joined now"
@@ -145,4 +127,33 @@ if (__name__ == '__main__'):
         UpdateClicks.main()
 
     print "FINISHED"
-    # done = raw_input("You can close the program now by pressing any key")
+
+if (__name__ == '__main__'):
+
+    
+    sleeplength = 0
+    timeout = 600 #input("In seconds, for how long would you like to collect tweets? ", )
+
+    runs = 144 #input("For how many runs would you like to collect tweets? ", )
+
+    runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
+
+    runHtmlExtractor = "y" #raw_input("Would you like to extract articles from identified links? (y/n)")
+
+    runNaiveBayes = "y" #raw_input("Would you like to classify extracted articles? (y/n)")
+
+    saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
+    if saveClicks == "y":
+        sleeplength = 7200 #int(raw_input("How often would you like to update clicks, answer in seconds "))
+        turns = 72 #int(raw_input("How many times would you like to update?"))
+
+    open('./data/seenShortURLs.txt', 'w').close()
+    open('./data/expanded.txt', 'w').close()
+    open('./data/runme.txt', 'w').close()
+    open('./data/links/UnknownArticlesToBeExtracted.txt', 'w').close()
+    open('./data/links/articleURLAndTitle.txt', 'w').close()
+    open('./data/news/classifications.txt', 'w').close()
+    #Erase contents in some .txt
+    runfunc(sleeplength, timeout, runs, runBitly, runHtmlExtractor, runNaiveBayes, saveClicks)
+    
+    #done = raw_input("You can close the program now by pressing any key")
