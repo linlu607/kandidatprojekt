@@ -2,6 +2,8 @@ import os
 import shutil
 import urllib2
 from urllib2 import Request, urlopen, URLError, HTTPError, HTTPRedirectHandler
+
+import errno
 from bs4 import BeautifulSoup
 import re
 from multiprocessing.dummy import Pool as ThreadPool

@@ -38,81 +38,52 @@ def main():
     
     paths = findNewsFiles("./data/")
     book = xlwt.Workbook(encoding="utf-8")
-    sheet1 = book.add_sheet("Clicks history real")
-    sheet2 = book.add_sheet("Clicks history fake")
+    sheet1 = book.add_sheet("Clicks")
     rowReal = 0
-    rowFake = 0
-    urlsAndClasses = []
-    with open('./data/links/articleURLAndTitle.txt', 'r') as f:
-        urlsAndClasses = ast.literal_eval(f.read())
+
     for path in paths:
         colTime = 2
         with open(path, 'r') as file:
             data=file.read().split('\n')
 
         sheet1.write(rowReal, 0, "URL")
-        sheet1.write(rowReal, 1, "Class")
-        sheet1.write(rowReal, 2, u'Antal click vid tiden: ' + path[len(path)-26:len(path)-9])
-        sheet2.write(rowFake, 0, "URL")
-        sheet2.write(rowFake, 1, "Class")
-        sheet2.write(rowFake, 2, u'Antal click vid tiden: ' + path[len(path)-26:len(path)-9])
+        sheet1.write(rowReal, 2, u'Tid: ' + path[len(path)-26:len(path)-9])
         rowReal = rowReal + 1
         counterReal = 0
-        rowFake = rowFake + 1
-        counterFake = 0
         print "File " + path + " is start file no. %d" % (paths.index(path)+1)
         for line in data:
             if line!='':
                 dataDict = ast.literal_eval(line)
                 url=dataDict["long_url"]
                 clicks=dataDict["global_clicks"]
-                try:   
-                    classification = dictionaryOfURLandClass[url]
-                    if(classification != "fake"):
-                        sheet1.write(rowReal, 0, url)
-                        sheet1.write(rowReal, 1, classification)
-                        sheet1.write(rowReal, colTime, clicks)
-                        rowReal=rowReal+1
-                        counterReal = counterReal + 1
-                    else:
-                        sheet2.write(rowFake, 0, url)
-                        sheet2.write(rowFake, 1, classification)
-                        sheet2.write(rowFake, colTime, clicks)
-                        rowFake=rowFake+1
-                        counterFake = counterFake + 1
+                try:
+                    sheet1.write(rowReal, 0, url)
+                    sheet1.write(rowReal, colTime, clicks)
+                    rowReal=rowReal+1
+                    counterReal = counterReal + 1
                 except KeyError as e:
                     print "THIS URL HAS BEEN SAVED WEIRDLY." #"A CLASS (unknown) WILL BE ASSIGNED HERE EVENTHOUGH IT MAY HAVE BEEN ASSIGNED A CLASS PREVIOUSLY!"
                     print url
         
         updatePaths = findUpdateFiles("./data/", path)
-        updateArray = []
         print "Is updatePaths for " + path + " empty (False = there's stuff to do)?", updatePaths.empty()
         while updatePaths.empty() is False:
             updatePath = updatePaths.get()
             colTime = colTime + 1
             rowReal = rowReal - counterReal - 1
-            rowFake = rowFake - counterFake - 1
-            sheet1.write(rowReal, colTime, u'Antal click vid tiden: ' + updatePath[len(updatePath)-22:len(updatePath)-5])
-            sheet2.write(rowFake, colTime, u'Antal click vid tiden: ' + updatePath[len(updatePath)-22:len(updatePath)-5])
+            sheet1.write(rowReal, colTime, u'Tid: ' + updatePath[len(updatePath)-22:len(updatePath)-5])
             rowReal=rowReal+1
-            rowFake=rowFake+1
             with open(updatePath, 'r') as file:
                updateArray = ast.literal_eval(file.read())
             for sampleUpdate in updateArray:
                 clicks = sampleUpdate["global_clicks"]
                 url=sampleUpdate["long_url"]
                 try:
-                    classification = dictionaryOfURLandClass[url]
-                    if(classification != "fake"):
-                        sheet1.write(rowReal, colTime, clicks)
-                        rowReal=rowReal+1
-                    else:
-                        sheet2.write(rowFake, colTime, clicks)
-                        rowFake=rowFake+1
+                    sheet1.write(rowReal, colTime, clicks)
+                    rowReal=rowReal+1
                 except KeyError as e:
                     print "THAT WEIRD URL STRIKES AGAIN, THIS TIME IN UPDATING!"
         rowReal = rowReal + 2
-        rowFake = rowFake + 2
     
     book.save("ResultsBitly.xls")
     print "Done updating, done saving excel."
