@@ -7,6 +7,8 @@ import titleExtractor
 TWEETSPATH = 'C:/Users/linne/Documents/LiU/TDDD82/Kandidatprojekt/kandidat/data/tweets/'
 COLLECTIONPATH = 'C:/Users/linne/Documents/LiU/TDDD82/Kandidatprojekt/kandidat/data/links/collectionByLink/'
 
+'''Writes two files that contain all Twitter posts, one to be changed whenever tweets in them are 
+written to another file'''
 def collectFiles():
     tweetsCollection = open('collectedTweets.txt', 'w')
     collectionToChange = open('unExtractedTweets.txt', 'w')
@@ -21,9 +23,12 @@ def main():
     if collectData:
         collectFiles()
         findLinks()
-    collectionFile = extractTweeters('http://bit.ly/2Iz2fpE')
-    #propagationTree.create(collectionFile)
+    collectionFile = extractTweeters('http://bit.ly/2FFIoaz')
+    print(collectionFile)
+    propagationTree.create(collectionFile)
 
+
+'''Writes all found links and their number of occurances into a file'''
 def findLinks():
     open('knownLinks.txt', 'w').close()
     foundBitlys = open('knownLinks.txt', 'r+')
@@ -49,6 +54,8 @@ def findLinks():
             print("ERROR")
             foundBitlys.write(key.encode("utf-8") + ", " + str(val) + "\n")
 
+
+'''Creates a file containing all posts regarding a certain URL'''
 def extractTweeters(expandedURL):
     headline = titleExtractor.saveText(expandedURL)
     savefile = open(COLLECTIONPATH+headline, 'w')
@@ -63,5 +70,6 @@ def extractTweeters(expandedURL):
         else:
             unExtractedTweets.write(line)
     return COLLECTIONPATH+headline
+
 
 main()

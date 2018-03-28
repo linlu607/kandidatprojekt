@@ -10,6 +10,7 @@ NEWLINE = '\n'
 opener = urllib2.build_opener()
 opener.addheaders = [('User-Agent', 'Mozilla/48.0')]
 
+'''Writes a headline and its corresponding URL into a file. Returns the filename'''
 def saveText(url):
     try:
         html = opener.open(url)
@@ -76,14 +77,15 @@ def saveText(url):
         savedArticle = open(file_path_and_name,"w")
         for line in text.split(NEWLINE):
             tmp=len(line.split(" "))
-            if(tmp>10):
+            if(tmp > 10):
                 line=line+NEWLINE
                 savedArticle.write(line.encode("utf8"))
                 savedArticle.flush()
         savedArticle.close
         a = open(urlpath+'URLsAndTitles.txt', 'a')
         r = open(urlpath+'URLsAndTitles.txt', 'r')
+        title = title.encode("utf8").replace(" ", "_")
         if (title + " " + url + "\n") not in r:
             a.write(title + " " + url + "\n")
-        title.encode("utf8").replace(" ", "_")
+        print(title)
         return title + '.txt'
