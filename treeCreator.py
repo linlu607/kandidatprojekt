@@ -19,7 +19,7 @@ def collectFiles():
             collectionToChange.write(line)
 
 def main():
-    collectData = True
+    collectData = False
     if collectData:
         collectFiles()
         findLinks()
