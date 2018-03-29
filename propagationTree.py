@@ -1,8 +1,10 @@
 import json
-import anytree
-from anytree import Node, AnyNode, RenderTree
+from anytree import AnyNode
+from PropTree import PropTree
 
 def create(tweetsFile):
+    # A node should have an idNr (starting on 0), idStr(tweet id), parent.
+    propTree = PropTree()
     idNr = 0  # to be ordered by time
     unknownIdNr = 0
     posts = []
@@ -14,41 +16,33 @@ def create(tweetsFile):
     for post in posts:
         post['tweetNr'] = idNr
         idStr = post['id_str']
-        reference = "ID" + idStr
-        idAndName[idStr] = reference  # by searching an id_str, you can get their reference and set them as parent
+        idAndName[idStr] = idNr  # by searching an id_str, you can get their idNr and set them as parent
 
         if 'quoted_status' in post:
             # this is a quote
             parentIdStr = post['quoted_status_id_str']
-            print("Here's the id_str: " + parentIdStr)
             try:
-                print("Reference to parent is " + idAndName[parentIdStr])
-                parentId = idAndName[parentIdStr]
+                parentIdNr = idAndName[parentIdStr]
+                parentNode = propTree.findNodeByIdNr(parentIdNr)
             except KeyError:
-                parentId = "x"+parentIdStr
-                idAndName[parentIdStr] = parentId
-                parentId = AnyNode(id="x"+str(unknownIdNr))
+                parentIdNr = "x" + str(unknownIdNr)
+                idAndName[parentIdStr] = parentIdNr
+                parentNode = AnyNode(id=parentIdNr, idStr=parentIdStr)
+                propTree.addRoot(parentNode)
                 unknownIdNr += 1
-                #return
-            print("Parent id is ")
-            print(parentId)
-            reference = AnyNode(id=idNr, parent=parentId)
-            print("Found quote")
+            AnyNode(id=idNr, idStr=idStr, parent=parentNode)
         elif 'retweeted_status' in post:
             # this is a retweet
-            print()
+            print("Here's a retweet")
         else:
             # this is original content
-            reference = AnyNode(id=idNr)
-            print(reference)
+            reference = AnyNode(id=idNr, idStr=idStr)
+            propTree.addRoot(reference)
         idNr += 1
-#    ref2 = AnyNode(id=idNr, parent=reference)
-    ID200 = AnyNode(id=200, parent=reference)
-    #print(RenderTree(reference))
-    #for pre, fill, node in RenderTree(reference):
-     #   print("%s%s" % (pre, node.id))
-    #for key, val in idAndName.items():
-    #   print(key + " " + val)
-
+    parentToTest = propTree.findNodeByIdStr("974939595002515457")
+    #print(parentToTest)
+    thisNode = AnyNode(id="test", parent=parentToTest)
+    #propTree.addRoot(thisNode)
+    propTree.makeSimpleTree()
 
 

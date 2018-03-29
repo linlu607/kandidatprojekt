@@ -4,8 +4,8 @@ import json
 import propagationTree
 import titleExtractor
 
-TWEETSPATH = 'C:/Users/linne/Documents/LiU/TDDD82/Kandidatprojekt/kandidat/data/tweets/'
-COLLECTIONPATH = 'C:/Users/linne/Documents/LiU/TDDD82/Kandidatprojekt/kandidat/data/links/collectionByLink/'
+TWEETSPATH = './data/tweets/'
+COLLECTIONPATH = './data/links/collectionByLink/'
 
 '''Writes two files that contain all Twitter posts, one to be changed whenever tweets in them are 
 written to another file'''
@@ -58,6 +58,8 @@ def findLinks():
 '''Creates a file containing all posts regarding a certain URL'''
 def extractTweeters(expandedURL):
     headline = titleExtractor.saveText(expandedURL)
+    if os.path.exists(COLLECTIONPATH+headline):
+        return COLLECTIONPATH+headline
     savefile = open(COLLECTIONPATH+headline, 'w')
     unExtractedTweets = open('unExtractedTweets.txt', 'r')
     lines = unExtractedTweets.readlines()
@@ -72,4 +74,5 @@ def extractTweeters(expandedURL):
     return COLLECTIONPATH+headline
 
 
+#propagationTree.create(COLLECTIONPATH+"Xbox_One_S_To.txt")
 main()
