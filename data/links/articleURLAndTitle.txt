@@ -1,1 +1,0 @@
-{'At least dead after.txt': 'http://www.foxnews.com/world/2018/03/23/gunman-holds-hostages-in-french-supermarket-claims-allegiance-to-isis-1-dead-reports-say.html', 'Citigroup Announces Gun Control Requirements.txt': 'http://www.breitbart.com/big-government/2018/03/22/citigroup-announces-gun-control-requirements-for-clients-and-small-businesses/'}
