@@ -132,20 +132,20 @@ if (__name__ == '__main__'):
 
     
     sleeplength = 0
-    timeout = 600 #input("In seconds, for how long would you like to collect tweets? ", )
+    timeout = 1200  # input("In seconds, for how long would you like to collect twets? ", ) #600 #
 
-    runs = 144 #input("For how many runs would you like to collect tweets? ", )
+    runs = 1  # input("For how many runs would you like to collect tweets? ", ) #144 #
 
-    runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
+    runBitly = "y"  #raw_input("Would you like to extract bitly info too? (y/n)")
 
     runHtmlExtractor = "y" #raw_input("Would you like to extract articles from identified links? (y/n)")
 
-    runNaiveBayes = "y" #raw_input("Would you like to classify extracted articles? (y/n)")
+    runNaiveBayes = "n" #raw_input("Would you like to classify extracted articles? (y/n)")
 
     saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
-        sleeplength = 7200 #int(raw_input("How often would you like to update clicks, answer in seconds "))
-        turns = 72 #int(raw_input("How many times would you like to update?"))
+        sleeplength = 1200  # int(raw_input("How often would you like to update clicks, answer in seconds ")) #7200 #
+        turns = 1  # int(raw_input("How many times would you like to update?")) #72 #
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
@@ -156,4 +156,4 @@ if (__name__ == '__main__'):
     #Erase contents in some .txt
     runfunc(sleeplength, timeout, runs, runBitly, runHtmlExtractor, runNaiveBayes, saveClicks)
     
-    #done = raw_input("You can close the program now by pressing any key")
+    done = raw_input("You can close the program now by pressing any key")

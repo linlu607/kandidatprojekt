@@ -1,11 +1,18 @@
 # -*- coding: cp1252 -*-
 import os
-from time import time
+import errno
+import numpy
 from pandas import DataFrame
+from time import time
 from sklearn.externals import joblib
+from sklearn.feature_extraction.text import TfidfTransformer, CountVectorizer
 from sklearn.metrics import confusion_matrix, f1_score
 
 # Some constants
+from sklearn.model_selection import GridSearchCV
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import Pipeline
+
 NEWLINE = '\n'
 REAL = 'real'
 FAKE = 'fake'
@@ -19,7 +26,7 @@ SOURCES = [
     ('./data/news/training_real/', REAL)
     #('./data/news/LinkBBC/', REAL)
 ]
-param_grid  = {
+param_grid = {
     'vectorizer__max_df': (0.5, 0.75, 1.0),
     'vectorizer__max_features': (None, 200, 800, 1600),
     'vectorizer__ngram_range': ((1, 1), (1, 2), (1, 3), (1, 4), (1, 5)),  # unigrams to 5-grams
@@ -55,7 +62,7 @@ def build_data_frame(path, classification):
 pipeline = Pipeline([
     ('vectorizer',  CountVectorizer()),
     ('tfidf_transformer',  TfidfTransformer()),
-    ('classifier',  MultinomialNB))
+    ('classifier',  MultinomialNB())
 ])
 
 grid = GridSearchCV(estimator = pipeline, param_grid = param_grid, n_jobs = 1, cv = 8)
