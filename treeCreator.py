@@ -9,23 +9,63 @@ COLLECTIONPATH = './data/links/collectionByLink/'
 
 '''What should the code do?'''
 def settingsInput():
-    collectData = "n"  # raw_input("Would you like to collect data from dataset? (y/n) ")
-    minTreeAmount = 100  # input("Enter minimum tweets to construct tree ", )
+    collectData = raw_input("Would you like to collect data from dataset? (y/n) ")
+    minTreeAmount = input("Enter minimum amount of tweets to construct tree: ", )
+    maxTreeAmount = input("Enter maximum amount of tweets to consruct tree: ")
 
     return [collectData, minTreeAmount]
 
 def main():
-    settings = settingsInput()
-    if settings[0] == 'y':
+    collectData = raw_input("Would you like to gather all tweets in one file? (y/n) ")
+    if collectData == "y":
         collectFiles()
         findLinks()
+    while True:
+        userInput()
 
-    for line in open('./data/tree/knownLinks.txt', 'r'):
-        bitly = line.split(',')[0]
-        nr = line.split(',')[1]
-        if bitly == "http://bit.ly/Bnat_X_Moshtia":  # int(nr) > settings[1]:  # bitly == "http://bit.ly/2F8OHSP":
+def showInfoOnBitlys():
+    bitlys = []
+    lineNr = 0
+    for line in open('./data/links/BitlyInfo.txt', 'r'):
+        print(str(lineNr)+": " + line)
+        bitlys.append(line)
+        lineNr += 1
+    createTree = raw_input("Create tree from specific bitly? ")
+    if createTree == "y":
+        chosenBitly = input("Choose the line that has the interesting link: ")
+        headline = bitlys[chosenBitly].split(",")[0]
+        print("Headline is " + str(headline))
+        if headline+".txt" in "./data/tree/trees":
+            print("Tree exists")
+        else:
+            if isAlreadyExtracted(headline):
+                propagationTree.create(COLLECTIONPATH+headline)
+            else:
+                bitly = bitlys[chosenBitly].split(", ")[1]
+                collectionFile = extractTweeters(bitly)
+                propagationTree.create(collectionFile)
+
+def userInput():
+    option = input("What would you like to do now? \n1: Get info on bitlys \n2: Construct multiple trees \n")
+    if option == 1:
+        showInfoOnBitlys()
+    elif option == 2:
+        startConstructing()
+    else:
+        return
+
+def startConstructing():
+    bitlys = open('./data/links/BitlyInfo.txt', 'r')
+    minTreeAmount = input("Enter minimum amount of tweets to construct tree: ")
+    maxTreeAmount = input("Enter maximum amount of tweets to construct tree: ")
+    for line in bitlys:
+        occurances = line.split(", ")[2]
+        if minTreeAmount < int(occurances) < maxTreeAmount:
+            # headline = line.split(", ")[0]
+            bitly = line.split(", ")[1]
             collectionFile = extractTweeters(bitly)
             propagationTree.create(collectionFile)
+
 
 '''Writes two files that contain all Twitter posts, one to be changed whenever tweets in them are 
 written to another file'''
@@ -41,10 +81,13 @@ def collectFiles():
 '''Writes all found links and their number of occurances into a file'''
 def findLinks():
     open('./data/tree/knownLinks.txt', 'w').close()
+    open('./data/links/BitlyInfo.txt', 'w').close()
     foundBitlys = open('./data/tree/knownLinks.txt', 'r+')
+    bitlyInfoFile = open('./data/links/BitlyInfo.txt', 'r+')
     foundRetweetsAndQuotes = open('./data/tree/foundRetweetsAndQuotes.txt', 'w')
     tweets = []
     linkDictionary = {}
+    occurancesDictionary = {}
     for line in open('./data/tree/collectedTweets.txt', 'r'):
         tweets.append(json.loads(line))
     for line in tweets:
@@ -57,18 +100,35 @@ def findLinks():
         else:
             linkDictionary[url] = 1
 
+        if url in occurancesDictionary:
+            occurancesDictionary[url] += 1
+        else:
+            occurancesDictionary[url] = 1
+
     for key, val in linkDictionary.items():
         try:
             foundBitlys.write(str(key) + "," + str(val) + "\n")
         except UnicodeEncodeError:
             print("ERROR")
-            foundBitlys.write(key.encode("utf-8") + ", " + str(val) + "\n")
-
+            encodedKey = key.encode("utf-8")
+            foundBitlys.write(str(getHeadline(encodedKey)) + ", " + encodedKey + ", " + str(val) + "\n")
+    nrOfIterations = 0
+    for key, val in occurancesDictionary.items():
+        nrOfIterations += 1
+        encodedKey = key.encode("utf-8")
+        headline = getHeadline(encodedKey)
+        if headline is not None:
+            toBitlyInfo = headline + ", " + encodedKey + ", " + str(val) + "\n"
+            bitlyInfoFile.write(toBitlyInfo)
+        if nrOfIterations > 5:
+            return
+    bitlyInfoFile.close()
+    foundBitlys.close()
 
 '''Creates a file containing all posts regarding a certain URL'''
 def extractTweeters(expandedURL):
     headline = titleExtractor.saveText(expandedURL)
-    if os.path.exists(COLLECTIONPATH+headline):
+    if isAlreadyExtracted(headline):
         return COLLECTIONPATH+headline
     savefile = open(COLLECTIONPATH+headline, 'w')
     unExtractedTweets = open('./data/tree/unExtractedTweets.txt', 'r')
@@ -83,5 +143,11 @@ def extractTweeters(expandedURL):
             unExtractedTweets.write(line)
     return COLLECTIONPATH+headline
 
+def getHeadline(url):
+    return titleExtractor.saveText(url)
+
+def isAlreadyExtracted(headline):
+    if os.path.exists(COLLECTIONPATH+headline):
+        return True
 
 main()
