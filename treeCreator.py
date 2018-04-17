@@ -3,6 +3,7 @@ import json
 
 import propagationTree
 import titleExtractor
+from pathlib import Path
 
 TWEETSPATH = './data/tweets/'
 COLLECTIONPATH = './data/links/collectionByLink/'
@@ -10,9 +11,12 @@ COLLECTIONPATH = './data/links/collectionByLink/'
 '''What should the code do?'''
 def settingsInput():
     collectData = "n"  # raw_input("Would you like to collect data from dataset? (y/n) ")
-    minTreeAmount = 100  # input("Enter minimum tweets to construct tree ", )
+    constructTree = "n"  # raw_input("Would you like to construct propagation trees from knownLinks? (y/n) ")
+    printTree = "y"  # raw_input("Would you like to print a propagation tree from file? (y/n) ")
+    minTreeAmount = 30  # input("Enter minimum tweets to construct tree ", )
+    maxTreeAmount = 50  # input("Enter maximum tweets to construct tree ", )
 
-    return [collectData, minTreeAmount]
+    return [collectData, constructTree, printTree, minTreeAmount, maxTreeAmount]
 
 def main():
     settings = settingsInput()
@@ -20,12 +24,19 @@ def main():
         collectFiles()
         findLinks()
 
-    for line in open('./data/tree/knownLinks.txt', 'r'):
-        bitly = line.split(',')[0]
-        nr = line.split(',')[1]
-        if bitly == "http://bit.ly/Bnat_X_Moshtia":  # int(nr) > settings[1]:  # bitly == "http://bit.ly/2F8OHSP":
-            collectionFile = extractTweeters(bitly)
-            propagationTree.create(collectionFile)
+    if settings[1] == "y":
+        for line in open('./data/tree/knownLinks.txt', 'r'):
+            bitly = line.split(',')[0]
+            nr = line.split(',')[1]
+            if settings[3] < int(nr) < settings[4]:
+                # for testing one file: bitly == "http://bit.ly/2F8OHSP":
+                # for testing files with X links: int(nr) > settings[2] and int(nr) < settings[3]:
+                collectionFile = extractTweeters(bitly)
+                path = Path(('./data/tree/trees/' + collectionFile[30:-4] + '.txt'))
+                if not path.is_file():
+                    propagationTree.create(collectionFile)
+    elif settings[2] == "y":
+        propagationTree.printTree("Xbox_One_S_To")
 
 '''Writes two files that contain all Twitter posts, one to be changed whenever tweets in them are 
 written to another file'''
