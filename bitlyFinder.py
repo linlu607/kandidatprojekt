@@ -61,10 +61,10 @@ class StdOutListener(tweepy.StreamListener):
 def readTokensFromConf():
     # We want to modify the global variables
     global access_token, access_token_secret, consumer_secret, consumer_key
-    access_token = '741298123088252928-lvwlT3tnKkJp7IPHHBfagm7RIQtfvOw'
-    access_token_secret = 'rXYyhuBRLHdi9scnURd7wRBFZS59RyWfhIpco1RgIczdK'
-    consumer_key = 'nZ0GXjkq7fGAM2WJVObMSRdkl'
-    consumer_secret = 'DDTRELK5IpXDcXmeMmOkmWXEXOm7C8bLUCAZuIrS1dL06YEFW8'
+    access_token = '2499482702-0b9ktOZ8Ooz1rFvvOSSmAs51nNu6qfn7svTUkLV'
+    access_token_secret = 'frzzjZHLXSKsKW3XXkGl2zmWM7ZWWDEY4s7reROebnoe7'
+    consumer_key = 'Xunyk8FMaSSddtlelb8UDvhRj'
+    consumer_secret = 'T8VFupQ5g1RszY6zyrcMA1KN3qztdMx6QFLv2pe2AfErztIC7c'
 
 
 def collectTweets(path_and_filename, seconds_to_collect):

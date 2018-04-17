@@ -18,10 +18,10 @@ class PropTree(object):
             print(RenderTree(root))
 
     '''Shows the tree with only the idNr of each node'''
-    def makeIdTree(self):
+    def makeNodeTree(self):
         for root in self.roots:
             for pre, fill, node in RenderTree(root):
-                print("%s%s" % (pre, node.id))
+                print("%s%s" % (pre, node.nodeNr))
 
     '''Adds a root to the tree'''
     def addRoot(self, newRoot):
@@ -35,10 +35,17 @@ class PropTree(object):
                     return node
 
     '''Find a specific node by its idStr as seen in its JSON array'''
-    def findNodeByIdStr(self, nodeIdStr):
+    def findNodeByIdStr(self, IdStr):
         for root in self.roots:
             for pre, fill, node in RenderTree(root):
-                if node.idStr == nodeIdStr:
+                if node.idStr == IdStr:
+                    return node
+
+    '''Find a specific node by its idUser'''
+    def findNodeByIdUser(self, idUser):
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                if node.idUser == idUser:
                     return node
 
     '''Get the timestamp of the node whose tweet was posted first'''
@@ -75,3 +82,19 @@ class PropTree(object):
                     timeStamp = quotedPost['created_at']
                     return timeStamp
         return None
+
+    '''Get a list of user ids in a tree'''
+    def getListIdUser(self):
+        listIdUser = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                listIdUser.append(node.idUser)
+        return listIdUser
+
+    '''Print a list of user ids in a tree'''
+    def printListIdUser(self):
+        listIdUser = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                print("Node" + str(node.idUser))
+        return listIdUser

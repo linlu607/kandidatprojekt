@@ -10,3 +10,7 @@ The report revealed that Jordanians pumped more than 2 billion dirhams through 7
 The report confirms that foreigners are an important source of real estate in Dubai during the first nine months of this year. The figures in the report indicate that Indian investors came first, and pumped 13 billion dirhams through 4661 investors, among the top 10 foreign nationalities .
 The report revealed that the British invested nearly 7 billion dirhams to take second place, followed by Pakistanis with investments of more than 5 billion dirhams.
 A jump in oil prices drives equity markets to further recover
+<<<<<<< HEAD
+=======
+Neum is the first capital city to be put on the market
+>>>>>>> 2010ed3269dcebbf0eae06817e87cc1bc1227d30

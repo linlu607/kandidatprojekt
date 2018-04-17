@@ -133,11 +133,16 @@ if (__name__ == '__main__'):
 
     
     sleeplength = 0
+
     timeout = 1200 #input("In seconds, for how long would you like to collect twets? ", ) #600 #
 
     runs = 1 #input("For how many runs would you like to collect tweets? ", ) #144 #
 
-    runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
+    timeout = 1200  # input("In seconds, for how long would you like to collect twets? ", ) #600 #
+
+    runs = 1  # input("For how many runs would you like to collect tweets? ", ) #144 #
+
+    runBitly = "y"  #raw_input("Would you like to extract bitly info too? (y/n)")
 
     runHtmlExtractor = "y" #raw_input("Would you like to extract articles from identified links? (y/n)")
 
@@ -147,6 +152,8 @@ if (__name__ == '__main__'):
     if saveClicks == "y":
         sleeplength = 1200 #int(raw_input("How often would you like to update clicks, answer in seconds ")) #7200 #
         turns = 1 #int(raw_input("How many times would you like to update?")) #72 #
+        sleeplength = 1200  # int(raw_input("How often would you like to update clicks, answer in seconds ")) #7200 #
+        turns = 1  # int(raw_input("How many times would you like to update?")) #72 #
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
