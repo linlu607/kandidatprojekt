@@ -50,7 +50,7 @@ def saveText(url):
 
         title = ''
         i = 0
-        if soup.title is None :
+        if soup.title is None:
             title = 'noTitle'
         else:
             for part in soup.title.string.split(" "):
