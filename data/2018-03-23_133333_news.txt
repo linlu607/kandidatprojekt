@@ -1,1 +1,0 @@
-{'long_url': 'http://www.bbc.co.uk/news/technology-43402898', 'global_clicks': 1, 'user_clicks': 1, 'countries': [], 'short_url': u'http://bbc.in/2u9H5eE', 'refs': None, 'id': 977161309992161281L, 'bitly_user_hash': u'2u9H5eE', 'bitly_global_hash': u'2DOR8oY'}
