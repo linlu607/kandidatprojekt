@@ -3,17 +3,20 @@ import json
 
 import propagationTree
 import titleExtractor
+from pathlib import Path
 
 TWEETSPATH = './data/tweets/'
 COLLECTIONPATH = './data/links/collectionByLink/'
 
 '''What should the code do?'''
 def settingsInput():
-    collectData = raw_input("Would you like to collect data from dataset? (y/n) ")
-    minTreeAmount = input("Enter minimum amount of tweets to construct tree: ", )
-    maxTreeAmount = input("Enter maximum amount of tweets to consruct tree: ")
+    collectData = "n"  # raw_input("Would you like to collect data from dataset? (y/n) ")
+    constructTree = "n"  # raw_input("Would you like to construct propagation trees from knownLinks? (y/n) ")
+    printTree = "y"  # raw_input("Would you like to print a propagation tree from file? (y/n) ")
+    minTreeAmount = 30  # input("Enter minimum tweets to construct tree ", )
+    maxTreeAmount = 50  # input("Enter maximum tweets to construct tree ", )
 
-    return [collectData, minTreeAmount]
+    return [collectData, constructTree, printTree, minTreeAmount, maxTreeAmount]
 
 def main():
     collectData = raw_input("Would you like to gather all tweets in one file? (y/n) ")
@@ -35,7 +38,8 @@ def showInfoOnBitlys():
         chosenBitly = input("Choose the line that has the interesting link: ")
         headline = bitlys[chosenBitly].split(",")[0]
         print("Headline is " + str(headline))
-        if headline+".txt" in "./data/tree/trees":
+        path = Path(('.data/tree/trees/' + headline + ".txt"))
+        if path.is_file():
             print("Tree exists")
         else:
             if isAlreadyExtracted(headline):
