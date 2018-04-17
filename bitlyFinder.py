@@ -79,5 +79,9 @@ def collectTweets(path_and_filename, seconds_to_collect):
     # KEYWORDS
     # Note: Important to not use dots in the URLs in the filter (see below)
     print('Starting keyword filtering!')
-    stream.filter(track=['bit ly', 'cnn it', 'huff to', 'bbc it', 'bbc in', 'nyti ms', 'fxn ws'])
+    #stream.filter(follow=['984035997653635073', '984037025178415104', '984037875221188614',
+                       #   '984039447753838592', '984040788937101312'])
+
+    stream.filter(follow=['976401049052438529', '976403553773412353', '976404893677350912', '984034082022723584', '984034889363345408', '984035997653635073', '984037025178415104', '984037875221188614', '984039447753838592', '984040788937101312'])
+    #stream.filter(track=['bit ly', 'cnn it', 'huff to', 'bbc it', 'bbc in', 'nyti ms', 'fxn ws'])
     print("Done streaming!")

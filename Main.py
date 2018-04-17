@@ -35,6 +35,7 @@ def u(q, sleep, turns, lock):
                 lock.acquire()
                 startBitly = time.time()
                 # Make faster/getmore threads
+                print "about to update clicks"
                 res = bitlydatahandler.updateClicks(path)
                 print "bitlys updated in %.2f seconds" % (time.time() - startBitly)
                 lock.release()
@@ -132,9 +133,9 @@ if (__name__ == '__main__'):
 
     
     sleeplength = 0
-    timeout = input("In seconds, for how long would you like to collect twets? ", ) #600 #
+    timeout = 1200 #input("In seconds, for how long would you like to collect twets? ", ) #600 #
 
-    runs = input("For how many runs would you like to collect tweets? ", ) #144 #
+    runs = 1 #input("For how many runs would you like to collect tweets? ", ) #144 #
 
     runBitly = "y" #raw_input("Would you like to extract bitly info too? (y/n)")
 
@@ -144,8 +145,8 @@ if (__name__ == '__main__'):
 
     saveClicks = "y" #raw_input("Would you like to save clicks to excelfile? (y/n)")
     if saveClicks == "y":
-        sleeplength = int(raw_input("How often would you like to update clicks, answer in seconds ")) #7200 #
-        turns = int(raw_input("How many times would you like to update?")) #72 #
+        sleeplength = 1200 #int(raw_input("How often would you like to update clicks, answer in seconds ")) #7200 #
+        turns = 1 #int(raw_input("How many times would you like to update?")) #72 #
 
     open('./data/seenShortURLs.txt', 'w').close()
     open('./data/expanded.txt', 'w').close()
