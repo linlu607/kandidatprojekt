@@ -1,16 +1,14 @@
 import json
-import time
 import tweepy
 from anytree import AnyNode
 from PropTree import PropTree
 from anytree.exporter import JsonExporter
 from anytree.importer import JsonImporter
 
-<<<<<<< HEAD
+
 '''Creates a tree structure, prints it and saves it to file'''
-=======
+
 '''Creates a tree structure, prints it and saves it to file (from a headline)'''
->>>>>>> 76b17feb743248939c044a85bae257b727259fad
 def create(tweetsFile):
     # A node should have an nodeNr (starting on 0), idStr(tweet id), parent.
     propTree = PropTree()  # an instance of a tree
