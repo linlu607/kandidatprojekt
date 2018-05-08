@@ -1,0 +1,1 @@
+{"quote_count": 0, "created_at": "Sun Mar 25 14:42:04 +0000 2018", "fileName": "bitly2zMywrp", "entities": {"urls": {"0": {"expanded_url": "http://bit.ly/2zMywrp"}}}, "id_str": "977918545630781440", "retweet_count": 0, "user": {"followers_count": 107, "statuses_count": 3021, "id_str": "894817356152807425", "friends_count": 1}}

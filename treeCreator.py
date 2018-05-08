@@ -1,12 +1,16 @@
 import os
 import json
 
+import time
+import fileSorter
 import propagationTree
 import titleExtractor
 from pathlib import Path
 
 TWEETSPATH = './data/tweets/'
 COLLECTIONPATH = './data/links/collectionByLink/'
+TREEPATH = './data/tree/'
+SORTEDPATH = './data/tweets/sortedFiles/'
 
 '''What should the code do?'''
 def settingsInput():
@@ -18,13 +22,72 @@ def settingsInput():
 
     return [collectData, constructTree, printTree, minTreeAmount, maxTreeAmount]
 
+def changeTime():
+    PATH = './data/tree/trees/'
+    for treeFile in os.listdir(PATH):
+        if os.path.isfile(PATH+treeFile):
+            tree = propagationTree.printTree(treeFile)
+            time_ = tree.getTimePeriodRedo()
+            propagationTree.changeInFile(treeFile, 'time', time_)
+
+def changeLevels():
+    PATH = './data/tree/trees/'
+    for treeFile in os.listdir(PATH):
+        if os.path.isfile(PATH + treeFile):
+            if treeFile == "bitly2G5Q.txt":
+                tree = propagationTree.printTree(treeFile)
+                timeLevels = tree.getTimeForLevels()
+                propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
+
 def main():
-    collectData = raw_input("Would you like to gather all tweets in one file? (y/n) ")
-    if collectData == "y":
-        collectFiles()
-        findLinks()
+    changeLevels()
+    return
+    PATH = './data/manual_of_interest/huge/onlyhuge/'
+    for tweetsFile in os.listdir(PATH):
+        try:
+            print(tweetsFile)
+            propTree = propagationTree.create(PATH+tweetsFile)
+            print(propTree.getLink())
+            propTree.makeNodeTree()
+        except AttributeError:
+            print("Attribute error for " + str(tweetsFile) + "")
+    return
     while True:
         userInput()
+
+def gatherLargeFiles():
+    saveFolder = SORTEDPATH+"Sorted_of_interest/"
+    foldersChecked = 0
+    filesChecked = 0
+    for folder in os.listdir(SORTEDPATH):
+        foldersChecked += 1
+        if folder != "Sorted_of_interest":
+            for innerFolder in os.listdir(SORTEDPATH+folder+"/"):
+                for textFile in os.listdir(SORTEDPATH+folder+"/"+innerFolder+"/"):
+                    filesChecked += 1
+                    filePathAndName = SORTEDPATH+folder+"/"+innerFolder+"/"+textFile
+                    fileSize = int(os.path.getsize(filePathAndName))
+                    fileFound = True
+                    if fileSize in range(0, 9999):
+                        fileFound = False
+                    if fileSize in range(10000, 20000):
+                        saveLocation = open(saveFolder + "ten_twenty/" + textFile, 'a+')
+                    elif fileSize in range(50000, 70000):
+                        saveLocation = open(saveFolder + "fifty_sixty/" + textFile, 'a+')
+                    elif fileSize in range(100000, 300000):
+                        saveLocation = open(saveFolder + "hundred_hundredtwenty/" + textFile, 'a+')
+                    elif fileSize in range(500000, 100000000):
+                        saveLocation = open(saveFolder + "huge/" + textFile, 'a+')
+                    else:
+                        fileFound = False
+                    if fileFound:
+                        origFile = open(filePathAndName, 'r')
+                        for line in origFile:
+                            saveLocation.write(line)
+                        saveLocation.close()
+        print("Done with folder")
+        print(foldersChecked)
+    print(filesChecked)
 
 def showInfoOnBitlys():
     bitlys = []
@@ -49,14 +112,82 @@ def showInfoOnBitlys():
                 collectionFile = extractTweeters(bitly)
                 propagationTree.create(collectionFile)
 
+def decreaseJSON():
+    nrOfErrors = 0
+    fileCounter = 0
+    startTime = time.time()
+    for file in os.listdir(TWEETSPATH):
+        with open(TWEETSPATH+file) as tweetsFile:
+            for line in tweetsFile:
+                jsonLine = json.loads(line)
+                reducedTweet = fileSorter.makeMiniTweet(jsonLine)
+                if reducedTweet is None:
+                    break
+                innerFolderName = json.dumps(reducedTweet['fileName'])[1:8]+"/"
+                folderName = innerFolderName[:6]+"/"
+                folderName = SORTEDPATH + folderName
+                innerFolderName = folderName + innerFolderName
+                try:
+                    if not os.path.exists(innerFolderName):
+                        nameLength = len(json.dumps(reducedTweet['fileName']))
+                        if nameLength < 6:
+                            folderName = folderName[:nameLength - 3]
+                            innerFolderName = innerFolderName[:nameLength - 2]
+                        if not os.path.exists(folderName):
+                                os.makedirs(folderName)
+                        os.makedirs(innerFolderName)
+                    fileName = innerFolderName+json.dumps(reducedTweet['fileName'])+'.txt'
+                    fileName = fileName.replace("\"", "")
+                    try:
+                        open(fileName, 'a+').write(json.dumps(reducedTweet) + "\n")
+                    except IOError:
+                        nrOfErrors += 1
+                        break
+                except WindowsError:
+                    nrOfErrors += 1
+        fileCounter += 1
+        print(fileCounter)
+        print(time.time()-startTime)
+    print("Done")
+    print("Nr of errors: " + str(nrOfErrors) + "")
+
+def listTrees():
+    with open(TREEPATH+"generalTreeData.txt", 'r') as treeInfo:
+        for line in treeInfo:
+            print line
+
+def setClasses():
+    minNodes = input("Insert minimum amount of nodes to classify: ")
+    with open(TREEPATH+"generalTreeData.txt", 'r') as treeInfo, open(TREEPATH+"generalTreeDataClassified.txt", 'w') as newFile:
+        for line in treeInfo:
+            jsonLine = json.loads(line)
+            if jsonLine['size'] >= minNodes:
+                print(line)
+                newClass = raw_input("Class: ")
+                jsonLine['class'] = newClass
+                newFile.write(json.dumps(jsonLine))
+
 def userInput():
-    option = input("What would you like to do now? \n1: Get info on bitlys \n2: Construct multiple trees \n")
+    option = input("What would you like to do now? \n1: Get info on bitlys \n2: Construct multiple trees \n3: Show tree data \n4: Set classes \n5: Make trees from folder\n")
     if option == 1:
         showInfoOnBitlys()
     elif option == 2:
         startConstructing()
+    elif option == 3:
+        listTrees()
+    elif option == 4:
+        setClasses()
+    elif option == 5:
+        folderPath = raw_input("File path to the folder: ")
+        makeTreesFromFolder(folderPath)
     else:
         return
+
+'''Creates trees from sorted files (by link))'''
+def makeTreesFromFolder(folderPath):
+    for tweetsFile in os.listdir(folderPath):
+            propagationTree.create(folderPath+tweetsFile)
+
 
 def startConstructing():
     bitlys = open('./data/links/BitlyInfo.txt', 'r')
