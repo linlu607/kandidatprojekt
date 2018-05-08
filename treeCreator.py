@@ -5,6 +5,7 @@ import time
 import fileSorter
 import propagationTree
 import titleExtractor
+import graphPlotter
 from pathlib import Path
 
 TWEETSPATH = './data/tweets/'
@@ -40,7 +41,7 @@ def changeLevels():
                 propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
 
 def main():
-    changeLevels()
+    graphPlotter.makeScatter("./data/tree/trees/")
     return
     PATH = './data/manual_of_interest/huge/onlyhuge/'
     for tweetsFile in os.listdir(PATH):

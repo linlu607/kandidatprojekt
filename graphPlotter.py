@@ -1,7 +1,10 @@
 import json
+
+import os
 from matplotlib import pyplot as plt
 from matplotlib import dates as dt
 import datetime
+import time
 import xlwt
 import propagationTree
 
@@ -140,4 +143,16 @@ def stripTime(timeStamp):
         return ts
     return datetime.datetime.strptime(timeStamp, str(pattern))
 
-plotTimeSeriesAll()
+def makeScatter(PATH):
+    for treeFile in os.listdir(PATH):
+        if os.path.isfile(PATH + treeFile):
+            tree = propagationTree.printTree(treeFile)
+            scatterData = tree.getDiffusionConstants()
+            if scatterData:
+                plt.scatter(*zip(*scatterData), marker=".", color='#000000')
+    plt.xlabel("Followers")
+    plt.ylabel("Children")
+    saveScatter(str(int(time.time())))
+
+def saveScatter(titel):
+    plt.savefig("./data/tree/scatter/" + titel)

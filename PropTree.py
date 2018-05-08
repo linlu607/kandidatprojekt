@@ -158,7 +158,7 @@ class PropTree(object):
         listIdUser = []
         for root in self.roots:
             for pre, fill, node in RenderTree(root):
-                print("Node" + str(node.idUser))
+                print("Node " + str(node.idUser))
         return listIdUser
 
     '''Returns a JSON object with data about the tree'''
@@ -200,6 +200,26 @@ class PropTree(object):
             currentSize += 1 + self.getNrOfDescendants(child)
         return currentSize
 
+    '''Returns the number of children a node has'''
+    def getNrOfChildren(self, node):
+        return len(node.children)
+
+    '''Returns the follower count of a node'''
+    def getNodeFollowerCount(self, node):
+        return node.followerCount
+
+    '''Returns the diffusion constant of all nodes node'''
+    def getDiffusionConstants(self):
+        diffDict = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                theChildren = self.getNrOfChildren(node)
+                theFollowers = self.getNodeFollowerCount(node)
+                if theFollowers is not 0 and theChildren is not 0 and theChildren < 100 and theFollowers < 1000:
+                    dataTuple = (theFollowers, theChildren)
+                    diffDict.append(dataTuple)
+        return diffDict
+
     def findMinTimeStamp(self, stamps):
         strpStamps = []
         for stamp in stamps:
@@ -225,7 +245,7 @@ class PropTree(object):
                 minOnLevel = self.findMinTimeStamp(level)
                 if firstRoot or highestIndex < levelIndex:
                     levelTimes[levelIndex] = minOnLevel
-                    if not firstRoot:
+                    if highestIndex < levelIndex:
                         highestIndex += 1
                 else:
                     levelTimes[levelIndex] = min(minOnLevel, levelTimes[levelIndex])
@@ -259,3 +279,5 @@ class PropTree(object):
             currentSize += 1
             grandchildSize = self.getHighestChildCount(child)
         return max(currentSize, grandchildSize)
+
+
