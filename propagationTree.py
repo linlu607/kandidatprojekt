@@ -20,22 +20,23 @@ def create(tweetsFile):
     print(len(posts))
     collectFollowers = True
     quotesAndRetweets = 0
-    repostedUsers = []
+    repostedUsers = {}
     for post in posts:
+        userID = None
         if 'retweeted_status' in post:
-            quotesAndRetweets += 1
-            repostedUsers.append(post['retweeted_status']['user']['id_str'])
+            userID = post['retweeted_status']['user']['id_str']
         elif 'quoted_status' in post:
+            userID = post['quoted_status']['user']['id_str']
+        if userID is not None:
             quotesAndRetweets += 1
-            repostedUsers.append(post['quoted_status']['user']['id_str'])
-    repostedUsers = json.dumps(repostedUsers)
-    print(repostedUsers)
-    print(quotesAndRetweets)
+            if userID in repostedUsers:
+                repostedUsers[userID] += 1
+            else:
+                repostedUsers[userID] = 1
     for post in posts:
         post['tweet_nr'] = nodeNr  # adds a new key, which is the id for a post when in the tree (does this do anything really? Should we include post as a JSON in the AnyNode object?)
         idStr = post['id_str']
         idUser = post['user']['id_str']
-        print(idUser)
         timeStamp = post['created_at']
         followerCount = post['user']['followers_count']
         if 'retweeted_status' in post:
@@ -56,28 +57,26 @@ def create(tweetsFile):
                 parentNodeNr = "x" + str(unknownNodeNr)  # artificial parents can be distinguished by an ex in their id
                 parentNode = AnyNode(nodeNr=parentNodeNr, idStr=parentIdStr, idUser=parentIdUser, time=parentTimeStamp, followerCount=parentFollowerCount)
                 propTree.addRoot(parentNode)
-                print("Parent: " + str(parentIdUser))
                 if str(parentIdUser) in repostedUsers:
-                   # print("Left: " + str(int(followerCount) * len(repostedUsers) / 5000))
-                    #if (int(parentFollowerCount)*len(repostedUsers)/5000) < quotesAndRetweets:
-                    propTree.addRootFollowers(parentIdUser, getFollowers(parentIdUser, requestCounter, len(posts)))
+                    if int(repostedUsers[parentIdUser]) > int(parentFollowerCount)/5000:
+                        propTree.addRootFollowers(parentIdUser, getFollowers(parentIdUser, requestCounter, len(posts)))
+                        requestCounter += 1
                 unknownNodeNr += 1
             AnyNode(nodeNr=nodeNr, idStr=idStr, idUser=idUser, parent=parentNode, time=timeStamp, followerCount=followerCount)
         else:
             # this is original content
             reference = AnyNode(nodeNr=nodeNr, idStr=idStr, idUser=idUser, time=timeStamp, followerCount=followerCount)
             propTree.addRoot(reference)
-            print("User: " + str(idUser))
             if str(idUser) in repostedUsers:
-                print("Left: " + str(int(followerCount) * len(repostedUsers)/5000))
-               # if (int(followerCount) * len(repostedUsers)/5000) < quotesAndRetweets:
-                propTree.addRootFollowers(idUser, getFollowers(idUser, requestCounter, len(posts)))
+                if int(repostedUsers[idUser]) > int(followerCount)/5000:
+                    propTree.addRootFollowers(idUser, getFollowers(idUser, requestCounter, len(posts)))
+                    requestCounter += 1
         nodeNr += 1
     propTree.updatePosts(posts)
     exporter = JsonExporter(indent=2, sort_keys=True)
     saveFileName = propTree.getFileName()
-    open('./data/tree/trees/' + saveFileName + '.txt', 'w').close
-    savedFile = open('./data/tree/trees/' + saveFileName + '.txt', 'r+')
+    open('./data/tree/trees/top/' + saveFileName + '.txt', 'w').close
+    savedFile = open('./data/tree/trees/top/' + saveFileName + '.txt', 'r+')
     for root in propTree.roots:
         exporter.write(root, savedFile)
         savedFile.write("&\n")
@@ -145,7 +144,6 @@ def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter,
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     api = tweepy.API(auth, wait_on_rate_limit=True)
-    #if collectFollowers:
     rootFollowers = propTree.rootFollowers.get(parentIdUser)
     if rootFollowers is not None:
         for follower in rootFollowers:
@@ -176,7 +174,7 @@ def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter,
 
 def writeToFile(propTree):
     data = propTree.getGeneralJsonData()
-    with open(TREEPATH + "generalTreeData.txt", 'a') as general:
+    with open(TREEPATH + "generalTreeDataTop.txt", 'a') as general:
         general.write(data + '\n')
 
 def changeInFile(fileName, attribute, value):

@@ -8,7 +8,7 @@ import titleExtractor
 import graphPlotter
 from pathlib import Path
 
-TWEETSPATH = './data/tweets/'
+TWEETSPATH_REG = './data/tweets/'
 COLLECTIONPATH = './data/links/collectionByLink/'
 TREEPATH = './data/tree/'
 SORTEDPATH = './data/tweets/sortedFiles/'
@@ -43,7 +43,6 @@ def changeLevels():
 def main():
     graphPlotter.makeScatter("./data/tree/trees/")
     return
-    PATH = './data/manual_of_interest/huge/onlyhuge/'
     for tweetsFile in os.listdir(PATH):
         try:
             print(tweetsFile)
@@ -55,6 +54,22 @@ def main():
     return
     while True:
         userInput()
+
+def makeTopTrees():
+    treesToCreate = open('./data/topAndRand/filesToLookAt.txt', 'r')
+    for line in treesToCreate:
+        if "top" in line.split("/")[4]:
+            try:
+                fileName = line.split(" ")[0]
+                tree = propagationTree.create(fileName)
+                print(tree.getLink())
+                tree.makeNodeTree()
+            except AttributeError:
+                if fileName is not None:
+                    print("Attribute error for " + str(fileName) + "")
+                else:
+                    print("Some error")
+
 
 def gatherLargeFiles():
     saveFolder = SORTEDPATH+"Sorted_of_interest/"
@@ -113,7 +128,7 @@ def showInfoOnBitlys():
                 collectionFile = extractTweeters(bitly)
                 propagationTree.create(collectionFile)
 
-def decreaseJSON():
+def decreaseJSON(TWEETSPATH):
     nrOfErrors = 0
     fileCounter = 0
     startTime = time.time()
@@ -209,8 +224,8 @@ def collectFiles():
     tweetsCollection = open('./data/tree/collectedTweets.txt', 'w')
     collectionToChange = open('./data/tree/unExtractedTweets.txt', 'w')
 
-    for file in os.listdir(TWEETSPATH):
-        for line in open(TWEETSPATH + file):
+    for file in os.listdir(TWEETSPATH_REG):
+        for line in open(TWEETSPATH_REG + file):
             tweetsCollection.write(line)
             collectionToChange.write(line)
 
