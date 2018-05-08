@@ -212,7 +212,6 @@ class PropTree(object):
             strpStamps.append(self.stripTime(stamp))
         return max(strpStamps)
 
-
     def getTimeForLevels(self):
         group = 0
         levelTimes = {}
@@ -225,7 +224,7 @@ class PropTree(object):
                 minOnLevel = self.findMinTimeStamp(level)
                 if firstRoot or highestIndex < levelIndex:
                     levelTimes[levelIndex] = minOnLevel
-                    if not firstRoot:
+                    if highestIndex < levelIndex:
                         highestIndex += 1
                 else:
                     levelTimes[levelIndex] = min(minOnLevel, levelTimes[levelIndex])
