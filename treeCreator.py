@@ -41,7 +41,11 @@ def changeLevels():
                 propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
 
 def main():
+    #tree = propagationTree.printTree("bitly14zB.txt")
+    #tree.makeNodeTree()
+    #graphPlotter.plotTimeSeriesColors()
     graphPlotter.makeScatter("./data/tree/trees/")
+    #makeRandomTrees()
     return
     for tweetsFile in os.listdir(PATH):
         try:
@@ -70,6 +74,20 @@ def makeTopTrees():
                 else:
                     print("Some error")
 
+def makeRandomTrees():
+    treesToCreate = open('./data/topAndRand/filesToLookAt.txt', 'r')
+    for line in treesToCreate:
+        if "random" in line.split("/")[4]:
+            try:
+                fileName = line.split(" ")[0]
+                tree = propagationTree.create(fileName)
+                print(tree.getLink())
+                tree.makeNodeTree()
+            except AttributeError:
+                if fileName is not None:
+                    print("Attribute error for " + str(fileName) + "")
+                else:
+                    print("Some error")
 
 def gatherLargeFiles():
     saveFolder = SORTEDPATH+"Sorted_of_interest/"

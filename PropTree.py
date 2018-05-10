@@ -132,7 +132,10 @@ class PropTree(object):
         return str(self.stripTime(secondTimeStamp) - self.stripTime(firstTimeStamp))
 
     def compareStrippedStamps(self, firstTimeStamp, secondTimeStamp):
-        return str(secondTimeStamp - firstTimeStamp)
+        timeDiff = secondTimeStamp - firstTimeStamp
+        if (timeDiff.seconds/3600) < 10:
+            return str(timeDiff)[:-7] + "0" + str(timeDiff)[len(str(timeDiff))-7:]
+        return str(timeDiff)
 
     def stripTime(self, timeStamp):
         offset = timeStamp.split(" ")[4]
@@ -278,5 +281,4 @@ class PropTree(object):
             currentSize += 1
             grandchildSize = self.getHighestChildCount(child)
         return max(currentSize, grandchildSize)
-
 

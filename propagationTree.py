@@ -75,8 +75,8 @@ def create(tweetsFile):
     propTree.updatePosts(posts)
     exporter = JsonExporter(indent=2, sort_keys=True)
     saveFileName = propTree.getFileName()
-    open('./data/tree/trees/top/' + saveFileName + '.txt', 'w').close
-    savedFile = open('./data/tree/trees/top/' + saveFileName + '.txt', 'r+')
+    open('./data/tree/trees/random/' + saveFileName + '.txt', 'w').close
+    savedFile = open('./data/tree/trees/random/' + saveFileName + '.txt', 'r+')
     for root in propTree.roots:
         exporter.write(root, savedFile)
         savedFile.write("&\n")
@@ -136,10 +136,10 @@ def getFollowers(idUser, requestCounter, tot):
 
 
 def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter, tot, collectFollowers):
-    access_token = '2499482702-0b9ktOZ8Ooz1rFvvOSSmAs51nNu6qfn7svTUkLV'
-    access_token_secret = 'frzzjZHLXSKsKW3XXkGl2zmWM7ZWWDEY4s7reROebnoe7'
-    consumer_key = 'Xunyk8FMaSSddtlelb8UDvhRj'
-    consumer_secret = 'T8VFupQ5g1RszY6zyrcMA1KN3qztdMx6QFLv2pe2AfErztIC7c'
+    access_token = '741298123088252928-lvwlT3tnKkJp7IPHHBfagm7RIQtfvOw'
+    access_token_secret = 'rXYyhuBRLHdi9scnURd7wRBFZS59RyWfhIpco1RgIczdK'
+    consumer_key = 'nZ0GXjkq7fGAM2WJVObMSRdkl'
+    consumer_secret = 'DDTRELK5IpXDcXmeMmOkmWXEXOm7C8bLUCAZuIrS1dL06YEFW8'
 
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
@@ -174,7 +174,7 @@ def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter,
 
 def writeToFile(propTree):
     data = propTree.getGeneralJsonData()
-    with open(TREEPATH + "generalTreeDataTop.txt", 'a') as general:
+    with open(TREEPATH + "generalTreeDataRandom.txt", 'a') as general:
         general.write(data + '\n')
 
 def changeInFile(fileName, attribute, value):
