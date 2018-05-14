@@ -1,7 +1,10 @@
 import json
+
+import os
 from matplotlib import pyplot as plt
 from matplotlib import dates as dt
 import datetime
+import time
 import xlwt
 import propagationTree
 
@@ -24,12 +27,12 @@ def makeLevelGraph():
 
 def getFollowerCount(jsonLine):
     fileName = jsonLine['fileName']
-    tree = propagationTree.printTree('/bbcfox/' + fileName+'.txt')
+    tree = propagationTree.printTree(fileName+'.txt')
     return tree.findRootFollowerCount()
 
 
 def plotTimeSeriesColors():
-    dataFile = open('./data/tree/generalTreeData_bbcfox.txt', 'r')
+    dataFile = open('./data/tree/generalTreeData.txt', 'r')
     for line in dataFile:
         maxY = 0
         maxX = "00:00:00"
@@ -100,6 +103,16 @@ def plotTimeSeries():
     plt.gcf().autofmt_xdate()
     plt.show()
 
+def stripTime(timeStamp):
+    pattern = '%H:%M:%S'
+    if "day" in timeStamp or "days" in timeStamp:
+        newTime = timeStamp.replace("day, ", "").replace("days, ", "")
+        toAdd = datetime.timedelta(hours=int(newTime.split()[0])*24)
+        timeStamp = newTime.replace(newTime.split()[0] + " ", "")
+        ts = datetime.datetime.strptime(timeStamp, str(pattern)) + toAdd
+        return ts
+    return datetime.datetime.strptime(timeStamp, str(pattern))
+
 def plotTimeSeriesAll():
     dataFile = open('./data/tree/generalTreeData.txt', 'r')
     for line in dataFile:
@@ -129,15 +142,23 @@ def plotTimeSeriesAll():
     fig.autofmt_xdate()
     plt.show()
 
+def makeScatter(PATH):
+    for treeFile in os.listdir(PATH):
+        if os.path.isfile(PATH + treeFile):
+            tree = propagationTree.printTree(treeFile)
+            scatterData = tree.getDiffusionConstants()
+            if scatterData:
+                plt.scatter(*zip(*scatterData), marker=".", color='#000000')
+        else:
+            for subTreeFile in os.listdir(PATH + treeFile + "/"):
+                if os.path.isfile(PATH + treeFile + "/" + subTreeFile):
+                    subTree = propagationTree.printTree(treeFile + "/" + subTreeFile)
+                    subScatterData = subTree.getDiffusionConstants()
+                    if subScatterData:
+                        plt.scatter(*zip(*subScatterData), marker=".", color='#000000')
+    plt.xlabel("Followers")
+    plt.ylabel("Retweeters")
+    savePlot("scatter_" + str(int(time.time())))
 
-def stripTime(timeStamp):
-    pattern = '%H:%M:%S'
-    if "day" in timeStamp or "days" in timeStamp:
-        newTime = timeStamp.replace("day, ", "").replace("days, ", "")
-        toAdd = datetime.timedelta(hours=int(newTime.split()[0])*24)
-        timeStamp = newTime.replace(newTime.split()[0] + " ", "")
-        ts = datetime.datetime.strptime(timeStamp, str(pattern)) + toAdd
-        return ts
-    return datetime.datetime.strptime(timeStamp, str(pattern))
-
-plotTimeSeriesAll()
+def savePlot(titel):
+    plt.savefig("./data/tree/plots/" + titel)

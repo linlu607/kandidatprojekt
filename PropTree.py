@@ -45,19 +45,6 @@ class PropTree(object):
             for pre, fill, node in RenderTree(root):
                 print("%s%s" % (pre, node.time))
 
-    def getDiffusionConstants(self):
-        diffDict = []
-        for root in self.roots:
-            for pre, fill, node in RenderTree(root):
-                print("Nodenr: " + str(node.nodeNr))
-                theChildren = self.getNrOfChildren(node)
-                print("Children: " + str(theChildren))
-                theFollowers = self.getNodeFollowerCount(node)
-                print("Followers: " + str(theFollowers))
-                if theFollowers is not 0 and theChildren is not 0: # and theChildren < 100 and theFollowers < 1000:
-                    dataTuple = (theFollowers, theChildren)
-                    diffDict.append(dataTuple)
-        return diffDict
 
     def getOriginalCount(self):
         return len(self.roots)
@@ -209,7 +196,7 @@ class PropTree(object):
         listIdUser = []
         for root in self.roots:
             for pre, fill, node in RenderTree(root):
-                print("Node" + str(node.idUser))
+                print("Node " + str(node.idUser))
         return listIdUser
 
     '''Returns a JSON object with data about the tree'''
@@ -253,6 +240,18 @@ class PropTree(object):
         for child in node.children:
             currentSize += 1 + self.getNrOfDescendants(child)
         return currentSize
+
+    '''Returns the diffusion constant of all nodes node'''
+    def getDiffusionConstants(self):
+        diffDict = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                theChildren = self.getNrOfChildren(node)
+                theFollowers = self.getNodeFollowerCount(node)
+                if theFollowers is not 0 and theChildren is not 0 and theChildren < 100 and theFollowers < 1000:
+                    dataTuple = (theFollowers, theChildren)
+                    diffDict.append(dataTuple)
+        return diffDict
 
     def findMinTimeStamp(self, stamps):
         strpStamps = []
@@ -303,7 +302,6 @@ class PropTree(object):
             if nrOfChildren > maxWidthFound:
                 maxWidthFound = nrOfChildren
         return maxWidthFound
-
 
     '''Returns the maximum number of siblings in a descendant chain of a node'''
     def getHighestChildCount(self, node):

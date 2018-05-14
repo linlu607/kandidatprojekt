@@ -76,8 +76,8 @@ def create(tweetsFile):
     propTree.updatePosts(posts)
     exporter = JsonExporter(indent=2, sort_keys=True)
     saveFileName = propTree.getFileName()
-    open('./data/tree/trees/TDS/' + saveFileName + '.txt', 'w').close
-    savedFile = open('./data/tree/trees/TDS/' + saveFileName + '.txt', 'r+')
+    open('./data/tree/trees/top/' + saveFileName + '.txt', 'w').close
+    savedFile = open('./data/tree/trees/top/' + saveFileName + '.txt', 'r+')
     for root in propTree.roots:
         exporter.write(root, savedFile)
         savedFile.write("&\n")
