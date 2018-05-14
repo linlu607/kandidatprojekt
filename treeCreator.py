@@ -40,22 +40,22 @@ def changeLevels():
                 propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
 
 def main():
-    makeTopTrees()
-    return
+    PATH = './data/manual_of_interest/medium/'
     for tweetsFile in os.listdir(PATH):
-        try:
-            print(tweetsFile)
-            propTree = propagationTree.create(PATH+tweetsFile)
-            print(propTree.getLink())
-            propTree.makeNodeTree()
-        except AttributeError:
-            print("Attribute error for " + str(tweetsFile) + "")
+        if os.path.isfile(PATH + tweetsFile):
+            try:
+                print(tweetsFile)
+                propTree = propagationTree.create(PATH+tweetsFile)
+                print(propTree.getLink())
+                propTree.makeNodeTree()
+            except AttributeError:
+                print("Attribute error for " + str(tweetsFile) + "")
     return
-    while True:
-        userInput()
+
 
 def makeTopTrees():
-    treesToCreate = open('./data/topAndRand/filesToLookAt.txt', 'r')
+    startTime = time.time()
+    treesToCreate = open('./data/topAndRand/smallerFiles.txt', 'r')
     for line in treesToCreate:
         if "top" in line.split("/")[4]:
             try:
@@ -68,7 +68,7 @@ def makeTopTrees():
                     print("Attribute error for " + str(fileName) + "")
                 else:
                     print("Some error")
-
+            print("Time: " + str(time.time() - startTime))
 
 def gatherLargeFiles():
     saveFolder = SORTEDPATH+"Sorted_of_interest/"

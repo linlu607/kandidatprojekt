@@ -35,11 +35,48 @@ class PropTree(object):
             for pre, fill, node in RenderTree(root):
                 print("%s%s" % (pre, node.nodeNr))
 
+    def makeFollowerTree(self):
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                print("%s%s" % (pre, node.followerCount))
+
     def makeTimeTree(self):
         for root in self.roots:
             for pre, fill, node in RenderTree(root):
                 print("%s%s" % (pre, node.time))
 
+    def getDiffusionConstants(self):
+        diffDict = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                print("Nodenr: " + str(node.nodeNr))
+                theChildren = self.getNrOfChildren(node)
+                print("Children: " + str(theChildren))
+                theFollowers = self.getNodeFollowerCount(node)
+                print("Followers: " + str(theFollowers))
+                if theFollowers is not 0 and theChildren is not 0: # and theChildren < 100 and theFollowers < 1000:
+                    dataTuple = (theFollowers, theChildren)
+                    diffDict.append(dataTuple)
+        return diffDict
+
+    def getOriginalCount(self):
+        return len(self.roots)
+
+
+    def getFollowersAndChildren(self):
+        followers = []
+        children = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                followers.append(node.followerCount)
+                children.append(len(node.children))
+        return [followers, children]
+
+    def getNrOfChildren(self, node):
+        return len(node.children)
+
+    def getNodeFollowerCount(self, node):
+        return node.followerCount
 
     '''Adds a root to the tree'''
     def addRoot(self, newRoot):
@@ -68,6 +105,14 @@ class PropTree(object):
             for pre, fill, node in RenderTree(root):
                 if node.idUser == idUser:
                     return node
+
+    def findNodesOnLevel(self, level):
+        nodeCount = 0
+        for root in self.roots:
+            nodes = [[node.nodeNr for node in children] for children in LevelOrderGroupIter(root)]
+            if len(nodes) > level:
+                nodeCount += len(nodes[level])
+        return nodeCount
 
     '''Get the timestamp of the node whose tweet was posted first'''
     def getFirstTimeStamp(self):
@@ -111,12 +156,12 @@ class PropTree(object):
     def getTimeStampForUnknown(self, node):
         for post in self.ptPosts:
             if 'quoted_status' in post:
-                if post['quoted_status_id_str'] == node.idStr:
+                if post['quoted_status']['id_str'] == node.idStr:
                     quotedPost = post['quoted_status']
                     timeStamp = quotedPost['created_at']
                     return timeStamp
             if 'retweeted_status' in post:
-                if post['retweeted_status']['user']['id_str'] == node.idStr:
+                if post['retweeted_status']['id_str'] == node.idStr:
                     retweetedPost = post['retweeted_status']
                     timeStamp = retweetedPost['created_at']
                     return timeStamp
@@ -131,8 +176,14 @@ class PropTree(object):
     def compareTimeStamps(self, firstTimeStamp, secondTimeStamp):
         return str(self.stripTime(secondTimeStamp) - self.stripTime(firstTimeStamp))
 
-    def compareStrippedStamps(self, firstTimeStamp, secondTimeStamp):
+    def compareStrippedStampsOriginal(self, firstTimeStamp, secondTimeStamp):
         return str(secondTimeStamp - firstTimeStamp)
+
+    def compareStrippedStamps(self, firstTimeStamp, secondTimeStamp):
+        timeDiff = secondTimeStamp - firstTimeStamp
+        if (timeDiff.seconds / 3600) < 10:
+            return str(timeDiff)[:-7] + "0" + str(timeDiff)[len(str(timeDiff)) - 7:]
+        return str(timeDiff)
 
     def stripTime(self, timeStamp):
         offset = timeStamp.split(" ")[4]
@@ -185,6 +236,9 @@ class PropTree(object):
             if root.height + 1 > longestChain:
                 longestChain = root.height + 1
         return longestChain
+
+    def getSubTreeDepth(self, node):
+        return node.height + 1
 
     '''Returns the number of nodes in the tree'''
     def getTreeSize(self):
@@ -249,6 +303,7 @@ class PropTree(object):
             if nrOfChildren > maxWidthFound:
                 maxWidthFound = nrOfChildren
         return maxWidthFound
+
 
     '''Returns the maximum number of siblings in a descendant chain of a node'''
     def getHighestChildCount(self, node):

@@ -18,7 +18,6 @@ def create(tweetsFile):
     for line in open(tweetsFile, 'r'):
         posts.append(json.loads(line))  # make a list of json arrays
     print(len(posts))
-    collectFollowers = True
     quotesAndRetweets = 0
     repostedUsers = {}
     for post in posts:
@@ -51,7 +50,7 @@ def create(tweetsFile):
             parentFollowerCount = post['quoted_status']['user']['followers_count']
         if 'retweeted_status' in post or 'quoted_status' in post:
             # make retweet or quote node
-            parentNode = getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter, len(posts), collectFollowers)
+            parentNode = getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter, len(posts))
             requestCounter += 1
             if parentNode is None:  # if this node has no parent we want to artificially create one
                 parentNodeNr = "x" + str(unknownNodeNr)  # artificial parents can be distinguished by an ex in their id
@@ -59,8 +58,9 @@ def create(tweetsFile):
                 propTree.addRoot(parentNode)
                 if str(parentIdUser) in repostedUsers:
                     if int(repostedUsers[parentIdUser]) > int(parentFollowerCount)/5000:
-                        propTree.addRootFollowers(parentIdUser, getFollowers(parentIdUser, requestCounter, len(posts)))
-                        requestCounter += 1
+                        if parentIdUser not in propTree.rootFollowers:
+                            propTree.addRootFollowers(parentIdUser, getFollowers(parentIdUser, requestCounter, len(posts)))
+                            requestCounter += 1
                 unknownNodeNr += 1
             AnyNode(nodeNr=nodeNr, idStr=idStr, idUser=idUser, parent=parentNode, time=timeStamp, followerCount=followerCount)
         else:
@@ -69,14 +69,15 @@ def create(tweetsFile):
             propTree.addRoot(reference)
             if str(idUser) in repostedUsers:
                 if int(repostedUsers[idUser]) > int(followerCount)/5000:
-                    propTree.addRootFollowers(idUser, getFollowers(idUser, requestCounter, len(posts)))
-                    requestCounter += 1
+                    if idUser not in propTree.rootFollowers:
+                        propTree.addRootFollowers(idUser, getFollowers(idUser, requestCounter, len(posts)))
+                        requestCounter += 1
         nodeNr += 1
     propTree.updatePosts(posts)
     exporter = JsonExporter(indent=2, sort_keys=True)
     saveFileName = propTree.getFileName()
-    open('./data/tree/trees/top/' + saveFileName + '.txt', 'w').close
-    savedFile = open('./data/tree/trees/top/' + saveFileName + '.txt', 'r+')
+    open('./data/tree/trees/TDS/' + saveFileName + '.txt', 'w').close
+    savedFile = open('./data/tree/trees/TDS/' + saveFileName + '.txt', 'r+')
     for root in propTree.roots:
         exporter.write(root, savedFile)
         savedFile.write("&\n")
@@ -100,7 +101,7 @@ def printTree(tweetsFile):
     importer = JsonImporter()
     rootNr = 0
 
-    with open('./data/tree/trees/' + tweetsFile, 'r') as _file:
+    with open(tweetsFile, 'r') as _file:
         content = _file.read()
 
     contentSplit = content.split("&")
@@ -135,7 +136,7 @@ def getFollowers(idUser, requestCounter, tot):
     return followers
 
 
-def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter, tot, collectFollowers):
+def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter, tot):
     access_token = '2499482702-0b9ktOZ8Ooz1rFvvOSSmAs51nNu6qfn7svTUkLV'
     access_token_secret = 'frzzjZHLXSKsKW3XXkGl2zmWM7ZWWDEY4s7reROebnoe7'
     consumer_key = 'Xunyk8FMaSSddtlelb8UDvhRj'
@@ -174,7 +175,7 @@ def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter,
 
 def writeToFile(propTree):
     data = propTree.getGeneralJsonData()
-    with open(TREEPATH + "generalTreeDataTop.txt", 'a') as general:
+    with open(TREEPATH + "generalTreeData.txt", 'a') as general:
         general.write(data + '\n')
 
 def changeInFile(fileName, attribute, value):
