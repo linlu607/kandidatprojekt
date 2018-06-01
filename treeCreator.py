@@ -113,13 +113,14 @@ def makeOtherTrees():
         for innerFolder in os.listdir(PATH + folder + '/'):
             for tweetsFile in os.listdir(PATH + folder + '/' + innerFolder + '/'):
                 fileAndFolder = PATH + folder + '/' + innerFolder + '/' + tweetsFile
-                if os.path.isfile(fileAndFolder):
+                if os.path.isfile(fileAndFolder) and tweetsFile not in skip:
                     try:
                         print(tweetsFile)
                         propTree = propagationTree.create(fileAndFolder, 'generalTreeDataOther.txt')
                         print(propTree.getLink())
                         propTree.makeNodeTree()
-                        filesDone.write(tweetsFile)
+                        filesDone.write(tweetsFile + '\n')
+                        filesDone.flush()
                     except AttributeError:
                         print("Attribute error for " + str(tweetsFile) + "")
 
