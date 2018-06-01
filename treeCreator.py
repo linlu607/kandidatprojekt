@@ -106,7 +106,7 @@ def makeOtherTrees():
     skip = []
     filesDone = open('./data/topAndRand/filesDone.txt', 'a+')
     for line in filesDone:
-        skip.append(line)
+        skip.append(line.replace("\n", ""))
 
     PATH = './data/topAndRand/sortedTweets/other/'
     for folder in os.listdir(PATH):
