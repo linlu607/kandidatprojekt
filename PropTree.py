@@ -1,5 +1,5 @@
 import json
-from anytree import RenderTree, LevelOrderGroupIter
+from anytree import RenderTree, LevelOrderGroupIter, LevelOrderIter
 import datetime
 
 '''A class for making a tree structure with many roots'''
@@ -101,6 +101,94 @@ class PropTree(object):
                 nodeCount += len(nodes[level])
         return nodeCount
 
+    def getTimeSortedRetweets(self):
+        nodes = []
+        for root in self.roots:
+            for pre, fill, node in RenderTree(root):
+                if node.parent is not None:
+                    nodes.append(self.stripTime(node.time))
+        sortedNodes = sorted(nodes)
+        return sortedNodes
+
+    def getFirstTimeStampBySorting(self):
+        nodes = []
+        for root in self.roots:
+            nodes.append(self.stripTime(root.time))
+        sortedNodes = sorted(nodes)
+        return sortedNodes[0]
+
+    def getFirstTimeStampBySortingLevel(self, times):
+        nodes = []
+        for time in times:
+            nodes.append(self.stripTime(time))
+        sortedNodes = sorted(nodes)
+        return sortedNodes[0]
+
+    def getNodesAtTimes(self, maxDays):
+        sortedNodes = self.getTimeSortedRetweets()
+        #print(len(sortedNodes))
+        hourStamps = []
+        firstStamp = self.getFirstTimeStampBySorting()
+        nodesAtTimes = []
+        hourStamps.append(0)
+        for i in range(0, len(sortedNodes)):
+            hourStamps.append(round(((sortedNodes[i] - firstStamp).total_seconds())/3600))
+        maxHours = int(max(hourStamps))
+        for i in range(0, maxHours+2):
+            nodesAtTimes.append(0)
+        for value in hourStamps:
+            nodesAtTimes[int(value)+1] += 1
+
+        return nodesAtTimes
+
+    def getNodesAtDepths(self):
+        minStamps = []
+        nodesAtDepths = []
+        for root in self.roots:
+            nodeGroups = [[node.time for node in children] for children in LevelOrderGroupIter(root)]
+            for i in range(0, len(nodeGroups)):
+                timeStamp = self.getFirstTimeStampBySortingLevel(nodeGroups[i])
+                if len(minStamps) > i:
+                    minStamps[i] = min(timeStamp, minStamps[i])
+                else:
+                    minStamps.append(timeStamp)
+        for i in range(0, len(minStamps)):
+            nodesAtDepths.append(0)
+        sortedNodes = self.getTimeSortedRetweets()
+
+        for i in range(0, len(sortedNodes)):
+            j = len(minStamps) - 1
+            #print(minStamps[j])
+            while sortedNodes[i] <= minStamps[j] and j >= 0:
+                nodesAtDepths[j] += 1
+                j -= 1
+        #print(nodesAtDepths)
+        return nodesAtDepths
+
+    def getNodesOnTimeLevels(self):
+        nodeCounts = []
+        for root in self.roots:
+            nodes = [[node.time for node in children] for children in LevelOrderGroupIter(root)]
+            #print(nodes)
+            for i in range(0, len(nodes)):
+                #print(i)
+                #1print(len(nodes))
+                if len(nodes) > i + 1:
+                    timeStamp = self.findMinTimeStamp(nodes[i+1])
+                    #print(timeStamp)
+                    for time in nodes[i]:
+                        if self.stripTime(time) <= timeStamp:
+                            if len(nodeCounts) <= i:
+                                nodeCounts.append(1)
+                            else:
+                                nodeCounts[i] += 1
+
+            #print(nodeCounts)
+        #for i in range(0, len(nodeCounts) - 1):
+            #nodeCounts[i+1] += nodeCounts[i]
+
+        return nodeCounts
+
     '''Get the timestamp of the node whose tweet was posted first'''
     def getFirstTimeStamp(self):
         unknownTSFound = False
@@ -120,6 +208,22 @@ class PropTree(object):
             if min(ts1, ts2) == ts1:
                 return uTimeStamp
         return kTimeStamp
+
+    def getTimeStampOnLevel(self, maxLevel):
+        stamps = []
+        #print("Max")
+        #print(maxLevel)
+        for root in self.roots:
+            timeGroups = [[node.time for node in children] for children in LevelOrderGroupIter(root, maxlevel=maxLevel)]
+            #print("Len")
+            #print(len(timeGroups))
+            if len(timeGroups) + 1 >= maxLevel:
+                #print(timeGroups[-1])
+                minOnLevel = min(timeGroups[-1])
+                #print(minOnLevel)
+                stamps.append(minOnLevel)
+       # print(min(stamps))
+        return min(stamps)
 
     def getTimePeriodRedo(self):
         rootTimes = []
@@ -204,7 +308,7 @@ class PropTree(object):
         pythonData = self.data
         pythonData['fileName'] = self.getFileName()
         pythonData['link'] = self.getLink()
-        pythonData['time'] = self.getTimePeriod()
+        pythonData['time'] = self.getTimePeriodRedo()
         pythonData['depth'] = self.getTreeDepth()
         pythonData['size'] = self.getTreeSize()
         pythonData['width'] = self.getMaxWidth()

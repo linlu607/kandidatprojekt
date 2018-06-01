@@ -23,24 +23,111 @@ def settingsInput():
     return [collectData, constructTree, printTree, minTreeAmount, maxTreeAmount]
 
 def changeTime():
-    PATH = './data/tree/trees/'
+    PATH = './data/tree/trees/TDS/'
     for treeFile in os.listdir(PATH):
         if os.path.isfile(PATH+treeFile):
-            tree = propagationTree.printTree(treeFile)
+            tree = propagationTree.printTree(PATH + treeFile)
             time_ = tree.getTimePeriodRedo()
             propagationTree.changeInFile(treeFile, 'time', time_)
 
 def changeLevels():
-    PATH = './data/tree/trees/'
+    PATH = './data/tree/trees/top/'
     for treeFile in os.listdir(PATH):
         if os.path.isfile(PATH + treeFile):
-            if treeFile == "bitly2G5Q.txt":
-                tree = propagationTree.printTree(treeFile)
-                timeLevels = tree.getTimeForLevels()
-                propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
+            tree = propagationTree.printTree(PATH + treeFile)
+            timeLevels = tree.getTimeForLevels()
+            propagationTree.changeInFile(treeFile, 'levelTimes', timeLevels)
+
+def findTotalNrOfTweets():
+    totalTweets = 0
+    totalLinks = 0
+    tweetsperfile = []
+    linksperfile = []
+    for file in ['generalTreeData.txt', 'generalTreeDataRandom.txt', 'generalTreeDataTop.txt']:
+        print(file)
+        for line in open(TREEPATH + file, 'r'):
+            jsonLine = json.loads(line)
+            totalTweets += jsonLine['size']
+            totalLinks += 1
+        tweetsperfile.append(totalTweets-sum(tweetsperfile))
+        linksperfile.append(totalLinks-sum(linksperfile))
+    print("Totalt antal tweets: " + str(totalTweets))
+    print("Totalt antal lankar: " + str(totalLinks))
+    print("Per fil:")
+    print(tweetsperfile)
+    print(linksperfile)
+
+def findMissingPosts(outerFolder):
+    OUTERPATH = './data/topAndRand/sortedTweets/'
+    FOLDERPATH = OUTERPATH + outerFolder + '/'
+    total = 0
+    found = 0
+    for folder in os.listdir(FOLDERPATH):
+        INNERPATH = FOLDERPATH + folder + '/'
+        for innerFolder in os.listdir(INNERPATH):
+            for tweetsFile in os.listdir(INNERPATH + innerFolder + '/'):
+                tweetsFileAndPath = INNERPATH + innerFolder + '/' + tweetsFile
+                #print(os.path.isfile(tweetsFile))
+                if os.path.isfile(tweetsFileAndPath):
+                    with open(tweetsFileAndPath, 'r') as thisFile:
+                        foundInFile = 0
+                        rootIDs = []
+                        counts = []
+                        for line in thisFile:
+                            jsonLine = json.loads(line)
+                            if 'retweeted_status' in jsonLine:
+                                foundInFile += 1
+                                rootID = jsonLine['retweeted_status']['user']['id_str']
+                                quoteCount = jsonLine['retweeted_status']['quote_count']
+                                retweetCount = jsonLine['retweeted_status']['retweet_count']
+                                if rootID not in rootIDs:
+                                    rootIDs.append(rootID)
+                                    counts.append(int(quoteCount) + int(retweetCount))
+                                else:
+                                    index = rootIDs.index(rootID)
+                                    counts[index] = (int(quoteCount) + int(retweetCount))
+                            elif 'quoted_status' in jsonLine:
+                                foundInFile += 1
+                                rootID = jsonLine['quoted_status']['user']['id_str']
+                                quoteCount = jsonLine['quoted_status']['quote_count']
+                                retweetCount = jsonLine['quoted_status']['retweet_count']
+                                if rootID not in rootIDs:
+                                    rootIDs.append(rootID)
+                                    counts.append(int(quoteCount) + int(retweetCount))
+                                else:
+                                    index = rootIDs.index(rootID)
+                                    counts[index] = (int(quoteCount) + int(retweetCount))
+                        total += sum(counts)
+                        found += foundInFile
+                        print("Found in file: " + str(foundInFile) + " Total: " + str(sum(counts)))
+    print("Found: " + str(found) + " Total: " + str(total))
+
+def makeOtherTrees():
+    skip = []
+    filesDone = open('./data/topAndRand/filesDone.txt', 'a+')
+    for line in filesDone:
+        skip.append(line)
+
+    PATH = './data/topAndRand/sortedTweets/other/'
+    for folder in os.listdir(PATH):
+        for innerFolder in os.listdir(PATH + folder + '/'):
+            for tweetsFile in os.listdir(PATH + folder + '/' + innerFolder + '/'):
+                fileAndFolder = PATH + folder + '/' + innerFolder + '/' + tweetsFile
+                if os.path.isfile(fileAndFolder):
+                    try:
+                        print(tweetsFile)
+                        propTree = propagationTree.create(fileAndFolder, 'generalTreeDataOther.txt')
+                        print(propTree.getLink())
+                        propTree.makeNodeTree()
+                        filesDone.write(tweetsFile)
+                    except AttributeError:
+                        print("Attribute error for " + str(tweetsFile) + "")
+
 
 def main():
-    PATH = './data/manual_of_interest/medium/'
+    makeOtherTrees()
+    return
+    PATH = './data/topAndRand/other/'
     for tweetsFile in os.listdir(PATH):
         if os.path.isfile(PATH + tweetsFile):
             try:
@@ -52,6 +139,55 @@ def main():
                 print("Attribute error for " + str(tweetsFile) + "")
     return
 
+def linkURLs():
+    BITLYPATH = './data/topAndRand/bitlys/'
+    shortAndLongs = open('./data/shortAndLongs.txt', 'w+')
+    URLs = []
+    for line in open('./data/topAndRand/topSetURLs.txt', 'r'):
+        URLs.append(line.replace("\n", ""))
+    for line in open('./data/topAndRand/randomSetURLs.txt', 'r'):
+        URLs.append(line.replace("\n", ""))
+    for file in os.listdir(BITLYPATH):
+        #print(file)
+        if file.endswith("_news01h.txt") or file.endswith("_news24h.txt"):
+          #  print("In file")
+            for line in open(BITLYPATH+file, 'r'):
+                longURL = line.split(", ")[1].split(": ")[1].replace("\'", "")
+                if longURL in URLs:
+           #         print("Url in urls")
+                    shortAndLongs.write(line.split(", ")[4].split(": u")[1].replace("\'", "") + ", " + longURL + "\n")
+    shortAndLongs.close()
+
+def classifyLinks():
+    files = ['generalTreeDataTop.txt', 'generalTreeDataRandom.txt']
+    classes = {1: 'bbc', 2: 'bre', 3: 'fox', 4: 'huf', 5: 'gua', 6: 'other'}
+    URLLinks = open('./data/shortAndLongs.txt', 'r')
+    classified = []
+    for line in open('./data/classifiedLinks.txt', 'r'):
+        classified.append(line.replace("\n", ""))
+    classifiedLinks = open('./data/classifiedLinks.txt', 'a')
+    urlDict = {}
+    for line in URLLinks:
+        urls = line.split(", ")
+        urlDict[urls[0]] = urls[1]
+    with open('./data/tree/classifiedTweets.txt', 'a') as classFile:
+        for generalFile in files:
+            for line in open(TREEPATH + generalFile, 'r'):
+                jsonLine = json.loads(line)
+                link = jsonLine['link']
+                if link not in classified:
+                    print(link + ": " + urlDict[link])
+                    classOption = input("Set class to: 1: bbc  2: bre  3: fox  4: huf  5: gua  6: other  7: return")
+                    if classOption == 6:
+                        linkClass = raw_input("Write class name: ")
+                    elif classOption == 7:
+                        classFile.close()
+                        return
+                    else:
+                        linkClass = classes[classOption]
+                    jsonLine['class'] = linkClass
+                    classFile.write(json.dumps(jsonLine) + "\n")
+                    classifiedLinks.write(link + "\n")
 
 def makeTopTrees():
     startTime = time.time()

@@ -8,7 +8,7 @@ from anytree.importer import JsonImporter
 TREEPATH = './data/tree/'
 
 '''Creates a tree structure, prints it and saves it to file (from a headline)'''
-def create(tweetsFile):
+def create(tweetsFile, generalFileName):
     # A node should have an nodeNr (starting on 0), idStr(tweet id), parent.
     propTree = PropTree()  # an instance of a tree
     nodeNr = 0  # to be ordered by time
@@ -76,23 +76,23 @@ def create(tweetsFile):
     propTree.updatePosts(posts)
     exporter = JsonExporter(indent=2, sort_keys=True)
     saveFileName = propTree.getFileName()
-    open('./data/tree/trees/top/' + saveFileName + '.txt', 'w').close
-    savedFile = open('./data/tree/trees/top/' + saveFileName + '.txt', 'r+')
+    open('./data/tree/trees/other/' + saveFileName + '.txt', 'w').close
+    savedFile = open('./data/tree/trees/other/' + saveFileName + '.txt', 'w')
     for root in propTree.roots:
         exporter.write(root, savedFile)
         savedFile.write("&\n")
 
     savedFile.close()
-    writeToFile(propTree)
+    writeToFile(propTree, generalFileName)
     return propTree
 
-def getTreeAndWriteToFile(tweetsFile):
+def getTreeAndWriteToFile(tweetsFile, generalFileName):
     tree = printTree(tweetsFile)
     posts = []
     for line in open('./data/manual_of_interest/chosen/' + tweetsFile + '.txt', 'r'):
         posts.append(json.loads(line))  # make a list of json arrays
     tree.updatePosts(posts)
-    writeToFile(tree)
+    writeToFile(tree, generalFileName)
     return tree
 
 '''Prints a tree from saved file'''
@@ -100,7 +100,6 @@ def printTree(tweetsFile):
     propTree = PropTree()  # an instance of a tree
     importer = JsonImporter()
     rootNr = 0
-
     with open(tweetsFile, 'r') as _file:
         content = _file.read()
 
@@ -173,19 +172,20 @@ def getFriendInTree(propTree, idUser, parentIdStr, parentIdUser, requestCounter,
 
     return propTree.findNodeByIdStr(parentIdStr)
 
-def writeToFile(propTree):
+def writeToFile(propTree, generalFileName):
     data = propTree.getGeneralJsonData()
-    with open(TREEPATH + "generalTreeData.txt", 'a') as general:
+    with open(TREEPATH + generalFileName, 'a') as general:
         general.write(data + '\n')
 
 def changeInFile(fileName, attribute, value):
-    with open(TREEPATH + "generalTreeData.txt", 'r+') as general:
+    general2 = open(TREEPATH + "generalTreeData2.txt", 'a+')
+    with open(TREEPATH + "generalTreeData.txt", 'r') as general1:
         fileName = str(fileName.replace('.txt', ''))
-        for line in general:
+        for line in general1:
             jsonLine = json.loads(line)
             if jsonLine['fileName'] == fileName:
                 print("Found match")
                 jsonLine[attribute] = value
                 newLine = json.dumps(jsonLine)
-                general.write(newLine + '\n')
+                general2.write(newLine + '\n')
                 break
