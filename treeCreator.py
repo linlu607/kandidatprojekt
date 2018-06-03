@@ -57,50 +57,121 @@ def findTotalNrOfTweets():
     print(tweetsperfile)
     print(linksperfile)
 
-def findMissingPosts(outerFolder):
+def findMissingPosts(outerFolder, generalDataFile):
+    doneFiles = []
+    generalFile = open('./data/tree/' + generalDataFile, 'r')
+    for line in generalFile:
+        doneFiles.append(json.loads(line)['fileName'])
+
     OUTERPATH = './data/topAndRand/sortedTweets/'
     FOLDERPATH = OUTERPATH + outerFolder + '/'
     total = 0
     found = 0
+    retweetedOriginals = 0
+    foundOriginals = 0
+    totalTrees = 0
+    totalTweets = 0
     for folder in os.listdir(FOLDERPATH):
         INNERPATH = FOLDERPATH + folder + '/'
         for innerFolder in os.listdir(INNERPATH):
             for tweetsFile in os.listdir(INNERPATH + innerFolder + '/'):
                 tweetsFileAndPath = INNERPATH + innerFolder + '/' + tweetsFile
-                #print(os.path.isfile(tweetsFile))
-                if os.path.isfile(tweetsFileAndPath):
+                if os.path.isfile(tweetsFileAndPath) and tweetsFile[:9] in doneFiles:
+                    totalTrees += 1
                     with open(tweetsFileAndPath, 'r') as thisFile:
                         foundInFile = 0
                         rootIDs = []
                         counts = []
                         for line in thisFile:
+                            totalTweets += 1
                             jsonLine = json.loads(line)
-                            if 'retweeted_status' in jsonLine:
+                            if 'retweeted_status' in jsonLine or 'quoted_status' in jsonLine:
                                 foundInFile += 1
-                                rootID = jsonLine['retweeted_status']['user']['id_str']
-                                quoteCount = jsonLine['retweeted_status']['quote_count']
-                                retweetCount = jsonLine['retweeted_status']['retweet_count']
+                                if 'retweeted_status' in jsonLine:
+                                    rootID = jsonLine['retweeted_status']['id_str']
+                                    quoteCount = jsonLine['retweeted_status']['quote_count']
+                                    retweetCount = jsonLine['retweeted_status']['retweet_count']
+                                elif 'quoted_status' in jsonLine:
+                                    rootID = jsonLine['quoted_status']['id_str']
+                                    quoteCount = jsonLine['quoted_status']['quote_count']
+                                    retweetCount = jsonLine['quoted_status']['retweet_count']
                                 if rootID not in rootIDs:
                                     rootIDs.append(rootID)
-                                    counts.append(int(quoteCount) + int(retweetCount))
+                                    counts.append(int(quoteCount) + int(retweetCount) + 1)
                                 else:
                                     index = rootIDs.index(rootID)
-                                    counts[index] = (int(quoteCount) + int(retweetCount))
-                            elif 'quoted_status' in jsonLine:
-                                foundInFile += 1
-                                rootID = jsonLine['quoted_status']['user']['id_str']
-                                quoteCount = jsonLine['quoted_status']['quote_count']
-                                retweetCount = jsonLine['quoted_status']['retweet_count']
-                                if rootID not in rootIDs:
-                                    rootIDs.append(rootID)
-                                    counts.append(int(quoteCount) + int(retweetCount))
-                                else:
-                                    index = rootIDs.index(rootID)
-                                    counts[index] = (int(quoteCount) + int(retweetCount))
+                                    newCount = int(quoteCount) + int(retweetCount) + 1
+                                    if newCount > counts[index]:
+                                        counts[index] = newCount
+                            else:
+                                foundOriginals += 1
                         total += sum(counts)
                         found += foundInFile
-                        print("Found in file: " + str(foundInFile) + " Total: " + str(sum(counts)))
-    print("Found: " + str(found) + " Total: " + str(total))
+                        retweetedOriginals += len(rootIDs)
+                        if foundInFile > sum(counts):
+                            print("found more")
+                            total += foundInFile - sum(counts)
+    print(outerFolder)
+    print("Found retweets: " + str(found) + " Total retweets: " + str(total) + " Missing: " + str(100*(total - found)/float(total)) + "%")
+    print("Found originals: " + str(foundOriginals) + " Retweeted originals: " + str(retweetedOriginals) +
+          " Never retweeted: " + str(100 * (foundOriginals - retweetedOriginals) / float(foundOriginals)) + "%")
+    print("Trees: " + str(totalTrees) + " Total tweets: " + str(totalTweets))
+
+def findMissingPostsTDS():
+    doneFiles = []
+    generalFile = open('./data/tree/generalTreeData.txt', 'r')
+    for line in generalFile:
+        doneFiles.append(json.loads(line)['fileName'])
+    OUTERPATH = './data/manual_of_interest/all/'
+    total = 0
+    found = 0
+    foundOriginals = 0
+    retweetedOriginals = 0
+    totalTrees = 0
+    totalTweets = 0
+    for tweetsFile in os.listdir(OUTERPATH):
+        tweetsFileAndPath = OUTERPATH + '/' + tweetsFile
+        if os.path.isfile(tweetsFileAndPath) and tweetsFile[:9] in doneFiles:
+            totalTrees += 1
+            with open(tweetsFileAndPath, 'r') as thisFile:
+                foundInFile = 0
+                rootIDs = []
+                counts = []
+                for line in thisFile:
+                    totalTweets += 1
+                    jsonLine = json.loads(line)
+                    if 'retweeted_status' in jsonLine or 'quoted_status' in jsonLine:
+                        foundInFile += 1
+                        if 'retweeted_status' in jsonLine:
+                            rootID = jsonLine['retweeted_status']['id_str']
+                            quoteCount = jsonLine['retweeted_status']['quote_count']
+                            retweetCount = jsonLine['retweeted_status']['retweet_count']
+                        elif 'quoted_status' in jsonLine:
+                            rootID = jsonLine['quoted_status']['id_str']
+                            quoteCount = jsonLine['quoted_status']['quote_count']
+                            retweetCount = jsonLine['quoted_status']['retweet_count']
+                        if rootID not in rootIDs:
+                            rootIDs.append(rootID)
+                            counts.append(int(quoteCount) + int(retweetCount) + 1)
+                        else:
+                            index = rootIDs.index(rootID)
+                            newCount = int(quoteCount) + int(retweetCount) + 1
+                            if newCount > counts[index]:
+                                counts[index] = newCount
+                    else:
+                        foundOriginals += 1
+                retweetedOriginals += len(rootIDs)
+                total += sum(counts)
+                found += foundInFile
+
+                if foundInFile > sum(counts):
+                    print("found more")
+                    total += foundInFile - sum(counts)
+    print("TDS")
+    print("Found retweets: " + str(found) + " Total retweets: " + str(total) + " Missing: " + str(100*(total - found)/float(total)) + "%")
+    print("Found originals: " + str(foundOriginals) + " Retweeted originals: " + str(retweetedOriginals) +
+          " Never retweeted: " + str(100*(foundOriginals - retweetedOriginals)/float(foundOriginals)) + "%")
+    print("Trees: " + str(totalTrees) + " Total tweets: " + str(totalTweets))
 
 def makeOtherTrees():
     skip = []
@@ -126,6 +197,13 @@ def makeOtherTrees():
 
 
 def main():
+    findMissingPosts('top', 'generalTreeDataTop.txt')
+    findMissingPosts('random', 'generalTreeDataRandom.txt')
+    findMissingPostsTDS()
+    return
+    tree = propagationTree.printTree(TREEPATH + '/trees/top/bbcin2Hb1.txt')
+    tree.getCurrentDepth()
+    #return
     makeOtherTrees()
     return
     PATH = './data/topAndRand/other/'

@@ -1,10 +1,13 @@
 import json
 
+import scipy
 from anytree import RenderTree, LevelOrderGroupIter
 from matplotlib import pyplot as plt
 from matplotlib import dates as dt
 import datetime
 import xlwt
+from scipy.interpolate import spline, interp1d
+
 import propagationTree
 import os
 import numpy as np
@@ -141,6 +144,10 @@ def CDFRetweetTime(generalFiles):
             folder = 'random/'
             label = "Random set"
             maxDays = 12
+        elif generalFile.endswith("Other.txt"):
+            folder = 'other/'
+            label = "Bottom set"
+            maxDays = 12
         else:
             folder = 'TDS/'
             label = "Three day set"
@@ -204,6 +211,10 @@ def CDFRetweetDepth2(generalFiles):
         elif generalFile.endswith('Random.txt'):
             folder = 'random/'
             label = "Random set"
+            maxDays = 12
+        elif generalFile.endswith("Other.txt"):
+            folder = 'other/'
+            label = "Bottom set"
             maxDays = 12
         else:
             folder = 'TDS/'
@@ -527,8 +538,8 @@ def depthsForAll(generalFiles):
         finalTot[i] += finalTot[i+1]
     fractionsTot = map(lambda y: y / total, finalTot)
     fractions = map(lambda x: x / total, final)
-    plt.bar(range(0, sortedDepths[-1] + 1), fractionsTot, color='teal', label="Total tweets that reached this depth")
-    plt.bar(range(0, sortedDepths[-1] + 1), fractions, color='skyblue', label="Tweets that reached only to this depth")
+    plt.bar(range(0, sortedDepths[-1] + 1), fractionsTot, color='teal', label="Total links that reached this depth")
+    plt.bar(range(0, sortedDepths[-1] + 1), fractions, color='skyblue', label="Links that reached only to this depth")
     plt.legend(fontsize='xx-large')
     plt.tick_params(axis='both', labelsize=16)
     plt.grid(axis='y', linestyle='dashed')
@@ -630,6 +641,9 @@ def followerRetweetBox():
         elif folder == "top":
             color = 'salmon'
             label = "Top set"
+        elif folder == "other":
+            color = 'magenta'
+            label = "Bottom set"
         else:
             color = 'darkolivegreen'
             label = "Random set"
@@ -701,12 +715,12 @@ def followerDepthWidthScatter(PATH):
                         addedFollowers[followerCount] = [fraction, 1]
     followerCounts = []
     meanFracs = []
-    iteration = 1
+    iteration = 0
     keys = []
     counts = []
     intervals = 100000
 
-    for key, val in sorted(addedFollowers.items()):
+    '''for key, val in sorted(addedFollowers.items()):
         if key < intervals * iteration * iteration * iteration/100:
             keys.append(key)
             counts.append(val[0]/val[1])
@@ -721,14 +735,55 @@ def followerDepthWidthScatter(PATH):
             keys = []
             counts = []
             keys.append(key)
-            counts.append(val[0]/val[1])
+            counts.append(val[0]/val[1])'''
+    item = 0
+    totalLength = len(addedFollowers)
+    print(totalLength)
+    groupLength = int(totalLength/30) + 1
+    print(groupLength)
+    keys.append(0)
+    counts.append(0)
+    for key, val in sorted(addedFollowers.items()):
+        iteration += 1
+        if item < groupLength and iteration < totalLength:
+            item += 1
+        else:
+            followerCounts.append(sum(keys)/len(keys))
+            meanFracs.append(sum(counts)/len(counts))
+            item = 0
+            keys = []
+            counts = []
+        keys.append(key)
+        counts.append(val[0] / val[1])
+    '''
+    for key, val in sorted(addedFollowers.items()):
+        followerCounts.append(key)
+        meanFracs.append(val[0]/val[1])
+    '''
+    newMeans = []
+    start = 1
+    averageLength = start*2
+
+    newMeans.append(meanFracs[0])
+    for i in range(start, len(meanFracs) - averageLength):
+        newMean = 0
+        index = -averageLength + start
+        while index <= averageLength:
+            newMean += meanFracs[i + index]
+            index += 1
+        newMeans.append(newMean/averageLength)
+
+    print(len(followerCounts))
+    print(len(newMeans))
+    newFollowers = followerCounts[:-(averageLength+start-1)]
+    f2 = scipy.interpolate.interp1d(newFollowers, newMeans, kind='slinear')
+    fnew = np.logspace(np.log10(newFollowers[0])+0.1, np.log10(newFollowers[-1])-0.1)
 
     plt.tick_params(axis='x', labelsize=16)
     plt.tick_params(axis='y', labelsize=17)
-    plt.scatter(followers, values, marker='.', color='teal', s=15) #13, steelgrey?
-    #plt.semilogy()
-    #plt.semilogx()
-    #plt.plot(followerCounts, meanFracs, color='black', linestyle='--')
+    plt.scatter(followers, values, marker='.', color='steelblue', s=13) #13, steelgrey?
+    plt.semilogx()
+    plt.plot(fnew, f2(fnew), color='black', marker='o')
     plt.show()
 
 def followerSizeScatter(PATH):
@@ -992,8 +1047,8 @@ def stripTime(timeStamp):
 #plotTimeSeriesBlack(GENERAL + 'generalTreeData.txt', 'hej') # done for top and random
 #plotTimeSeriesFirstRetweet()
 #retweetRate('classifiedTweets.txt', GENERAL + 'trees/topAndRandom/')
-#followerDepthWidthScatter(GENERAL+'trees/')
-depthWidthSize(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'], GENERAL) #should this be used?
+followerDepthWidthScatter(GENERAL+'trees/')
+#depthWidthSize(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'], GENERAL) #should this be used?
 #CDFRetweetDepth2(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
 #CDFRetweetTime(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
 #followerRetweetScatter('./data/tree/trees/')
