@@ -1,5 +1,5 @@
 import json
-from anytree import RenderTree, LevelOrderGroupIter, LevelOrderIter
+from anytree import RenderTree, LevelOrderGroupIter, LevelOrderIter, PreOrderIter
 import datetime
 
 '''A class for making a tree structure with many roots'''
@@ -415,3 +415,40 @@ class PropTree(object):
             currentSize += 1
             grandchildSize = self.getHighestChildCount(child)
         return max(currentSize, grandchildSize)
+
+    def getDataOnNodes(self, nodeFileAndPath):
+        nodeFile = open(nodeFileAndPath, 'w+')
+        nodes = []
+        maxDepth = 1
+        maxBreadth = 0
+        totalFollowers = 0
+        nodeDict = {'id': 0, 'time': 0, 'depth': 1, 'breadth': 0, 'max_reach': 0}
+        for root in self.roots:
+            nodes.extend(node for node in PreOrderIter(root))
+        nodes = sorted(nodes, key=lambda node: self.stripTime(node.time))
+        foundNodes = []
+        for node in nodes:
+            foundNodes.append(node)
+            foundDepth = node.depth + 1
+            parent = node.parent
+            foundBreadth = 0
+            if parent is not None:
+                children = parent.children
+                for child in children:
+                    if child in foundNodes:
+                        foundBreadth += 1
+
+            foundFollowers = node.followerCount
+            timeStamp = node.time
+            nodeDict.update(id=node.nodeNr)
+            nodeDict.update(time=timeStamp)
+            if maxDepth < foundDepth:
+                nodeDict.update(depth=foundDepth)
+                maxDepth = foundDepth
+            if maxBreadth < foundBreadth:
+                nodeDict.update(breadth=foundBreadth)
+                maxBreadth = foundBreadth
+            totalFollowers += foundFollowers
+            nodeDict.update(max_reach=totalFollowers)
+            nodeFile.write(json.dumps(nodeDict) + '\n')
+        nodeFile.close()

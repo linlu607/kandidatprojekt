@@ -630,9 +630,11 @@ def followerRetweetScatter(PATH):
 
 def followerRetweetBox():
     labelVal = 0
-    labels = [range(0, 21, 4), range(1, 22, 4), range(2, 23, 4), range(3, 24, 4)]
-    legendList = []
-    repostList = []
+    sets = 4
+    labels = []
+    for i in range(0, sets):
+        labels.append(range(i, 21 + i, sets + 1))
+    #labels = [range(0, 21, 4), range(1, 22, 4), range(2, 23, 4), range(3, 24, 4)]
     for folder in os.listdir(TREEPATH):
         reposts = [[], [], [], [], [], []]
         if folder == 'TDS':
@@ -670,7 +672,6 @@ def followerRetweetBox():
                             index = 5
 
                         reposts[index].append(retweetCounts[1][i])
-                        #print(reposts[index])
         positions = labels[labelVal]
         plt.boxplot(reposts, positions=positions, boxprops=dict(color=color, linewidth=2), medianprops=dict(linewidth=2), showfliers=False) #, labels=labels[labelVal])
         plt.bar([0], [0], color='white', edgecolor=color, label=label, linewidth=2, width=10)

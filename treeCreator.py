@@ -195,8 +195,21 @@ def makeOtherTrees():
                     except AttributeError:
                         print("Attribute error for " + str(tweetsFile) + "")
 
+def getNodeData(setFolder):
+    TREEFOLDERPATH = TREEPATH + 'trees/' + setFolder
+    for treeFile in os.listdir(TREEFOLDERPATH):
+        tree = propagationTree.printTree(TREEFOLDERPATH + '/' + treeFile)
+        tree.getDataOnNodes(TREEPATH + 'nodeData/' + setFolder + '/' + treeFile)
 
 def main():
+    getNodeData('top')
+    return
+    setFolder = 'random'
+    treeFile = 'bitly2HIi.txt'
+    TREEFOLDERPATH = TREEPATH + 'trees/' + setFolder
+    tree = propagationTree.printTree(TREEFOLDERPATH + '/' + treeFile)
+    tree.getDataOnNodes(TREEPATH + 'nodeData/' + setFolder + '/' + treeFile)
+    return
     findMissingPosts('top', 'generalTreeDataTop.txt')
     findMissingPosts('random', 'generalTreeDataRandom.txt')
     findMissingPostsTDS()
