@@ -549,70 +549,79 @@ def depthsForAll(generalFiles):
 
 
 def makeScatter(PATH):
-    dataPoints = 0
+    fig, ax = plt.subplots(1)
     for treeFile in os.listdir(PATH):
-
         if os.path.isfile(PATH + treeFile):
-            print("Tree: " + str(treeFile))
             tree = propagationTree.printTree(PATH + treeFile)
+            size = tree.getTreeSize()
             scatterData = tree.getDiffusionConstants()
-            if len(scatterData) > 0:
-                print("Had scatterdata")
-                print(scatterData)
-                plt.scatter(*zip(*scatterData), marker=".", color='#000000')
-                dataPoints += 1
-
+            if scatterData:
+                if 97 < size < 99 or 313 < size < 315 or 911 < size < 913 or 1794 < size < 1796 or 2629 < size < 2631 \
+                        or 4607 < size < 4609:
+                    pointLabel = str(size + (100 - (size % 100))) + " nodes"
+                else:
+                    pointLabel = None
+                ax.scatter(*zip(*scatterData), marker=".", s=size, color='#' + '{0:06X}'.format((size+10000)*300),
+                            alpha=0.2, label=pointLabel)
         else:
-            print("Folder: " + str(treeFile))
             for subTreeFile in os.listdir(PATH + treeFile + "/"):
                 if os.path.isfile(PATH + treeFile + "/" + subTreeFile):
-                    print("Subtree: " + str(subTreeFile))
                     subTree = propagationTree.printTree(PATH + treeFile + "/" + subTreeFile)
+                    subSize = subTree.getTreeSize()
                     subScatterData = subTree.getDiffusionConstants()
-                    if len(subScatterData) > 0:
-                        print("Had data")
-                        print(subScatterData)
-                        plt.scatter(*zip(*subScatterData), marker=".", color='#000000')
-                        dataPoints += 1
-                    else:
-                        print("Had no data")
-                        print(subScatterData)
-    print(dataPoints)
-    plt.xlabel("Followers")
-    plt.ylabel("Retweeters")
+                    if subScatterData:
+                        if 97 < subSize < 99 or 313 < subSize < 315 or 911 < subSize < 913 or 1794 < subSize < 1796 \
+                                or 2119 < subSize < 2941 or 4607 < subSize < 4609:
+                            subPointLabel = str(subSize + (100 - (subSize % 100)))
+                        else:
+                            subPointLabel = None
+                        ax.scatter(*zip(*subScatterData), marker=".", s=subSize,
+                                    color='#' + '{0:06X}'.format((subSize+10000)*300), alpha=0.2,
+                                    label=subPointLabel)
+    ax.semilogx()
+    ax.semilogy()
+    ax.tick_params(axis="both", labelsize=15)
+    handles, labels = ax.get_legend_handles_labels()
+
+    handles = [handles[2], handles[1], handles[0], handles[3], handles[5], handles[4]]
+    labels = [labels[2], labels[1], labels[0], labels[3], labels[5], labels[4]]
+
+    legend = ax.legend(handles, labels, loc='upper center', borderpad=1, labelspacing=1, ncol=6,
+                       fontsize=15, title="Number of Nodes in Tree of Origin")
+    plt.setp(legend.get_title(), fontsize=20)
     plt.show()
 
 def makeWhisker(PATH):
-   fig, ax= plt.subplots(1)
-   fold = 0
-   zones = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
-   for folder in os.listdir(PATH):
-       for treeFile in os.listdir(PATH + folder + "/"):
-           if os.path.isfile(PATH + folder + "/" + treeFile):
-               tree = propagationTree.printTree(folder + "/" + treeFile)
-               data = tree.getDiffusionConstants()
-               for node in data:
-                   if 1 <= node[0] < 10:
-                       zones[0+fold].append(node[1])
-                   elif 11 <= node[0] < 100:
-                       zones[1+fold].append(node[1])
-                   elif 101 <= node[0] < 1000:
-                       zones[2+fold].append(node[1])
-                   elif 1001 <= node[0] < 10000:
-                       zones[3+fold].append(node[1])
-                   elif 10001 <= node[0] < 100000:
-                       zones[4+fold].append(node[1])
-                   elif 100001 <= node[0] < 1000000:
-                       zones[5+fold].append(node[1])
-       fold += 6
-   for x in range(0, 6):
-       zoneGroups = [zones[x], zones[x+6], zones[x+12]]
-       bp = ax.boxplot(zoneGroups, 0, '', positions=[x+(2*x), x+1+(2*x), x+2+(2*x)], widths=0.2)
-       setBoxColors(bp)
-   ax.set_xticklabels([' ', 'A', '', ' ', 'B', '', ' ', 'C', '', ' ', 'D', '', ' ', 'E', '', ' ', 'F', ''])
-   ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
-   ax.tick_params(axis="both", labelsize=15)
-   plt.show()
+    fig, ax= plt.subplots(1)
+    fold = 0
+    zones = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+    for folder in os.listdir(PATH):
+        for treeFile in os.listdir(PATH + folder + "/"):
+            if os.path.isfile(PATH + folder + "/" + treeFile):
+                tree = propagationTree.printTree(folder + "/" + treeFile)
+                data = tree.getDiffusionConstants()
+                for node in data:
+                    if 1 <= node[0] < 10:
+                        zones[0+fold].append(node[1])
+                    elif 11 <= node[0] < 100:
+                        zones[1+fold].append(node[1])
+                    elif 101 <= node[0] < 1000:
+                        zones[2+fold].append(node[1])
+                    elif 1001 <= node[0] < 10000:
+                        zones[3+fold].append(node[1])
+                    elif 10001 <= node[0] < 100000:
+                        zones[4+fold].append(node[1])
+                    elif 100001 <= node[0] < 1000000:
+                        zones[5+fold].append(node[1])
+        fold += 6
+    for x in range(0, 6):
+        zoneGroups = [zones[x], zones[x+6], zones[x+12]]
+        bp = ax.boxplot(zoneGroups, 0, '', positions=[x+(2*x), x+1+(2*x), x+2+(2*x)], widths=0.2)
+        #setBoxColors(bp)
+    ax.set_xticklabels([' ', 'A', '', ' ', 'B', '', ' ', 'C', '', ' ', 'D', '', ' ', 'E', '', ' ', 'F', ''])
+    ax.set_xticks([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17])
+    ax.tick_params(axis="both", labelsize=15)
+    plt.show()
 
 def followerRetweetScatter(PATH):
     dataPoints = 0
@@ -649,8 +658,8 @@ def followerRetweetBox():
         else:
             color = 'darkolivegreen'
             label = "Random set"
-        for treeFile in os.listdir(TREEPATH+folder + '/'):
-           # print(reposts)
+        for treeFile in os.listdir(TREEPATH + folder + '/'):
+            # print(reposts)
             tree = propagationTree.printTree(TREEPATH + folder + '/' + treeFile)
             retweetCounts = tree.getFollowersAndChildren()
             if retweetCounts is not None:
@@ -673,7 +682,8 @@ def followerRetweetBox():
 
                         reposts[index].append(retweetCounts[1][i])
         positions = labels[labelVal]
-        plt.boxplot(reposts, positions=positions, boxprops=dict(color=color, linewidth=2), medianprops=dict(linewidth=2), showfliers=False) #, labels=labels[labelVal])
+        plt.boxplot(reposts, positions=positions, boxprops=dict(color=color, linewidth=2), medianprops=dict(linewidth=2)
+                    , showfliers=False, labels=labels[labelVal])
         plt.bar([0], [0], color='white', edgecolor=color, label=label, linewidth=2, width=10)
         labelVal += 1
     plt.semilogy()
@@ -1013,12 +1023,29 @@ def timeBar(files, PATH):
     plt.bar(hourValues, entries, width=3)
     plt.show()
 
+
 def depthWidthSize(fileList, PATH):
     widths = []
     depths = []
     sizes = []
     for file in fileList:
         thisFile = open(PATH + file, 'r')
+        if file == "generalTreeData.txt":
+            color = "red"
+            label = "Three Day Set"
+        elif file == "generalTreeDataTop.txt":
+            color = "green"
+            label = "Top"
+        elif file == "generalTreeDataRandom.txt":
+            color = "blue"
+            label = "Random"
+        elif file == "generalTreeDataOther.txt":
+            color = "grey"
+            label = "Bottom"
+        else:
+            color = "black"
+            label = "ERROR"
+        plt.scatter(10, 2, marker='.', color=color, s=0.00001, alpha=0.5, label=label)
         for line in thisFile:
             jsonLine = json.loads(line)
             width = jsonLine['width']
@@ -1029,8 +1056,12 @@ def depthWidthSize(fileList, PATH):
             widths.append(width)
             depths.append(depth)
             sizes.append(size*1.4)
-    plt.scatter(widths, depths, marker='.', color='mediumturquoise', s=sizes)
+        plt.scatter(widths, depths, marker='.', color=color, s=sizes, alpha=0.5)
+        widths = []
+        depths = []
+        sizes = []
     plt.semilogx()
+    plt.legend(fontsize='xx-large', markerscale=10000)
     plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=16)
     plt.show()
@@ -1045,11 +1076,58 @@ def stripTime(timeStamp):
         return ts
     return datetime.datetime.strptime(timeStamp, str(pattern))
 
+def plotDataOnNodes():
+    PATH = './data/tree/nodeData/'
+
+    for folder in os.listdir(PATH):
+        maxReaches = []
+        trees = []
+        if folder == 'TDS':
+            color = 'steelblue'
+            label = "Three day set"
+        elif folder == "top":
+            color = 'salmon'
+            label = "Top set"
+        elif folder == "other":
+            color = 'magenta'
+            label = "Bottom set"
+        else:
+            color = 'darkolivegreen'
+            label = "Random set"
+        for treeFile in os.listdir(PATH + folder + '/'):
+            treeReach = 0
+            treeNode = 0
+            with open(PATH + folder + '/' + treeFile, 'r') as treeFile:
+                for line in treeFile:
+                    try:
+                        maxReaches[treeNode] += treeReach
+                    except IndexError:
+                        maxReaches.append(treeReach)
+                    try:
+                        trees[treeNode] += 1
+                    except IndexError:
+                        trees.append(1)
+                    jsonLine = json.loads(line)
+                    treeReach = jsonLine['max_reach']
+                    treeNode += 1
+        maxReachesAverages = [x / y for x, y in zip(maxReaches, trees)]
+        plt.plot(range(0, len(maxReachesAverages)), maxReachesAverages, marker='o', markersize=0, color=color, linewidth=2, label=label)
+    plt.legend(loc='upper left')
+    ax = plt.gca()
+    #ax.set_xlim([0, 7300])
+    #ax.set_ylim([0, 50000])
+    plt.grid(True)
+    plt.show()
+
 #plotTimeSeriesBlack(GENERAL + 'generalTreeData.txt', 'hej') # done for top and random
 #plotTimeSeriesFirstRetweet()
 #retweetRate('classifiedTweets.txt', GENERAL + 'trees/topAndRandom/')
-followerDepthWidthScatter(GENERAL+'trees/')
+#followerDepthWidthScatter(GENERAL+'trees/')
 #depthWidthSize(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'], GENERAL) #should this be used?
+#followerDepthWidthScatter(GENERAL+'trees/')
+#depthWidthSize(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt'], GENERAL) #should this be used?
+#makeScatter(TREEPATH)
+plotDataOnNodes()
 #CDFRetweetDepth2(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
 #CDFRetweetTime(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
 #followerRetweetScatter('./data/tree/trees/')
