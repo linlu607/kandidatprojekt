@@ -1384,3 +1384,4 @@ def plotDataOnNodes():
 #followerRetweetScatter('./data/tree/trees/')
 #followerRetweetBox()
 #depthsForAll(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
+maxReach()
