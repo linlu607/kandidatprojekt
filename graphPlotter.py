@@ -172,8 +172,10 @@ def CDFRetweetTime(generalFiles):
             setCounts[i+1] += setCounts[i]
         totalSize = float(setCounts[-1])
         normedCounts = map(lambda x: 100*round(x/totalSize, 2), setCounts)
-        #normedCounts = [round(elem, 2) for elem in normedCounts]
-        plt.plot(range(0, len(setCounts)), normedCounts, label=label, linewidth=2)
+        if folder == 'other/':
+            plt.plot(range(0, len(setCounts)), normedCounts, color='orchid', label=label, linewidth=2)
+        else:
+            plt.plot(range(0, len(setCounts)), normedCounts, label=label, linewidth=2)
         for i in range(0, len(setCounts)):
             if len(fullNodes) > i:
                 fullNodes[i] += setCounts[i]
@@ -185,9 +187,9 @@ def CDFRetweetTime(generalFiles):
         if len(fullNodes) > len(setCounts):
             for i in range(len(setCounts), len(fullNodes)):
                 fullNodes[i] += setCounts[-1]
-        print(setCounts)
-        print(len(setCounts))
-    print(fullNodes)
+        #print(setCounts)
+        #print(len(setCounts))
+    #print(fullNodes)
     fullSize = float(fullNodes[-1])
     normedFull = map(lambda x: 100*round(x/fullSize, 2), fullNodes)
     #normedFull = [round(elem, 2) for elem in normedFull]
@@ -195,6 +197,7 @@ def CDFRetweetTime(generalFiles):
     plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=17)
     plt.xticks(range(0, 13*24, 6))
+    #plt.xticks([0, 6, 24, 48, 72, 96])
     plt.legend(fontsize='xx-large')
     plt.grid()
     plt.show()
@@ -243,7 +246,10 @@ def CDFRetweetDepth2(generalFiles):
                                 setCounts[i] += nodesAtTimes[-1]
         totalSize = float(setCounts[-1])
         normedCounts = map(lambda x: round(x/totalSize, 2), setCounts)
-        plt.plot(range(0, len(setCounts)), normedCounts, label=label, linewidth=2, marker='D')
+        if folder == 'other/':
+            plt.plot(range(0, len(setCounts)), normedCounts, color='orchid', label=label, linewidth=2, marker='D')
+        else:
+            plt.plot(range(0, len(setCounts)), normedCounts, label=label, linewidth=2, marker='D')
         for i in range(0, len(setCounts)):
             if len(fullNodes) > i:
                 fullNodes[i] += setCounts[i]
@@ -263,14 +269,14 @@ def CDFRetweetDepth2(generalFiles):
     plt.plot(range(0, len(fullNodes)), normedFull, label="All", color='black', linestyle='--', linewidth=2, marker='D')
     plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=17)
-    plt.xticks(range(0, 11))
+    plt.xticks(range(0, 12))
     plt.legend(fontsize='xx-large', loc='lower right')
     plt.grid()
     plt.show()
 
 def getFollowerCount(jsonLine):
     fileName = jsonLine['fileName']
-    tree = propagationTree.printTree(TREEPATH + '/TDS/' + fileName + '.txt')
+    tree = propagationTree.printTree(TREEPATH + '/other/' + fileName + '.txt')
     return tree.findRootFollowerCount()
 
 def plotTimeSeriesMediumFollowers():
@@ -368,7 +374,7 @@ def plotTimeSeriesBlack(fileAndPath, title):
     #plt.ylim(0, max(maxLevels))
     #maxX = datetime.datetime.strptime("3, 20:00:00", '%d, %H:%M:%S')
     #maxX = max(maxTimes)
-    plt.xticks(range(0, 1024, 48))
+    plt.xticks(range(0, 1024, 12))
     #plt.xlim(minX, maxX)
     plt.tick_params(axis='x', labelsize=15)
     plt.tick_params(axis='y', labelsize=17)
@@ -436,7 +442,7 @@ def plotTimeSeriesRoots():
     plt.grid(True)
     plt.show()
 def plotTimeSeriesFirstRetweet():
-    dataFile = open('./data/tree/generalTreeData.txt', 'r')
+    dataFile = open('./data/tree/generalTreeDataOther.txt', 'r')
     maxTimes = []
     maxLevels = []
     maxX = "00:00:00"
@@ -632,8 +638,9 @@ def followerRetweetBox():
     labelVal = 0
     sets = 4
     labels = []
-    for i in range(0, sets):
-        labels.append(range(i, 21 + i, sets + 1))
+    for i in range(0, sets + 1):
+        labels.append(range(i, 26 + i, sets + 1))
+    print(labels)
     #labels = [range(0, 21, 4), range(1, 22, 4), range(2, 23, 4), range(3, 24, 4)]
     for folder in os.listdir(TREEPATH):
         reposts = [[], [], [], [], [], []]
@@ -644,7 +651,7 @@ def followerRetweetBox():
             color = 'salmon'
             label = "Top set"
         elif folder == "other":
-            color = 'magenta'
+            color = 'goldenrod'
             label = "Bottom set"
         else:
             color = 'darkolivegreen'
@@ -673,6 +680,7 @@ def followerRetweetBox():
 
                         reposts[index].append(retweetCounts[1][i])
         positions = labels[labelVal]
+        print(len(reposts))
         plt.boxplot(reposts, positions=positions, boxprops=dict(color=color, linewidth=2), medianprops=dict(linewidth=2), showfliers=False) #, labels=labels[labelVal])
         plt.bar([0], [0], color='white', edgecolor=color, label=label, linewidth=2, width=10)
         labelVal += 1
@@ -681,7 +689,7 @@ def followerRetweetBox():
     plt.legend(fontsize='xx-large')
     plt.tick_params(axis='y', labelsize=17)
     plt.tick_params(axis='x', labelsize=15)
-    plt.xticks(labels[3], [10, 100, 1000, 10000, 100000, 1000000])
+    plt.xticks(labels[4], [10, 100, 1000, 10000, 100000, 1000000])
     plt.grid(linestyle='dashed')
     plt.show()
 
@@ -719,28 +727,11 @@ def followerDepthWidthScatter(PATH):
     iteration = 0
     keys = []
     counts = []
-    intervals = 100000
 
-    '''for key, val in sorted(addedFollowers.items()):
-        if key < intervals * iteration * iteration * iteration/100:
-            keys.append(key)
-            counts.append(val[0]/val[1])
-        else:
-            iteration += 1
-            if len(keys) > 0:
-                followerCounts.append(sum(keys)/len(keys))
-                meanFracs.append(sum(counts)/len(counts))
-            else:
-                followerCounts.append(intervals * iteration * iteration * iteration/100)
-                meanFracs.append(0)
-            keys = []
-            counts = []
-            keys.append(key)
-            counts.append(val[0]/val[1])'''
     item = 0
     totalLength = len(addedFollowers)
     print(totalLength)
-    groupLength = int(totalLength/30) + 1
+    groupLength = int(totalLength/50) + 1
     print(groupLength)
     keys.append(0)
     counts.append(0)
@@ -756,13 +747,9 @@ def followerDepthWidthScatter(PATH):
             counts = []
         keys.append(key)
         counts.append(val[0] / val[1])
-    '''
-    for key, val in sorted(addedFollowers.items()):
-        followerCounts.append(key)
-        meanFracs.append(val[0]/val[1])
-    '''
+
     newMeans = []
-    start = 1
+    start = 3
     averageLength = start*2
 
     newMeans.append(meanFracs[0])
@@ -782,9 +769,10 @@ def followerDepthWidthScatter(PATH):
 
     plt.tick_params(axis='x', labelsize=16)
     plt.tick_params(axis='y', labelsize=17)
-    plt.scatter(followers, values, marker='.', color='steelblue', s=13) #13, steelgrey?
-    plt.semilogx()
-    plt.plot(fnew, f2(fnew), color='black', marker='o')
+    plt.scatter(followers, values, marker='.', color='teal', s=15) #13, steelgrey?
+    #plt.semilogx()
+    #plt.plot([0], [0], color='white')
+    #plt.plot(fnew, f2(fnew), color='black', linewidth=2)
     plt.show()
 
 def followerSizeScatter(PATH):
@@ -862,23 +850,61 @@ def plotTimeSeriesAll():
     fig.autofmt_xdate()
     plt.show()
 
-def retweetRate(generalFile, PATH):
+def retweetRate(generalFile):
+    topfiles = []
+    randomfiles = []
+    otherfiles = []
+    generalFiles = ['generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt']
+    for line in open(GENERAL + generalFiles[0], 'r'):
+        topfiles.append(json.loads(line)['fileName'])
+    for line in open(GENERAL + generalFiles[1], 'r'):
+        randomfiles.append(json.loads(line)['fileName'])
+    for line in open(GENERAL + generalFiles[2], 'r'):
+        otherfiles.append(json.loads(line)['fileName'])
     data = {}
-    counter = {'bbc': 0, 'bre': 0, 'fox': 0, 'huf': 0, 'cnn': 0, 'tim': 0, 'gua': 0}
+    counter = {'bbc': 0, 'bre': 0, 'fox': 0, 'huf': 0, 'cnn': 0, 'tim': 0, 'gua': 0, 'reu': 0, 'cbs': 0, 'was': 0}
+    labels = {'bre': 'Breitbart', 'bbc': 'BBC', 'fox': 'Fox News', 'huf': 'Huffington Post', 'cnn': 'CNN',
+              'tim': 'The Times', 'gua': 'The Guardian', 'cbs': 'CBS', 'reu': 'Reuters', 'was': 'Washington Post'}
+    colors = {'bre': 'tomato', 'bbc': 'palegreen', 'fox': 'lightsteelblue', 'huf': 'plum', 'cnn': 'lightpink',
+              'tim': 'khaki', 'gua': 'teal', 'cbs': 'firebrick', 'reu': 'magenta', 'was': 'goldenrod'}
+
     for line in open('./data/tree/' + generalFile, 'r'):
+        ignore = False
+        print(line)
         jsonLine = json.loads(line)
         contentClass = jsonLine['class']
-        labelName = contentClass + " " + str(counter[contentClass])
+        if contentClass not in counter:
+            if contentClass == 'other':
+                ignore = True
+                counter[contentClass] = 0
+            else:
+                counter[contentClass] = 0
+                print(contentClass)
+                print(jsonLine['link'])
+                ignore = raw_input("Ignore?")
+                if ignore == 'n':
+                    labels[contentClass] = raw_input("Set name for class: ")
+                    colors[contentClass] = raw_input("Set color for class: ")
         counter[contentClass] += 1
         link = jsonLine['fileName']
-        tree = propagationTree.printTree(PATH + link + '.txt')
-        originals = tree.getOriginalCount()
-        retweets = int(jsonLine['size']) - originals
-        retweetRate = float(retweets)/float(originals)
-        data[labelName] = retweetRate
+        if link in topfiles:
+            pathEnding = '/top/'
+        elif link in randomfiles:
+            pathEnding = '/random/'
+        elif link in otherfiles:
+            pathEnding = '/other/'
+        else:
+            print("Not found")
+            ignore = True
+        if not ignore:
+            PATH = './data/tree/trees' + pathEnding
+            tree = propagationTree.printTree(PATH + link + '.txt')
+            originals = tree.getOriginalCount()
+            retweets = int(jsonLine['size']) - originals
+            retweetRate = float(retweets)/float(originals)
+            labelName = contentClass + " " + str(counter[contentClass])
+            data[labelName] = retweetRate
     sortedData = sorted(data.items(), key=lambda x: x[1])
-    labels = {'bre': 'Breitbart', 'bbc': 'BBC', 'fox': 'Fox News', 'huf': 'Huffington Post', 'cnn': 'CNN', 'tim': 'The Times', 'gua': 'The Guardian'}
-    colors = {'bre': 'tomato', 'bbc': 'palegreen', 'fox': 'lightsteelblue', 'huf': 'plum', 'cnn': 'lightpink', 'tim': 'khaki', 'gua': 'teal'}
     for tuple_ in sortedData:
         if int(tuple_[0][3:]) == 0:
             label = labels[tuple_[0][:3]]
@@ -893,6 +919,132 @@ def retweetRate(generalFile, PATH):
     #plt.ylabel("Retweet rate")
     #plt.xlabel("Tweets color coded by news outlet")
     plt.show()
+
+def retweetRateBox(generalFile):
+    dataTop = {'bbc': [], 'bre': [], 'fox': [], 'huf': [], 'cnn': [], 'tim': [], 'gua': [], 'cbs': [], 'was': []}
+    dataRandom = {'bbc': [], 'bre': [], 'fox': [], 'huf': [], 'cnn': [], 'tim': [], 'gua': [], 'cbs': [], 'was': []}
+    dataOther = {'bbc': [], 'bre': [], 'fox': [], 'huf': [], 'cnn': [], 'tim': [], 'gua': [], 'cbs': [], 'was': []}
+    topfiles = []
+    randomfiles = []
+    otherfiles = []
+    generalFiles = ['generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt']
+    for line in open(GENERAL + generalFiles[0], 'r'):
+        topfiles.append(json.loads(line)['fileName'])
+    for line in open(GENERAL + generalFiles[1], 'r'):
+        randomfiles.append(json.loads(line)['fileName'])
+    for line in open(GENERAL + generalFiles[2], 'r'):
+        otherfiles.append(json.loads(line)['fileName'])
+    data = {}
+    counter = {'bbc': 0, 'bre': 0, 'fox': 0, 'huf': 0, 'cnn': 0, 'tim': 0, 'gua': 0, 'cbs': 0, 'was': 0}
+    labels = {'bre': 'Breitbart', 'bbc': 'BBC', 'fox': 'Fox News', 'huf': 'Huffington Post', 'cnn': 'CNN',
+              'tim': 'The Times', 'gua': 'The Guardian', 'cbs': 'CBS', 'was': 'Washington Post'}
+    colors = {'bre': 'tomato', 'bbc': 'palegreen', 'fox': 'lightsteelblue', 'huf': 'plum', 'cnn': 'lightpink',
+              'tim': 'khaki', 'gua': 'teal', 'cbs': 'firebrick', 'reu': 'magenta', 'was': 'goldenrod'}
+    toBox = {'bbc': [], 'bre': [], 'fox': [], 'huf': [], 'cnn': [], 'tim': [], 'gua': [], 'reu': [], 'cbs': [], 'was': []}
+    for line in open('./data/tree/' + generalFile, 'r'):
+        ignore = False
+        jsonLine = json.loads(line)
+        contentClass = jsonLine['class']
+        if contentClass not in counter:
+            if contentClass == 'other' or contentClass == 'twi' or contentClass == 'reu':
+                ignore = True
+                counter[contentClass] = 0
+            else:
+                counter[contentClass] = 0
+                print(contentClass)
+                print(jsonLine['link'])
+                ignore = raw_input("Ignore?")
+                if ignore == 'n':
+                    labels[contentClass] = raw_input("Set name for class: ")
+                    colors[contentClass] = raw_input("Set color for class: ")
+        counter[contentClass] += 1
+        link = jsonLine['fileName']
+        if link in topfiles:
+            pathEnding = '/top/'
+            toDict = dataTop
+        elif link in randomfiles:
+            pathEnding = '/random/'
+            toDict = dataRandom
+        elif link in otherfiles:
+            pathEnding = '/other/'
+            toDict = dataOther
+        else:
+            print("Not found")
+            ignore = True
+        if not ignore:
+            PATH = './data/tree/trees' + pathEnding
+            tree = propagationTree.printTree(PATH + link + '.txt')
+            originals = tree.getOriginalCount()
+            retweets = int(jsonLine['size']) - originals
+            if int(jsonLine['size'] != tree.getTreeSize()):
+                print(link)
+                if link in topfiles:
+                    print("toperror")
+                elif link in randomfiles:
+                    print("randerror")
+                elif link in otherfiles:
+                    print("othererror")
+                else:
+                    print("error")
+                retweets = tree.getTreeSize() - originals
+                print(retweets)
+            retweetRate = float(retweets)/float(originals)
+            if contentClass != 'reu':
+                toDict[contentClass].append(retweetRate)
+            labelName = contentClass + " " + str(counter[contentClass])
+            data[labelName] = retweetRate
+            toBox[contentClass].append(retweetRate)
+            if int(retweetRate) == 57:
+                print(link)
+                print("57 found")
+    position = 5
+    positions2 = []
+    vals = []
+    toshow = []
+    colorstoshow = []
+    names = []
+    for key, val in toBox.items():
+        if key != 'reu':
+            toshow.append(val)
+            colorstoshow.append(colors[key])
+            positions = [0, position]
+            position += 2
+            newVal = []
+            newVal.append([0])
+            newVal.append(val)
+            names.append(labels[key])
+            positions2.append(positions)
+            plt.boxplot(newVal, positions=positions, widths=0.7, boxprops=dict(color=colors[key], linewidth=2),
+                        medianprops=dict(linewidth=2), showfliers=False)
+
+    plt.tick_params(axis='x', labelsize=14)
+    plt.tick_params(axis='y', labelsize=16)
+    plt.xticks(range(5, 25, 2), names, rotation=45)
+    totalDict = {'bbc': [], 'bre': [], 'fox': [], 'huf': [], 'cnn': [], 'tim': [], 'gua': [], 'cbs': [], 'was': []}
+    dicts = [dataTop, dataRandom, dataOther]
+    print(dataOther)
+    for dictionary in dicts:
+        print("New")
+        for key, val in dictionary.items():
+            if len(val) != 0:
+                medium = round(sum(val)/len(val), 2)
+                #print(str(labels[key]) + ": " + str(medium) + "  " + str(len(val)))
+                totalDict[key].extend(val)
+    print("Total")
+    for key, val in totalDict.items():
+        if len(val) != 0:
+            medium = round(sum(val)/len(val), 2)
+            print(str(labels[key]) + ": " + str(medium) + "  " + str(len(val)))
+            if key == 'tim':
+                print(val)
+                print(sorted(val))
+
+    #print(dataTop)
+    #print(dataRandom)
+    #print(dataOther)
+
+    #plt.show()
+
 
 def mediumRateURL(generalFile, PATH):
     data = {}
@@ -1035,6 +1187,50 @@ def depthWidthSize(fileList, PATH):
     plt.tick_params(axis='y', labelsize=16)
     plt.show()
 
+def plotDataOnNodes():
+    PATH = './data/tree/nodeData/'
+
+    for folder in os.listdir(PATH):
+        maxReaches = []
+        trees = []
+        if folder == 'TDS':
+            color = 'steelblue'
+            label = "Three day set"
+        elif folder == "top":
+            color = 'salmon'
+            label = "Top set"
+        elif folder == "other":
+            color = 'magenta'
+            label = "Bottom set"
+        else:
+            color = 'darkolivegreen'
+            label = "Random set"
+        for treeFile in os.listdir(PATH + folder + '/'):
+            treeReach = 0
+            treeNode = 0
+            with open(PATH + folder + '/' + treeFile, 'r') as treeFile:
+                for line in treeFile:
+                    try:
+                        maxReaches[treeNode] += treeReach
+                    except IndexError:
+                        maxReaches.append(treeReach)
+                    try:
+                        trees[treeNode] += 1
+                    except IndexError:
+                        trees.append(1)
+                    jsonLine = json.loads(line)
+                    treeReach = jsonLine['max_reach']
+                    treeNode += 1
+        maxReachesAverages = [x / y for x, y in zip(maxReaches, trees)]
+        print(maxReachesAverages)
+        plt.plot(range(0, len(maxReachesAverages)), maxReachesAverages, marker='o', markersize=0, color=color, linewidth=2, label=label)
+    plt.legend(loc='upper left')
+    ax = plt.gca()
+    #ax.set_xlim([0, 7300])
+    #ax.set_ylim([0, 50000])
+    plt.grid(True)
+    plt.show()
+
 def stripTime(timeStamp):
     pattern = '%H:%M:%S'
     if "day" in timeStamp or "days" in timeStamp:
@@ -1045,13 +1241,74 @@ def stripTime(timeStamp):
         return ts
     return datetime.datetime.strptime(timeStamp, str(pattern))
 
-#plotTimeSeriesBlack(GENERAL + 'generalTreeData.txt', 'hej') # done for top and random
+def maxReach():
+    PATH = './data/tree/nodeData/'
+    for folder in os.listdir(PATH):
+        allMaxReaches = []
+        allCounts = []
+        if folder == 'TDS':
+            color = 'teal'
+            label = "Three day set"
+        elif folder == "top":
+            color = 'darkorange'
+            label = "Top set"
+        elif folder == "other":
+            color = 'orchid'
+            label = "Bottom set"
+        else:
+            color = 'darkolivegreen'
+            label = "Random set"
+        for treeFile in os.listdir(PATH + folder + '/'):
+            maxReaches = []
+            counts = []
+            treeNode = 0
+            with open(PATH + folder + '/' + treeFile, 'r') as treeFile:
+                for line in treeFile:
+                    maxReaches.append(json.loads(line)['max_reach'])
+                    counts.append(1)
+                    treeNode += 1
+                if 0 < treeNode < 5000:
+                    allMaxReaches.append(maxReaches)
+                    allCounts.append(counts)
+        newList = []
+        newCounts = []
+        longest = 0
+        for i in range(0, len(allMaxReaches)):
+            longest = max(longest, len(allMaxReaches[i]))
+        for i in range(0, longest):
+            newList.append(0)
+            newCounts.append(0)
+
+        for i in range(0, len(allMaxReaches)):
+            maxReachList = allMaxReaches[i]
+            for j in range(0, len(maxReachList)):
+                newList[j] += maxReachList[j]
+                newCounts[j] += allCounts[i][j]
+            for k in range(len(maxReachList), len(newList)):
+                newList[k] += maxReachList[-1]
+
+        averages = []
+        for i in range(0, len(newList)):
+            averages.append((newList[i])/newCounts[i])
+        newAve = []
+        newAve.append(0)
+        newAve.extend(averages)
+        plt.plot(range(0, len(averages)+1), newAve, color=color, label=label, marker='.')
+    plt.legend(fontsize='xx-large')
+    plt.grid(axis='x')
+    plt.tick_params(axis='x')
+    plt.xticks(range(0, 400, 10))
+    plt.show()
+
+#plotTimeSeriesBlack(GENERAL + 'generalTreeDataOther.txt', 'hej') # done for top and random
 #plotTimeSeriesFirstRetweet()
-#retweetRate('classifiedTweets.txt', GENERAL + 'trees/topAndRandom/')
-followerDepthWidthScatter(GENERAL+'trees/')
+#retweetRateBox('classifiedTweets.txt')
+#followerDepthWidthScatter(GENERAL+'trees/')
 #depthWidthSize(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'], GENERAL) #should this be used?
-#CDFRetweetDepth2(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
-#CDFRetweetTime(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
+#CDFRetweetDepth2(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt'])
+#CDFRetweetTime(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt'])
 #followerRetweetScatter('./data/tree/trees/')
 #followerRetweetBox()
-#depthsForAll(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt'])
+#depthsForAll(['generalTreeData.txt', 'generalTreeDataTop.txt', 'generalTreeDataRandom.txt', 'generalTreeDataOther.txt'])
+#plotDataOnNodes()
+maxReach()
